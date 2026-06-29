@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+/* Force pointer cursor on all interactive elements and custom clickable items */
+button,
+select,
+input[type="checkbox"],
+input[type="radio"],
+[role="button"],
+[role="checkbox"],
+.cursor-pointer,
+.cursor-pointer * {
+  cursor: pointer !important;
+}
+
+/* Keyboard-focus fallback: any interactive element that doesn't define its
+   own focus-visible style still gets a visible ring. Components that set
+   `focus-visible:outline-none` plus a custom ring have higher specificity and
+   are unaffected — this only catches the gaps (e.g. the marketing page). */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@theme {
+  /* Brand palette */
+  --color-brand: #de483a;
+  --color-brand-dark: #b53226;
+  --color-brand-hover: #c53a2d;
+  --color-brand-tint: #fef6f5;
+
+  /* Typography */
+  --font-sans:
+    system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* Animations */
+  --animate-fade-up: fade-up 0.35s ease both;
+  --animate-check-pop: check-pop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-pop-in: pop-in 0.4s ease both;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes check-pop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ============================================================
+   Dark mode — flips the literal surface/text/border utilities the
+   app uses. Scoped to html.dark (toggled by the Dark theme).
+   `text-white` is intentionally NOT remapped so button labels stay
+   readable on the brand accent.
+   ============================================================ */
+html.dark {
+  color-scheme: dark;
+  background-color: #1a1a1a;
+
+  /* Invert the neutral ramp. Because Tailwind v4 utilities resolve to
+     var(--color-neutral-*), this flips every neutral utility — including
+     opacity (bg-neutral-50/50), stroke, fill and placeholder variants. */
+  --color-neutral-50: #242424;
+  --color-neutral-100: #2b2b2b;
+  --color-neutral-200: #353535;
+  --color-neutral-300: #474747;
+  --color-neutral-400: #8a8a8a;
+  --color-neutral-500: #a0a0a0;
+  --color-neutral-600: #bcbcbc;
+  --color-neutral-700: #d6d6d6;
+  --color-neutral-800: #e6e6e6;
+  --color-neutral-900: #f2f2f2;
+}
+
+/* White surfaces (kept separate so `text-white` stays white on buttons) */
+html.dark .bg-white {
+  background-color: #1f1f1f;
+}
+
+/* Arbitrary literal colors used across the app */
+html.dark .bg-\[\#fcfaf8\] {
+  background-color: #181818;
+} /* sidebar */
+html.dark .bg-\[\#fafafa\] {
+  background-color: #222;
+}
+html.dark .bg-\[\#fbf3ee\],
+html.dark .bg-\[\#fdf8f0\],
+html.dark .bg-\[\#f3e4d9\] {
+  background-color: #2a2320;
+}
+html.dark .text-\[\#202020\] {
+  color: #ededed;
+}
+html.dark .text-\[\#404040\] {
+  color: #cfcfcf;
+}
+html.dark .hover\:text-\[\#202020\]:hover {
+  color: #f5f5f5;
+}
+
+/* Inputs */
+html.dark input,
+html.dark textarea,
+html.dark select {
+  color: #ededed;
+}
+
+/* ============================================================
+   Accessibility — honor the OS "reduce motion" setting. Collapses
+   every animation/transition (entrance keyframes, toggles, spinners)
+   to a near-instant state without removing the resulting visuals.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
