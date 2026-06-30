@@ -67,6 +67,9 @@ const TEMPLATES: TemplateDef[] = [
 export function LandingPage() {
   const [activeView, setActiveView] = useState<ActiveView>("home");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mockupTab, setMockupTab] = useState<
+    "inbox" | "calendar" | "board" | "productivity" | "teams"
+  >("inbox");
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(
     "yearly",
   );
@@ -303,36 +306,80 @@ export function LandingPage() {
               </div>
             </section>
 
+            {/* Interactive Mockup View Switcher */}
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-10 max-w-4xl mx-auto px-6">
+              {[
+                { id: "inbox", label: "📥 Inbox & Tasks" },
+                { id: "calendar", label: "📅 Schedule Calendar" },
+                { id: "board", label: "📋 Kanban Board" },
+                { id: "productivity", label: "📈 Karma & Progress" },
+                { id: "teams", label: "👥 Team Workspace" },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setMockupTab(tab.id as any)}
+                  className={cn(
+                    "px-4 py-2 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer",
+                    mockupTab === tab.id
+                      ? "bg-brand text-white shadow-md shadow-brand/20 scale-[1.05]"
+                      : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200/80",
+                  )}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
             {/* MOCKUP PREVIEW */}
-            <section className="px-6 pb-20">
-              <div className="mx-auto max-w-5xl rounded-2xl border border-neutral-200/80 bg-neutral-50/50 p-3 shadow-2xl">
-                <div className="rounded-xl border border-neutral-200/60 bg-white overflow-hidden aspect-video shadow-inner flex flex-col">
+            <section className="px-6 pb-20 max-w-6xl mx-auto relative">
+              <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,rgba(222,72,58,0.06),transparent_65%)] pointer-events-none" />
+
+              {/* MacBook Bezel chassis container */}
+              <div className="mx-auto max-w-5xl rounded-[30px] border-4 border-neutral-800 bg-[#161616] p-3 shadow-2xl relative overflow-hidden transition-all duration-500 hover:shadow-brand/10 hover:border-neutral-700/80">
+                {/* Webcam dot indicator */}
+                <div className="absolute top-1.5 left-1/2 -translate-x-1/2 flex items-center gap-1 z-20">
+                  <span className="w-1.5 h-1.5 rounded-full bg-neutral-900 border border-neutral-800" />
+                  <span className="w-1 h-1 rounded-full bg-blue-500/80 animate-pulse" />
+                </div>
+
+                {/* Inner screen aspect container */}
+                <div className="rounded-[20px] bg-white overflow-hidden aspect-[16/10] flex flex-col relative select-none">
                   {/* Mock browser header */}
-                  <div className="bg-neutral-50 border-b border-neutral-100 px-4 py-2.5 flex items-center gap-1.5 shrink-0">
-                    <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
-                    <span className="text-[10px] text-neutral-400 font-medium ml-4">
-                      https://todoist.com/app/inbox
-                    </span>
+                  <div className="bg-neutral-50 border-b border-neutral-100 px-4 py-2.5 flex items-center justify-between shrink-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                    </div>
+                    <div className="bg-neutral-200/60 rounded px-20 py-0.5 text-[9px] text-neutral-500 font-semibold truncate max-w-sm">
+                      https://todoist.com/app/{mockupTab}
+                    </div>
+                    <div className="w-10" />
                   </div>
                   {/* Mock dashboard content */}
                   <div className="flex-1 flex overflow-hidden">
-                    <aside className="w-48 bg-neutral-50/60 border-r border-neutral-100 p-3 space-y-4 hidden sm:block shrink-0">
+                    <aside className="w-48 bg-neutral-50/60 border-r border-neutral-100 p-3.5 space-y-4 hidden sm:block shrink-0">
                       <div className="flex items-center gap-2 px-1">
-                        <span className="h-6 w-6 rounded-full bg-[#d6409f] text-[10px] font-bold text-white flex items-center justify-center">
-                          N
+                        <span className="h-6 w-6 rounded-full bg-brand text-[10px] font-bold text-white flex items-center justify-center shrink-0">
+                          T
                         </span>
                         <span className="text-xs font-bold text-neutral-800">
-                          Nicelydone
+                          Tushar Jolly
                         </span>
                       </div>
                       <div className="space-y-1">
-                        <span className="block px-2 py-1 text-[10px] font-bold text-neutral-400 uppercase">
+                        <span className="block px-2 py-0.5 text-[9px] font-bold text-neutral-400 uppercase tracking-wider">
                           Workspace
                         </span>
-                        <div className="text-[11px] font-bold text-neutral-700 space-y-1">
-                          <div className="px-2 py-1.5 rounded-lg bg-neutral-100 text-neutral-900 flex items-center justify-between">
+                        <div className="text-[11px] font-semibold text-neutral-600 space-y-0.5">
+                          <div
+                            className={cn(
+                              "px-2.5 py-1.5 rounded-lg flex items-center justify-between transition",
+                              mockupTab === "inbox"
+                                ? "bg-brand/10 text-brand font-bold"
+                                : "hover:bg-neutral-50",
+                            )}
+                          >
                             <span className="flex items-center gap-1.5">
                               <LandingIcon
                                 name="inbox"
@@ -340,42 +387,345 @@ export function LandingPage() {
                               />
                               Inbox
                             </span>
-                            <span>12</span>
+                            <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-neutral-200/60 text-neutral-500">
+                              12
+                            </span>
                           </div>
-                          <div className="px-2 py-1.5 rounded-lg hover:bg-neutral-50 cursor-pointer flex items-center gap-1.5">
+                          <div className="px-2.5 py-1.5 rounded-lg hover:bg-neutral-50 flex items-center gap-1.5">
                             <LandingIcon
                               name="calendar"
                               className="h-3.5 w-3.5"
                             />
                             Today
                           </div>
-                          <div className="px-2 py-1.5 rounded-lg hover:bg-neutral-50 cursor-pointer flex items-center gap-1.5">
-                            <LandingIcon
-                              name="calendarUpcoming"
-                              className="h-3.5 w-3.5"
-                            />
-                            Upcoming
+                          <div
+                            className={cn(
+                              "px-2.5 py-1.5 rounded-lg flex items-center justify-between transition",
+                              mockupTab === "calendar"
+                                ? "bg-brand/10 text-brand font-bold"
+                                : "hover:bg-neutral-50",
+                            )}
+                          >
+                            <span className="flex items-center gap-1.5">
+                              <LandingIcon
+                                name="calendarUpcoming"
+                                className="h-3.5 w-3.5"
+                              />
+                              Calendar View
+                            </span>
+                          </div>
+                          <div
+                            className={cn(
+                              "px-2.5 py-1.5 rounded-lg flex items-center justify-between transition",
+                              mockupTab === "board"
+                                ? "bg-brand/10 text-brand font-bold"
+                                : "hover:bg-neutral-50",
+                            )}
+                          >
+                            <span className="flex items-center gap-1.5">
+                              <LandingIcon
+                                name="users"
+                                className="h-3.5 w-3.5"
+                              />
+                              Task Boards
+                            </span>
+                          </div>
+                          <div
+                            className={cn(
+                              "px-2.5 py-1.5 rounded-lg flex items-center justify-between transition",
+                              mockupTab === "productivity"
+                                ? "bg-brand/10 text-brand font-bold"
+                                : "hover:bg-neutral-50",
+                            )}
+                          >
+                            <span className="flex items-center gap-1.5">
+                              <LandingIcon
+                                name="sparkles"
+                                className="h-3.5 w-3.5"
+                              />
+                              Karma Dashboard
+                            </span>
                           </div>
                         </div>
                       </div>
                     </aside>
-                    <main className="flex-1 p-6 space-y-4">
-                      <div className="flex justify-between items-center border-b pb-2">
-                        <h3 className="text-base font-bold text-neutral-900">
-                          Inbox
-                        </h3>
-                        <span className="text-[10px] text-neutral-400 font-semibold">
-                          Today • June 29
-                        </span>
-                      </div>
-                      <div className="space-y-2">
-                        <TaskRow
-                          title="Draft next quarter marketing campaign budget"
-                          completed
-                        />
-                        <TaskRow title="Schedule 1-on-1 meeting with Design Lead" />
-                        <TaskRow title="Review Google Sheet export validation" />
-                      </div>
+                    <main className="flex-1 p-6 overflow-y-auto no-scrollbar flex flex-col justify-between bg-white text-left">
+                      {mockupTab === "inbox" && (
+                        <div className="space-y-4 animate-fade-up">
+                          <div className="flex justify-between items-center border-b pb-2.5">
+                            <h3 className="text-base font-bold text-neutral-900">
+                              Inbox
+                            </h3>
+                            <span className="text-[10px] text-neutral-400 font-semibold">
+                              Sorted by due date
+                            </span>
+                          </div>
+                          <div className="space-y-2">
+                            <TaskRow
+                              title="Draft next quarter marketing campaign budget"
+                              completed
+                            />
+                            <TaskRow
+                              title="Schedule 1-on-1 meeting with Design Lead"
+                              priority="orange"
+                            />
+                            <TaskRow
+                              title="Review Google Sheet export validation"
+                              priority="blue"
+                            />
+                            <TaskRow
+                              title="Implement billing cycle subscription grid"
+                              priority="red"
+                            />
+                            <TaskRow title="Release version 10.9 update to app store" />
+                          </div>
+                        </div>
+                      )}
+
+                      {mockupTab === "calendar" && (
+                        <div className="space-y-4 animate-fade-up">
+                          <div className="flex justify-between items-center border-b pb-2.5">
+                            <h3 className="text-base font-bold text-neutral-900">
+                              Week Schedule Calendar
+                            </h3>
+                            <span className="text-[10px] text-brand font-extrabold uppercase bg-brand/10 px-2 py-0.5 rounded">
+                              PRO feature
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-5 gap-2 text-center text-[10px] text-neutral-500 font-bold border-b pb-1 bg-neutral-50 py-1 rounded">
+                            <div>Mon 29</div>
+                            <div>Tue 30</div>
+                            <div>Wed 1</div>
+                            <div>Thu 2</div>
+                            <div>Fri 3</div>
+                          </div>
+                          <div className="grid grid-cols-5 gap-2 min-h-[140px] text-[9px]">
+                            <div className="space-y-1.5 border-r border-neutral-100 pr-1">
+                              <div className="bg-brand/10 border-l-2 border-brand p-1.5 rounded text-brand font-semibold leading-tight">
+                                09:30 AM <br /> Standup meeting
+                              </div>
+                              <div className="bg-blue-50 border-l-2 border-blue-500 p-1.5 rounded text-blue-700 font-medium leading-tight">
+                                14:00 PM <br /> Code Review
+                              </div>
+                            </div>
+                            <div className="space-y-1.5 border-r border-neutral-100 px-1">
+                              <div className="bg-amber-50 border-l-2 border-amber-500 p-1.5 rounded text-amber-700 font-medium leading-tight">
+                                11:00 AM <br /> Design Crit
+                              </div>
+                            </div>
+                            <div className="space-y-1.5 border-r border-neutral-100 px-1">
+                              <div className="bg-brand/10 border-l-2 border-brand p-1.5 rounded text-brand font-semibold leading-tight">
+                                10:00 AM <br /> Client Sync
+                              </div>
+                            </div>
+                            <div className="space-y-1.5 border-r border-neutral-100 px-1">
+                              <div className="bg-green-50/80 border-l-2 border-green-600 p-1.5 rounded text-green-700 font-medium leading-tight">
+                                15:00 PM <br /> Marketing Pitch
+                              </div>
+                            </div>
+                            <div className="space-y-1.5 px-1">
+                              <div className="bg-neutral-100 border-l-2 border-neutral-400 p-1.5 rounded text-neutral-600 font-medium leading-tight">
+                                16:30 PM <br /> Weekly retrospective
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {mockupTab === "board" && (
+                        <div className="space-y-4 animate-fade-up h-full flex flex-col">
+                          <div className="flex justify-between items-center border-b pb-2.5 shrink-0">
+                            <h3 className="text-base font-bold text-neutral-900">
+                              Kanban Boards
+                            </h3>
+                            <span className="text-[10px] text-neutral-400 font-semibold">
+                              Drag cards to update state
+                            </span>
+                          </div>
+                          <div className="flex-1 grid grid-cols-3 gap-3 pt-1">
+                            <div className="bg-neutral-50 rounded-xl p-2.5 space-y-2">
+                              <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-1">
+                                To Do (2)
+                              </span>
+                              <div className="bg-white border border-neutral-200/80 rounded-lg p-2 shadow-2xs text-[10px] font-bold text-neutral-700 leading-normal">
+                                Integrate Chrome extension
+                              </div>
+                              <div className="bg-white border border-neutral-200/80 rounded-lg p-2 shadow-2xs text-[10px] font-bold text-neutral-700 leading-normal">
+                                Setup Zapier triggers
+                              </div>
+                            </div>
+                            <div className="bg-neutral-50 rounded-xl p-2.5 space-y-2">
+                              <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-1">
+                                In Progress (1)
+                              </span>
+                              <div className="bg-white border border-brand/20 rounded-lg p-2 shadow-2xs text-[10px] font-bold text-neutral-700 border-l-2 border-brand leading-normal">
+                                Refactor state managers
+                              </div>
+                            </div>
+                            <div className="bg-neutral-50 rounded-xl p-2.5 space-y-2">
+                              <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-1">
+                                Done (2)
+                              </span>
+                              <div className="bg-white border border-neutral-200/80 rounded-lg p-2 shadow-2xs text-[10px] text-neutral-400 line-through leading-normal">
+                                Draft quarterly release
+                              </div>
+                              <div className="bg-white border border-neutral-200/80 rounded-lg p-2 shadow-2xs text-[10px] text-neutral-400 line-through leading-normal">
+                                Clean settings styles
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {mockupTab === "productivity" && (
+                        <div className="space-y-4 animate-fade-up">
+                          <div className="flex justify-between items-center border-b pb-2.5">
+                            <h3 className="text-base font-bold text-neutral-900">
+                              Karma &amp; Productivity Metrics
+                            </h3>
+                            <span className="text-[10px] text-amber-500 font-bold flex items-center gap-1">
+                              👑 Level: Master
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-3 gap-3">
+                            <div className="border border-neutral-200 rounded-xl p-3 bg-white text-center">
+                              <span className="text-[10px] text-neutral-400 font-bold block">
+                                Daily Goal
+                              </span>
+                              <span className="text-xl font-extrabold text-[#202020] block mt-1">
+                                5/5
+                              </span>
+                              <span className="text-[9px] text-green-600 font-bold block mt-1">
+                                ✓ Complete
+                              </span>
+                            </div>
+                            <div className="border border-neutral-200 rounded-xl p-3 bg-white text-center">
+                              <span className="text-[10px] text-neutral-400 font-bold block">
+                                Weekly Goal
+                              </span>
+                              <span className="text-xl font-extrabold text-[#202020] block mt-1">
+                                32/30
+                              </span>
+                              <span className="text-[9px] text-green-600 font-bold block mt-1">
+                                ✓ +2 tasks
+                              </span>
+                            </div>
+                            <div className="border border-neutral-200 rounded-xl p-3 bg-white text-center">
+                              <span className="text-[10px] text-neutral-400 font-bold block">
+                                Karma Points
+                              </span>
+                              <span className="text-xl font-extrabold text-brand block mt-1">
+                                8,450
+                              </span>
+                              <span className="text-[9px] text-brand/80 font-bold block mt-1">
+                                Rank Top 1%
+                              </span>
+                            </div>
+                          </div>
+                          <div className="border border-neutral-200 rounded-xl p-3.5 space-y-2 bg-neutral-50/50">
+                            <span className="text-[10px] font-bold text-neutral-500 block">
+                              Weekly Completion Activity Curve
+                            </span>
+                            <div className="flex items-end justify-between h-14 pt-2 px-4 gap-2">
+                              {[
+                                { day: "Mon", h: "h-6" },
+                                { day: "Tue", h: "h-8" },
+                                { day: "Wed", h: "h-11" },
+                                { day: "Thu", h: "h-7" },
+                                { day: "Fri", h: "h-10" },
+                                { day: "Sat", h: "h-4" },
+                                { day: "Sun", h: "h-5" },
+                              ].map((bar) => (
+                                <div
+                                  key={bar.day}
+                                  className="flex-1 flex flex-col items-center gap-1.5"
+                                >
+                                  <div
+                                    className={cn(
+                                      "w-full bg-brand rounded-t-sm",
+                                      bar.h,
+                                    )}
+                                  />
+                                  <span className="text-[8px] text-neutral-400 font-bold">
+                                    {bar.day}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {mockupTab === "teams" && (
+                        <div className="space-y-4 animate-fade-up">
+                          <div className="flex justify-between items-center border-b pb-2.5">
+                            <h3 className="text-base font-bold text-neutral-900">
+                              Workspace Members Directory
+                            </h3>
+                            <span className="text-[10px] text-neutral-400 font-bold">
+                              3 active members
+                            </span>
+                          </div>
+                          <div className="divide-y divide-neutral-100">
+                            {[
+                              {
+                                name: "Tushar Jolly (You)",
+                                email: "tushar.gts7650@gmail.com",
+                                role: "Owner",
+                                bg: "bg-[#d6409f]",
+                              },
+                              {
+                                name: "Sarah Conners",
+                                email: "sarah.conners@nicelydone.com",
+                                role: "Collaborator",
+                                bg: "bg-blue-500",
+                              },
+                              {
+                                name: "Alex Rivera",
+                                email: "alex.rivera@nicelydone.com",
+                                role: "Pending Invite",
+                                bg: "bg-neutral-300",
+                              },
+                            ].map((member) => (
+                              <div
+                                key={member.name}
+                                className="flex items-center justify-between py-2 text-xs"
+                              >
+                                <div className="flex items-center gap-2.5">
+                                  <span
+                                    className={cn(
+                                      "h-7 w-7 rounded-full text-white text-[10px] font-bold flex items-center justify-center",
+                                      member.bg,
+                                    )}
+                                  >
+                                    {member.name.charAt(0)}
+                                  </span>
+                                  <div>
+                                    <span className="font-bold text-neutral-800 block">
+                                      {member.name}
+                                    </span>
+                                    <span className="text-[9px] text-neutral-400">
+                                      {member.email}
+                                    </span>
+                                  </div>
+                                </div>
+                                <span
+                                  className={cn(
+                                    "text-[9px] font-bold px-2 py-0.5 rounded-full border",
+                                    member.role === "Owner"
+                                      ? "border-brand bg-brand-tint text-brand"
+                                      : member.role === "Collaborator"
+                                        ? "border-blue-200 bg-blue-50 text-blue-600"
+                                        : "border-neutral-200 bg-neutral-50 text-neutral-400",
+                                  )}
+                                >
+                                  {member.role}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </main>
                   </div>
                 </div>
@@ -1316,29 +1666,63 @@ export function LandingPage() {
 }
 
 /* Local UI Helpers */
-function TaskRow({ title, completed }: { title: string; completed?: boolean }) {
+function TaskRow({
+  title,
+  completed,
+  priority,
+}: {
+  title: string;
+  completed?: boolean;
+  priority?: "red" | "orange" | "blue" | "gray";
+}) {
+  const pColors = {
+    red: "text-red-500 border-red-200 bg-red-50/50",
+    orange: "text-orange-500 border-orange-200 bg-orange-50/50",
+    blue: "text-blue-500 border-blue-200 bg-blue-50/50",
+    gray: "text-neutral-400 border-neutral-200 bg-neutral-50/50",
+  };
+
   return (
-    <div className="flex items-center gap-3 py-2 border-b border-neutral-50 last:border-0">
-      <span
-        className={cn(
-          "h-4.5 w-4.5 rounded-full border flex items-center justify-center shrink-0 text-[10px]",
-          completed
-            ? "border-green-500 bg-green-50 text-green-600 font-bold"
-            : "border-neutral-300",
-        )}
-      >
-        {completed && <LandingIcon name="check" className="h-3 w-3" />}
-      </span>
-      <span
-        className={cn(
-          "text-xs leading-normal",
-          completed
-            ? "text-neutral-400 line-through"
-            : "text-neutral-800 font-medium",
-        )}
-      >
-        {title}
-      </span>
+    <div className="flex items-center justify-between py-2 border-b border-neutral-100 last:border-0 text-xs">
+      <div className="flex items-center gap-3">
+        <span
+          className={cn(
+            "h-4.5 w-4.5 rounded-full border flex items-center justify-center shrink-0 text-[10px]",
+            completed
+              ? "border-green-500 bg-green-50 text-green-600 font-bold"
+              : "border-neutral-300",
+          )}
+        >
+          {completed && <LandingIcon name="check" className="h-3 w-3" />}
+        </span>
+        <span
+          className={cn(
+            "text-xs leading-normal",
+            completed
+              ? "text-neutral-400 line-through"
+              : "text-neutral-800 font-medium",
+          )}
+        >
+          {title}
+        </span>
+      </div>
+      {priority && (
+        <span
+          className={cn(
+            "text-[9px] font-bold px-2 py-0.5 rounded border flex items-center gap-1 uppercase tracking-wider scale-90",
+            pColors[priority],
+          )}
+        >
+          🚩 P
+          {priority === "red"
+            ? "1"
+            : priority === "orange"
+              ? "2"
+              : priority === "blue"
+                ? "3"
+                : "4"}
+        </span>
+      )}
     </div>
   );
 }
@@ -1353,10 +1737,10 @@ function FeatureCard({
   desc: string;
 }) {
   return (
-    <div className="p-6 border border-neutral-100 rounded-2xl bg-white space-y-2 text-center hover:shadow-md transition">
+    <div className="p-8 border border-black/5 rounded-[30px] bg-white space-y-3 text-center shadow-[0px_6px_24px_0px_rgba(11,32,96,0.05)] hover:shadow-[0px_14px_42px_0px_rgba(15,28,71,0.07)] transition-all duration-300">
       <LandingIcon name={icon} className="mx-auto h-8 w-8 text-brand" />
-      <h3 className="text-sm font-bold text-neutral-900">{title}</h3>
-      <p className="text-xs text-neutral-500 leading-relaxed">{desc}</p>
+      <h3 className="text-base font-bold text-[#191919]">{title}</h3>
+      <p className="text-xs text-[#3d3d3d]/80 leading-relaxed">{desc}</p>
     </div>
   );
 }
@@ -1379,36 +1763,43 @@ function PriceCard({
   return (
     <div
       className={cn(
-        "p-6 rounded-2xl border flex flex-col justify-between h-[340px] bg-white relative",
-        active ? "border-brand shadow-lg" : "border-neutral-200",
+        "p-8 rounded-[30px] border flex flex-col justify-between h-[370px] bg-white relative transition-all duration-300",
+        active
+          ? "border-brand shadow-[0px_12px_64px_0px_rgba(19,37,99,0.15)] scale-[1.02]"
+          : "border-black/5 shadow-[0px_6px_24px_0px_rgba(11,32,96,0.05)]",
       )}
     >
       {active && (
-        <span className="absolute top-2.5 right-2.5 bg-brand text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wider">
+        <span className="absolute top-3 right-3 bg-brand text-white text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
           Best Value
         </span>
       )}
       <div className="space-y-3">
-        <h3 className="text-sm font-bold text-neutral-800">{title}</h3>
+        <h3 className="text-sm font-bold text-[#191919]/60 uppercase tracking-wider">
+          {title}
+        </h3>
         <div className="flex items-baseline">
-          <span className="text-3xl font-extrabold text-neutral-900">
+          <span className="text-3xl font-extrabold text-[#191919]">
             {price}
           </span>
-          <span className="text-neutral-400 text-xs ml-1">/ {cycle}</span>
+          <span className="text-[#3d3d3d]/50 text-xs ml-1">/ {cycle}</span>
         </div>
-        <ul className="text-xs text-neutral-500 space-y-2 pt-2 text-left">
+        <ul className="text-xs text-[#3d3d3d] space-y-2 pt-2 text-left">
           {benefits.map((b) => (
-            <li key={b}>{b}</li>
+            <li key={b} className="flex items-center gap-2">
+              <span className="text-brand/70 font-bold">•</span>
+              {b}
+            </li>
           ))}
         </ul>
       </div>
       <Link href={siteConfig.routes.signup} className="w-full block pt-4">
         <button
           className={cn(
-            "w-full py-2.5 text-xs font-bold rounded-lg transition",
+            "w-full py-2.5 text-xs font-bold rounded-full transition-all duration-200",
             active
-              ? "bg-brand text-white hover:bg-brand-dark shadow-2xs"
-              : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200",
+              ? "bg-brand text-white hover:bg-brand-dark shadow-[0px_6px_24px_0px_rgba(11,32,96,0.15)]"
+              : "border border-black/24 bg-transparent text-[#191919]/80 hover:bg-black/5",
           )}
         >
           {buttonText}
@@ -1432,22 +1823,22 @@ function DownloadOption({
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      alert(`Completed mock download for Todoist_${platform}.${extension}`);
+      alert(`Completed mock download for TickTick_${platform}.${extension}`);
     }, 1500);
   };
 
   return (
-    <div className="p-6 border border-neutral-100 rounded-2xl text-center space-y-4 bg-white hover:border-neutral-200 hover:shadow-xs transition">
-      <LandingIcon name={icon} className="mx-auto h-9 w-9 text-neutral-700" />
-      <h3 className="text-xs font-bold text-neutral-900">{platform}</h3>
+    <div className="p-8 border border-black/5 rounded-[30px] text-center space-y-4 bg-white shadow-[0px_8px_16px_0px_rgba(15,28,71,0.07)] hover:shadow-[0px_14px_42px_0px_rgba(15,28,71,0.07)] transition-all duration-300">
+      <LandingIcon name={icon} className="mx-auto h-9 w-9 text-[#191919]/70" />
+      <h3 className="text-xs font-bold text-[#191919]">{platform}</h3>
       <button
         onClick={handleDownload}
         disabled={loading}
         className={cn(
-          "w-full py-2 text-xs font-bold rounded-lg transition",
+          "w-full py-2.5 text-xs font-bold rounded-full transition-all duration-200",
           loading
             ? "bg-green-50 text-green-700"
-            : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200",
+            : "border border-black/24 bg-transparent text-[#191919]/80 hover:bg-black/5",
         )}
       >
         {loading ? "Downloading..." : `Download .${extension}`}
@@ -1466,16 +1857,16 @@ function JobRow({
   onClick: () => void;
 }) {
   return (
-    <div className="p-4 border border-neutral-100 rounded-xl hover:border-neutral-200 transition flex justify-between items-center bg-white">
+    <div className="p-5 border border-black/5 rounded-[20px] shadow-[0px_6px_24px_0px_rgba(11,32,96,0.05)] hover:shadow-[0px_14px_42px_0px_rgba(15,28,71,0.07)] transition-all duration-300 flex justify-between items-center bg-white">
       <div>
-        <h4 className="text-xs font-bold text-neutral-900">{title}</h4>
-        <span className="text-[10px] text-neutral-400 block mt-0.5">
+        <h4 className="text-xs font-bold text-[#191919]">{title}</h4>
+        <span className="text-[10px] text-[#3d3d3d]/60 block mt-0.5">
           {dept} • Remote
         </span>
       </div>
       <button
         onClick={onClick}
-        className="rounded bg-brand/10 text-brand px-3 py-1.5 text-xs font-bold hover:bg-brand hover:text-white transition"
+        className="rounded-full border border-black/24 bg-transparent px-4 py-1.5 text-xs font-bold text-[#191919]/80 hover:bg-black/5 transition"
       >
         Apply
       </button>

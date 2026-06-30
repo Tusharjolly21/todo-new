@@ -65,11 +65,13 @@ export function InboxView({
   title = "Inbox",
   onNavigate,
   onOpenSettings,
+  searchQuery = "",
 }: {
   projectId?: string;
   title?: string;
   onNavigate?: (view: string) => void;
   onOpenSettings?: (tab: string) => void;
+  searchQuery?: string;
 }) {
   const { state, dispatch } = useTasks();
   const addAt = state.addingAtIndex;
@@ -361,6 +363,14 @@ export function InboxView({
 
   // Apply filters
   const filteredTasks = combinedTasks.filter((t) => {
+    // 0. Search query filter
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      const titleMatch = t.title.toLowerCase().includes(q);
+      const descMatch = t.description?.toLowerCase().includes(q) ?? false;
+      if (!titleMatch && !descMatch) return false;
+    }
+
     // 1. Completed tasks toggle
     if (!showCompleted && t.completed) return false;
 
@@ -749,8 +759,8 @@ export function InboxView({
                   {addingSectionIndex === colIdx ? (
                     <div className="self-start">{inlineSectionAddForm()}</div>
                   ) : (
-                    <div className="w-[300px] shrink-0 flex flex-col group/sec">
-                      <div className="flex items-center justify-between border-b border-neutral-100 pb-2 mb-4">
+                    <div className="w-[310px] shrink-0 bg-neutral-50/50 border border-neutral-200/50 rounded-2xl p-4 flex flex-col group/sec min-h-[600px] gap-3">
+                      <div className="flex items-center justify-between border-b border-neutral-200/50 pb-2.5 px-0.5">
                         <div className="flex-1 min-w-0 pr-2">
                           {editingSectionId === column.id ? (
                             <input
@@ -767,7 +777,7 @@ export function InboxView({
                                 if (e.key === "Escape")
                                   setEditingSectionId(null);
                               }}
-                              className="w-full text-xs font-bold text-[#202020] bg-white border border-neutral-300 rounded px-1.5 py-0.5 outline-none"
+                              className="w-full text-xs font-bold text-[#171717] bg-white border border-neutral-200 rounded-lg px-2 py-1 outline-none"
                             />
                           ) : (
                             <h3
@@ -778,7 +788,7 @@ export function InboxView({
                                 }
                               }}
                               className={cn(
-                                "text-xs font-bold text-[#202020] truncate",
+                                "text-xs font-bold text-[#171717] truncate",
                                 column.id !== "no-section" &&
                                   "cursor-pointer hover:underline",
                               )}
@@ -787,12 +797,12 @@ export function InboxView({
                             </h3>
                           )}
                         </div>
-                        <div className="flex items-center gap-1">
-                          <span className="px-1 text-xs font-semibold text-neutral-400">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[10px] font-bold bg-neutral-200/50 px-1.5 py-0.5 rounded-md text-neutral-600">
                             {columnTasks.length}
                           </span>
                           {column.id !== "no-section" && (
-                            <div className="relative">
+                            <div className="relative flex items-center">
                               <button
                                 onClick={() =>
                                   setSectionOptionsOpen(
@@ -801,7 +811,7 @@ export function InboxView({
                                       : column.id,
                                   )
                                 }
-                                className="flex h-5 w-5 items-center justify-center rounded text-neutral-400 opacity-0 group-hover/sec:opacity-100 hover:bg-neutral-200 hover:text-neutral-700 transition"
+                                className="flex h-5 w-5 items-center justify-center rounded text-neutral-400 opacity-0 group-hover/sec:opacity-100 hover:bg-neutral-250/50 hover:text-neutral-700 transition"
                               >
                                 <svg
                                   width="14"
@@ -866,7 +876,7 @@ export function InboxView({
                           )}
                         </div>
                       </div>
-                      <div className="space-y-2.5">
+                      <div className="space-y-2.5 flex-1">
                         {columnTasks.map((task) => (
                           <BoardTaskCard key={task.id} task={task} />
                         ))}

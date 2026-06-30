@@ -5,6 +5,7 @@ import { useTasks } from "../state";
 import { toISO, startOfToday, addDays, shortDate, weekdayLong } from "../date";
 import { AddTaskEditor } from "./AddTask";
 import { cn } from "@/lib/utils/cn";
+import { BoardTaskCard } from "./BoardTaskCard";
 
 export function UpcomingView() {
   const { state, dispatch } = useTasks();
@@ -164,16 +165,16 @@ export function UpcomingView() {
         </div>
 
         {/* Horizontal Columns Container */}
-        <div className="flex gap-6 overflow-x-auto pb-8 items-start max-w-7xl mx-auto scrollbar-thin">
+        <div className="flex gap-6 overflow-x-auto pb-8 items-start max-w-7xl mx-auto no-scrollbar">
           {/* Overdue Column (Only shows if overdue count > 0) */}
           {overdueTasks.length > 0 && (
-            <div className="flex-1 min-w-[300px] max-w-[320px] shrink-0 space-y-4">
-              <div className="flex items-center justify-between border-b border-neutral-100 pb-2">
+            <div className="flex-1 min-w-[300px] max-w-[325px] shrink-0 bg-red-50/20 rounded-2xl p-4.5 border border-red-100/50 space-y-4">
+              <div className="flex items-center justify-between border-b border-red-100/40 pb-2">
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs font-bold text-red-600">
                     Overdue
                   </span>
-                  <span className="text-xs font-semibold text-neutral-400">
+                  <span className="text-[10px] font-bold bg-red-150/40 px-1.5 py-0.5 rounded-md text-red-700">
                     {overdueTasks.length}
                   </span>
                 </div>
@@ -187,37 +188,7 @@ export function UpcomingView() {
 
               <div className="space-y-2.5">
                 {overdueTasks.map((t) => (
-                  <div
-                    key={t.id}
-                    className="bg-white border border-neutral-200 rounded-xl p-3 shadow-xs hover:border-neutral-300 transition cursor-pointer select-none"
-                  >
-                    <div className="flex items-start gap-2.5">
-                      <button
-                        onClick={() => dispatch({ type: "COMPLETE", id: t.id })}
-                        className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-neutral-300 text-transparent hover:border-brand hover:text-brand"
-                      >
-                        ✓
-                      </button>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold text-neutral-800 leading-snug truncate">
-                          {t.title}
-                        </p>
-                        <div className="flex items-center gap-2 mt-2 text-[9px] font-medium text-neutral-400">
-                          <span className="flex items-center gap-0.5 text-red-500 font-semibold">
-                            📅{" "}
-                            {t.dueDate
-                              ? shortDate(new Date(t.dueDate))
-                              : "No date"}
-                          </span>
-                          <span>
-                            📁{" "}
-                            {state.projects.find((p) => p.id === t.projectId)
-                              ?.name || "Inbox"}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <BoardTaskCard key={t.id} task={t} />
                 ))}
               </div>
             </div>
@@ -231,19 +202,19 @@ export function UpcomingView() {
             return (
               <div
                 key={d.dateStr}
-                className="flex-1 min-w-[300px] max-w-[320px] shrink-0 space-y-4"
+                className="flex-1 min-w-[300px] max-w-[325px] shrink-0 bg-neutral-50/50 rounded-2xl p-4.5 border border-neutral-200/50 space-y-4"
               >
                 {/* Column Header */}
                 <div className="flex items-center gap-1.5 border-b border-neutral-100 pb-2">
                   <span
                     className={cn(
                       "text-xs font-bold",
-                      d.isToday ? "text-[#202020]" : "text-neutral-500",
+                      d.isToday ? "text-[#171717]" : "text-neutral-500",
                     )}
                   >
                     {getColumnHeaderLabel(d)}
                   </span>
-                  <span className="text-xs font-semibold text-neutral-400">
+                  <span className="text-[10px] font-bold bg-neutral-200/50 px-1.5 py-0.5 rounded-md text-neutral-600">
                     {dayTasks.length}
                   </span>
                 </div>
@@ -251,39 +222,7 @@ export function UpcomingView() {
                 {/* Task Stack */}
                 <div className="space-y-2.5">
                   {dayTasks.map((t) => (
-                    <div
-                      key={t.id}
-                      className="bg-white border border-neutral-200 rounded-xl p-3 shadow-xs hover:border-neutral-300 transition cursor-pointer select-none"
-                    >
-                      <div className="flex items-start gap-2.5">
-                        <button
-                          onClick={() =>
-                            dispatch({ type: "COMPLETE", id: t.id })
-                          }
-                          className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-neutral-300 text-transparent hover:border-brand hover:text-brand"
-                        >
-                          ✓
-                        </button>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-semibold text-neutral-800 leading-snug truncate">
-                            {t.title}
-                          </p>
-                          <div className="flex items-center gap-2 mt-2 text-[9px] font-medium text-neutral-400">
-                            <span className="flex items-center gap-0.5 text-neutral-400 font-semibold">
-                              📅{" "}
-                              {t.dueDate
-                                ? shortDate(new Date(t.dueDate))
-                                : "No date"}
-                            </span>
-                            <span>
-                              📁{" "}
-                              {state.projects.find((p) => p.id === t.projectId)
-                                ?.name || "Inbox"}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <BoardTaskCard key={t.id} task={t} />
                   ))}
 
                   {/* Inline Add Task Trigger */}

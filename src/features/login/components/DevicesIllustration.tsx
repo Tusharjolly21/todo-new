@@ -3,7 +3,7 @@
  * First-party asset — swap for a licensed unDraw scene if preferred.
  */
 
-const BRAND = "#dc4c3e";
+const BRAND = "#171717";
 const INK = "#3f4a3c";
 const SAGE = "#cdd8c6";
 const SAGE_SOFT = "#e4ebe0";

@@ -44,7 +44,7 @@ export function AllDone({
 const SAGE = "#cdd8c6";
 const SAGE_DEEP = "#9bb38f";
 const AMBER = "#f3c14b";
-const BRAND = "#dc4c3e";
+const BRAND = "#171717";
 
 function AllDoneIllustration({ className }: { className?: string }) {
   return (

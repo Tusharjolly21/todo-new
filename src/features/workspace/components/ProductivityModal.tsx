@@ -2,17 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTasks } from "../state";
-import { toISO, startOfToday, addDays } from "../date";
+import { toISO, startOfToday, addDays, shortDate } from "../date";
 import { cn } from "@/lib/utils/cn";
 
 interface ProductivityModalProps {
   onClose: () => void;
   onOpenSettings: (tab: string) => void;
+  onOpenReport?: () => void;
 }
 
 export function ProductivityModal({
   onClose,
   onOpenSettings,
+  onOpenReport,
 }: ProductivityModalProps) {
   const ref = useRef<HTMLDivElement>(null);
   const { state, dispatch } = useTasks();
@@ -80,20 +82,21 @@ export function ProductivityModal({
     Math.round((completedThisWeekCount / weeklyGoal) * 100),
   );
 
-  // 3. Calculate 7-day stats for chart
-  const last7Days = Array.from({ length: 7 }, (_, i) => {
-    const d = addDays(today, -6 + i);
+  // 3. Calculate 12-week stats for contribution heatmap
+  const startOfGrid = addDays(startOfWeek, -11 * 7);
+  const gridDays = Array.from({ length: 84 }, (_, i) => {
+    const d = addDays(startOfGrid, i);
     const dateStr = toISO(d);
-    const dayLabel = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][
-      d.getDay()
-    ];
     const count = completedList.filter(
       (t) => t.completedAt && t.completedAt.split("T")[0] === dateStr,
     ).length;
-    return { dateStr, dayLabel, count };
+    return { dateStr, date: d, count };
   });
 
-  const maxCompletions = Math.max(1, ...last7Days.map((d) => d.count));
+  const gridWeeks: (typeof gridDays)[] = [];
+  for (let i = 0; i < 12; i++) {
+    gridWeeks.push(gridDays.slice(i * 7, (i + 1) * 7));
+  }
 
   // 4. Level calculation
   const totalCompleted = completedList.length;
@@ -357,33 +360,86 @@ export function ProductivityModal({
 
       <div>
         <p className="text-xs font-bold text-neutral-500 mb-3">
-          Last 7 Days Completion
+          Productivity Heatmap
         </p>
-        <div className="flex items-end justify-between h-24 px-1 pb-1 pt-4 border-b border-neutral-100 bg-neutral-50/30 rounded-lg">
-          {last7Days.map((d) => {
-            const barHeight = Math.round((d.count / maxCompletions) * 60);
-            return (
-              <div
-                key={d.dateStr}
-                className="flex flex-col items-center flex-1 group relative"
-              >
-                <div className="absolute bottom-full mb-1 opacity-0 group-hover:opacity-100 transition-opacity bg-neutral-800 text-white text-[9px] font-bold rounded px-1.5 py-0.5 pointer-events-none whitespace-nowrap z-50">
-                  {d.count} tasks
+        <div className="bg-neutral-50/30 border border-neutral-100 p-3 rounded-xl flex flex-col gap-2.5">
+          <div className="flex gap-2 justify-center items-start">
+            {/* Weekday labels */}
+            <div className="flex flex-col justify-between text-[8px] font-bold text-neutral-400 h-[77px] pr-0.5 pt-0.5">
+              <span>M</span>
+              <span>W</span>
+              <span>F</span>
+              <span>S</span>
+            </div>
+
+            {/* Weeks columns */}
+            <div className="flex gap-1.5">
+              {gridWeeks.map((wk, wkIdx) => (
+                <div key={wkIdx} className="flex flex-col gap-1.5">
+                  {wk.map((day) => {
+                    let bgClass =
+                      "bg-neutral-100/80 border border-neutral-200/20";
+                    if (day.count > 4) {
+                      bgClass = "bg-brand";
+                    } else if (day.count > 2) {
+                      bgClass = "bg-brand/60 border border-brand/20";
+                    } else if (day.count > 0) {
+                      bgClass = "bg-brand/25 border border-brand/10";
+                    }
+
+                    const formattedDate = shortDate(day.date);
+                    const titleTooltip = `${formattedDate}: ${day.count} task${day.count === 1 ? "" : "s"} completed`;
+
+                    return (
+                      <div
+                        key={day.dateStr}
+                        className={cn(
+                          "h-[9px] w-[9px] rounded-[2px] transition-all hover:scale-125 cursor-pointer",
+                          bgClass,
+                        )}
+                        title={titleTooltip}
+                      />
+                    );
+                  })}
                 </div>
-                <div
-                  style={{ height: `${barHeight || 4}px` }}
-                  className={cn(
-                    "w-3 rounded-t transition-all duration-500",
-                    d.count > 0 ? "bg-brand" : "bg-neutral-200",
-                  )}
-                />
-                <span className="text-[9px] text-neutral-400 font-bold mt-2.5">
-                  {d.dayLabel[0]}
-                </span>
-              </div>
-            );
-          })}
+              ))}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between text-[9px] text-neutral-400 font-semibold border-t border-neutral-100/50 pt-2.5 px-0.5">
+            <span>Last 12 weeks</span>
+            <div className="flex items-center gap-1">
+              <span>Less</span>
+              <div className="h-2 w-2 rounded-[1.5px] bg-neutral-100/80 border border-neutral-200/20" />
+              <div className="h-2 w-2 rounded-[1.5px] bg-brand/25 border border-brand/10" />
+              <div className="h-2 w-2 rounded-[1.5px] bg-brand/60 border border-brand/20" />
+              <div className="h-2 w-2 rounded-[1.5px] bg-brand" />
+              <span>More</span>
+            </div>
+          </div>
         </div>
+        <button
+          onClick={() => {
+            onClose();
+            onOpenReport?.();
+          }}
+          className="w-full mt-4 flex items-center justify-center gap-1.5 py-2.5 px-3 bg-brand hover:bg-brand-hover dark:hover:bg-neutral-800 text-white rounded-xl text-xs font-bold transition shadow-sm cursor-pointer"
+        >
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+            <path d="M22 12A10 10 0 0 0 12 2v10z" />
+          </svg>
+          View Full Report
+        </button>
       </div>
     </div>
   );

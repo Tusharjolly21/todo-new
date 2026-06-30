@@ -280,15 +280,17 @@ export function CalendarView({
               <div
                 key={idx}
                 className={cn(
-                  "min-h-[105px] bg-white p-2 flex flex-col group transition relative hover:bg-neutral-50/40",
-                  !cell.isCurrentMonth && "bg-neutral-50/30 text-neutral-400",
+                  "min-h-[115px] bg-white p-2.5 flex flex-col group transition relative hover:bg-neutral-50/30",
+                  !cell.isCurrentMonth && "bg-neutral-50/20 text-neutral-400",
+                  cell.isToday &&
+                    "bg-[#171717]/[0.01] ring-1 ring-inset ring-[#171717]/10",
                 )}
               >
                 {/* Day Number Label */}
-                <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center justify-between mb-1.5">
                   <span
                     className={cn(
-                      "flex h-5 w-fit min-w-[20px] px-1 items-center justify-center rounded-full text-xs font-bold leading-none select-none",
+                      "flex h-5.5 w-fit min-w-[22px] px-1.5 items-center justify-center rounded-[6px] text-xs font-bold leading-none select-none",
                       cell.isToday && "bg-brand text-white",
                       cell.isCurrentMonth &&
                         !cell.isToday &&
@@ -303,7 +305,7 @@ export function CalendarView({
 
                   <button
                     onClick={() => onAddTaskOnDate(cell.dateStr)}
-                    className="opacity-0 group-hover:opacity-100 text-[10px] text-neutral-400 hover:text-brand transition px-1 rounded hover:bg-neutral-100 font-bold"
+                    className="opacity-0 group-hover:opacity-100 text-[10px] text-neutral-400 hover:text-brand transition px-1.5 py-0.5 rounded-md hover:bg-neutral-100 font-bold"
                     title="Add task on this day"
                   >
                     ＋
@@ -311,7 +313,7 @@ export function CalendarView({
                 </div>
 
                 {/* Tasks List inside cell */}
-                <div className="flex-1 space-y-1 overflow-y-auto max-h-[70px] scrollbar-thin">
+                <div className="flex-1 space-y-1.5 overflow-y-auto max-h-[70px] scrollbar-thin">
                   {cellTasks.map((task) => (
                     <div
                       key={task.id}
@@ -320,23 +322,18 @@ export function CalendarView({
                       onMouseEnter={(e) => handleTaskHover(e, task)}
                       onMouseLeave={() => setHoveredTask(null)}
                       className={cn(
-                        "flex items-center gap-1.5 rounded px-2 py-1 text-[10px] font-semibold transition cursor-pointer select-none border truncate",
+                        "flex items-center gap-1.5 rounded-[6px] px-2 py-1 text-[10px] font-bold transition cursor-pointer select-none border-y border-r border-l-[3.5px] truncate shadow-[0px_1px_3px_rgba(0,0,0,0.02)]",
                         task.completed
-                          ? "bg-neutral-50 text-neutral-400 border-neutral-100 line-through"
-                          : "bg-white hover:bg-neutral-50 border-neutral-200/50 text-neutral-800 hover:border-neutral-300",
+                          ? "bg-neutral-50/60 text-neutral-400 border-neutral-150 line-through"
+                          : "bg-white hover:bg-neutral-50/80 border-neutral-200/50 text-neutral-800 hover:border-neutral-300",
                       )}
+                      style={{
+                        borderLeftColor: task.completed
+                          ? "#d4d4d4"
+                          : PRIORITY_META[task.priority].color,
+                      }}
                       title={task.title}
                     >
-                      {/* Teardrop/circle checkbox matching priority */}
-                      <span
-                        className="h-2.5 w-2.5 rounded-full border shrink-0 transition"
-                        style={{
-                          borderColor: task.completed
-                            ? "#a3a3a3"
-                            : PRIORITY_META[task.priority].color,
-                          backgroundColor: "transparent",
-                        }}
-                      />
                       <span className="truncate flex-1">{task.title}</span>
                       {task.dueTime && (
                         <span className="text-[8px] text-neutral-400 bg-neutral-100 px-1 py-0.5 rounded leading-none shrink-0 font-medium">
@@ -354,7 +351,7 @@ export function CalendarView({
 
       {/* Right Drawer: No Date Tasks Panel */}
       {noDateOpen && (
-        <div className="w-[280px] shrink-0 mt-4 border border-neutral-200 bg-white rounded-2xl p-4 shadow-sm animate-pop-in select-none">
+        <div className="w-[290px] shrink-0 mt-4 border border-neutral-200 bg-white rounded-2xl p-4 shadow-sm animate-pop-in select-none">
           <div className="flex items-center justify-between pb-3 border-b border-neutral-100 mb-4">
             <h3 className="text-sm font-bold text-[#202020]">
               Unscheduled Tasks
@@ -377,16 +374,12 @@ export function CalendarView({
                 <div
                   key={t.id}
                   onClick={() => onSelectTask(t.id)}
-                  className="flex items-center justify-between rounded-lg border border-neutral-100 p-2.5 bg-neutral-50/50 hover:bg-neutral-50 cursor-pointer transition select-none"
+                  className="flex items-center justify-between rounded-xl border-y border-r border-l-[3px] p-2.5 bg-neutral-50/50 hover:bg-neutral-50 cursor-pointer transition select-none"
+                  style={{
+                    borderLeftColor: PRIORITY_META[t.priority].color,
+                  }}
                 >
                   <div className="flex items-center gap-2 truncate">
-                    <span
-                      className="h-2.5 w-2.5 rounded-full border shrink-0"
-                      style={{
-                        borderColor: PRIORITY_META[t.priority].color,
-                        backgroundColor: "transparent",
-                      }}
-                    />
                     <span className="text-xs text-neutral-800 font-semibold truncate">
                       {t.title}
                     </span>
@@ -400,7 +393,7 @@ export function CalendarView({
                         dueDate: toISO(startOfToday()),
                       });
                     }}
-                    className="text-[9px] font-bold text-indigo-600 hover:text-indigo-800 transition"
+                    className="text-[9px] font-bold text-[#171717] hover:underline transition shrink-0"
                     title="Schedule for Today"
                   >
                     Schedule today
@@ -426,14 +419,42 @@ export function CalendarView({
             {hoveredTask.task.title}
           </h4>
           <div className="flex flex-wrap gap-2 mt-2 text-[9px] font-medium text-neutral-400">
-            <span>
-              📁{" "}
+            <span className="flex items-center gap-0.5">
+              <svg
+                width="10"
+                height="10"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="shrink-0"
+              >
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
               {state.projects.find((p) => p.id === hoveredTask.task.projectId)
                 ?.name || "Inbox"}
             </span>
             {hoveredTask.task.dueDate && (
-              <span className="text-indigo-600">
-                📅 {formatDue(hoveredTask.task.dueDate).label}
+              <span className="text-indigo-600 flex items-center gap-0.5">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="shrink-0"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                {formatDue(hoveredTask.task.dueDate).label}
               </span>
             )}
           </div>

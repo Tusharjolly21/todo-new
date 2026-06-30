@@ -111,7 +111,7 @@ export function ProfileMenu({
         icon={<ActivityIcon />}
         shortcut="G then A"
         onClick={() => {
-          onNavigate("activity");
+          onNavigate("reporting");
           onClose();
         }}
       >

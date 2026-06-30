@@ -39,7 +39,7 @@ export function SocialProofPanel() {
   );
 }
 
-const stroke = "#dc4c3e";
+const stroke = "#171717";
 
 function PeopleIcon() {
   return (

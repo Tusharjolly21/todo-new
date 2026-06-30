@@ -22,12 +22,23 @@ input[type="radio"],
   border-radius: 2px;
 }
 
+/* Prevent text/search/number inputs from rendering the accessibility outline focus ring */
+input[type="text"]:focus-visible,
+input[type="number"]:focus-visible,
+input[type="search"]:focus-visible,
+input[type="email"]:focus-visible,
+input[type="password"]:focus-visible,
+textarea:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 @theme {
   /* Brand palette */
-  --color-brand: #de483a;
-  --color-brand-dark: #b53226;
-  --color-brand-hover: #c53a2d;
-  --color-brand-tint: #fef6f5;
+  --color-brand: #171717;
+  --color-brand-dark: #0a0a0a;
+  --color-brand-hover: #262626;
+  --color-brand-tint: #f5f5f5;
 
   /* Typography */
   --font-sans:

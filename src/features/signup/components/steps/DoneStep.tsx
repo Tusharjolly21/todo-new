@@ -32,7 +32,7 @@ export function DoneStep() {
             >
               <path
                 d="M5 12.5l4.5 4.5L19 7"
-                stroke="#dc4c3e"
+                stroke="#171717"
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"

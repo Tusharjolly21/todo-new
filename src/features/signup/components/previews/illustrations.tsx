@@ -4,8 +4,8 @@
  * swap in licensed unDraw SVGs here if exact scenes are preferred.
  */
 
-const BRAND = "#dc4c3e";
-const BRAND_SOFT = "#f6b8af";
+const BRAND = "#171717";
+const BRAND_SOFT = "#f5f5f5";
 const INK = "#2b2b2b";
 const SKIN = "#f4c9a8";
 const NEUTRAL = "#e7ddd6";

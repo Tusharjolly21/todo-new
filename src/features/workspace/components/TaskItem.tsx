@@ -7,6 +7,9 @@ import { useTasks } from "../state";
 import type { DueColor, Priority, Task } from "../types";
 import { DatePicker } from "./DatePicker";
 import { TaskContextMenu } from "./TaskContextMenu";
+import { getProject } from "../projects";
+import { getMember } from "../members";
+import { MemberAvatar } from "./MemberAvatar";
 
 const PRIORITY_COLOR: Record<Priority, string> = {
   1: "#dc4c3e",
@@ -48,6 +51,9 @@ export function TaskItem({ task }: { task: Task }) {
     );
   }
 
+  const project = getProject(task.projectId);
+  const assignee = getMember(task.assigneeId);
+
   return (
     <div
       className={cn(
@@ -57,127 +63,179 @@ export function TaskItem({ task }: { task: Task }) {
           : "max-h-40 opacity-100",
       )}
     >
-      <div className="group flex items-start gap-3 border-b border-neutral-100 py-3">
-        <button
-          type="button"
-          role="checkbox"
-          aria-checked={completing}
-          aria-label="Complete task"
-          onClick={complete}
-          style={{ borderColor: color, color }}
-          className={cn(
-            "mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-1",
-            completing ? "" : "hover:bg-black/[0.03]",
-          )}
-        >
-          {completing ? (
-            <span
-              className="flex h-full w-full animate-check-pop items-center justify-center rounded-full"
-              style={{ backgroundColor: color }}
-            >
-              <CheckIcon filled />
-            </span>
-          ) : (
-            <CheckIcon className="opacity-0 transition group-hover:opacity-40" />
-          )}
-        </button>
-
-        <div
-          className="min-w-0 flex-1 cursor-pointer"
-          onClick={() => dispatch({ type: "OPEN_TASK", id: task.id })}
-        >
-          <p
+      <div className="group flex items-center justify-between gap-4 px-4 py-3 rounded-2xl border border-neutral-200/60 bg-white hover:border-neutral-300 hover:shadow-xs transition duration-200 mb-2 relative">
+        <div className="flex items-center gap-3.5 min-w-0 flex-grow">
+          <button
+            type="button"
+            role="checkbox"
+            aria-checked={completing}
+            aria-label="Complete task"
+            onClick={complete}
+            style={{ borderColor: color, color }}
             className={cn(
-              "text-sm leading-snug text-[#202020] transition",
-              completing && "text-neutral-400 line-through",
+              "mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[5px] border-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-1",
+              completing ? "" : "hover:bg-black/[0.03]",
             )}
           >
-            {task.title}
-          </p>
-          {task.description && (
-            <p
-              className={cn(
-                "mt-0.5 text-xs text-neutral-500",
-                completing && "line-through",
-              )}
-            >
-              {task.description}
-            </p>
-          )}
-          {task.dueDate && !completing && <DueChip task={task} />}
-        </div>
+            {completing ? (
+              <span
+                className="flex h-full w-full animate-check-pop items-center justify-center rounded-[3px]"
+                style={{ backgroundColor: color }}
+              >
+                <CheckIcon filled />
+              </span>
+            ) : (
+              <CheckIcon className="opacity-0 transition group-hover:opacity-40" />
+            )}
+          </button>
 
-        {/* hover actions */}
-        {!completing && (
-          <div className="relative flex shrink-0 items-center">
-            {/* icon buttons — fade in on hover only */}
-            <div
-              className={cn(
-                "flex items-center gap-0.5 transition",
-                menuOpen || dateOpen
-                  ? "opacity-100"
-                  : "pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100",
+          <div
+            className="min-w-0 flex-grow cursor-pointer flex flex-col justify-center"
+            onClick={() => dispatch({ type: "OPEN_TASK", id: task.id })}
+          >
+            <div className="flex flex-wrap items-center gap-2">
+              <span
+                className={cn(
+                  "text-sm font-semibold text-[#171717] leading-snug break-words transition",
+                  completing && "text-neutral-400 line-through",
+                )}
+              >
+                {task.title}
+              </span>
+
+              {/* Project tag inline */}
+              {project && (
+                <span className="inline-flex items-center gap-1 rounded bg-neutral-50 border border-neutral-200/50 px-1.5 py-0.5 text-[9px] font-bold text-neutral-500">
+                  <span
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{ backgroundColor: project.color || "#9ca3af" }}
+                  />
+                  {project.name}
+                </span>
               )}
-            >
-              <ActionBtn
-                label="Edit"
-                onClick={() => dispatch({ type: "OPEN_TASK", id: task.id })}
-              >
-                <PencilIcon />
-              </ActionBtn>
-              <ActionBtn
-                label="Schedule"
-                onClick={() => {
-                  setDateOpen((v) => !v);
-                  setMenuOpen(false);
-                }}
-              >
-                <CalendarMini />
-              </ActionBtn>
-              <ActionBtn
-                label="Comments"
-                onClick={() => dispatch({ type: "OPEN_TASK", id: task.id })}
-              >
-                <CommentDots />
-              </ActionBtn>
-              <ActionBtn
-                label="Assignee"
-                onClick={() => dispatch({ type: "OPEN_TASK", id: task.id })}
-              >
-                <PersonIcon />
-              </ActionBtn>
-              <ActionBtn
-                label="More actions"
-                onClick={() => {
-                  setMenuOpen((v) => !v);
-                  setDateOpen(false);
-                }}
-              >
-                <DotsIcon />
-              </ActionBtn>
+
+              {/* Labels list inline */}
+              {task.labels &&
+                task.labels.map((label) => (
+                  <span
+                    key={label}
+                    className="inline-flex items-center rounded bg-indigo-50/50 border border-indigo-100/60 px-1.5 py-0.5 text-[9px] font-extrabold text-indigo-600 uppercase tracking-wider"
+                  >
+                    {label}
+                  </span>
+                ))}
             </div>
 
-            {/* popovers — visibility driven only by their open state */}
-            {dateOpen && (
-              <div className="absolute right-0 top-full z-20 mt-1">
-                <DatePicker
-                  value={task.dueDate}
-                  onSelect={(iso) =>
-                    dispatch({ type: "SET_DUE", id: task.id, dueDate: iso })
-                  }
-                  onClose={() => setDateOpen(false)}
-                />
-              </div>
-            )}
-            {menuOpen && (
-              <TaskContextMenu
-                taskId={task.id}
-                align="right"
-                onClose={() => setMenuOpen(false)}
-              />
+            {task.description && (
+              <p
+                className={cn(
+                  "mt-0.5 text-xs text-neutral-400 leading-normal line-clamp-1 break-words",
+                  completing && "line-through",
+                )}
+              >
+                {task.description}
+              </p>
             )}
           </div>
-        )}
+        </div>
+
+        {/* Right column: due date + priority badge + assignee + hover actions */}
+        <div className="flex items-center gap-4 shrink-0">
+          <div className="flex items-center gap-2.5">
+            {task.dueDate && !completing && <DueChip task={task} />}
+
+            {/* Priority flag tag */}
+            {task.priority !== 4 && (
+              <span
+                className="inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider"
+                style={{
+                  color: color,
+                  borderColor: `${color}25`,
+                  backgroundColor: `${color}06`,
+                }}
+              >
+                P{task.priority}
+              </span>
+            )}
+
+            {/* Assignee Avatar */}
+            {assignee && (
+              <div className="scale-90">
+                <MemberAvatar member={assignee} size={20} />
+              </div>
+            )}
+          </div>
+
+          {/* hover actions */}
+          {!completing && (
+            <div className="relative flex shrink-0 items-center">
+              <div
+                className={cn(
+                  "flex items-center gap-0.5 transition",
+                  menuOpen || dateOpen
+                    ? "opacity-100"
+                    : "pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100",
+                )}
+              >
+                <ActionBtn
+                  label="Edit"
+                  onClick={() => dispatch({ type: "OPEN_TASK", id: task.id })}
+                >
+                  <PencilIcon />
+                </ActionBtn>
+                <ActionBtn
+                  label="Schedule"
+                  onClick={() => {
+                    setDateOpen((v) => !v);
+                    setMenuOpen(false);
+                  }}
+                >
+                  <CalendarMini />
+                </ActionBtn>
+                <ActionBtn
+                  label="Comments"
+                  onClick={() => dispatch({ type: "OPEN_TASK", id: task.id })}
+                >
+                  <CommentDots />
+                </ActionBtn>
+                <ActionBtn
+                  label="Assignee"
+                  onClick={() => dispatch({ type: "OPEN_TASK", id: task.id })}
+                >
+                  <PersonIcon />
+                </ActionBtn>
+                <ActionBtn
+                  label="More actions"
+                  onClick={() => {
+                    setMenuOpen((v) => !v);
+                    setDateOpen(false);
+                  }}
+                >
+                  <DotsIcon />
+                </ActionBtn>
+              </div>
+
+              {dateOpen && (
+                <div className="absolute right-0 top-full z-20 mt-1">
+                  <DatePicker
+                    value={task.dueDate}
+                    onSelect={(iso) =>
+                      dispatch({ type: "SET_DUE", id: task.id, dueDate: iso })
+                    }
+                    onClose={() => setDateOpen(false)}
+                  />
+                </div>
+              )}
+              {menuOpen && (
+                <TaskContextMenu
+                  taskId={task.id}
+                  align="right"
+                  onClose={() => setMenuOpen(false)}
+                />
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

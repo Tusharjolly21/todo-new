@@ -22,6 +22,13 @@ interface SidebarProps {
   onAddTask: () => void;
   onOpenSettings: (tab: string) => void;
   onOpenResources?: () => void;
+  sidebarOpen: boolean;
+  onToggleSidebar: () => void;
+  onOpenProductivityReport?: () => void;
+  onOpenFocusTimer?: () => void;
+  searchQuery: string;
+  setSearchQuery: (q: string) => void;
+  onOpenSearch?: () => void;
 }
 
 export function Sidebar({
@@ -31,6 +38,13 @@ export function Sidebar({
   onAddTask,
   onOpenSettings,
   onOpenResources,
+  sidebarOpen,
+  onToggleSidebar,
+  onOpenProductivityReport,
+  onOpenFocusTimer,
+  searchQuery,
+  setSearchQuery,
+  onOpenSearch,
 }: SidebarProps) {
   const { state, dispatch } = useTasks();
   const [profileOpen, setProfileOpen] = useState(false);
@@ -42,6 +56,7 @@ export function Sidebar({
   const [collapsedTeams, setCollapsedTeams] = useState<Record<string, boolean>>(
     {},
   );
+  const [projectsCollapsed, setProjectsCollapsed] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [productivityOpen, setProductivityOpen] = useState(false);
   const [completedList, setCompletedList] = useState<any[]>([]);
@@ -131,18 +146,27 @@ export function Sidebar({
     onNavigate(newProjId);
   }
   return (
-    <aside className="flex w-[300px] shrink-0 flex-col bg-[#fcfaf8] px-3 py-3">
+    <aside
+      className={cn(
+        "flex shrink-0 flex-col bg-neutral-50 border-r border-neutral-200/60 dark:bg-[#0c0c0c] dark:border-neutral-900/60 transition-all duration-300 ease-in-out select-none",
+        sidebarOpen
+          ? "w-[290px] px-4 py-4.5"
+          : "w-0 px-0 py-0 border-r-0 overflow-hidden opacity-0 pointer-events-none",
+      )}
+    >
       {/* user row */}
-      <div className="flex items-center justify-between px-2 py-1.5">
+      <div className="flex items-center justify-between px-1 py-1.5">
         <div className="relative">
           <button
             onClick={() => setProfileOpen((v) => !v)}
-            className="flex items-center gap-2 rounded-md px-1 py-0.5 hover:bg-neutral-100"
+            className="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-neutral-200/50 dark:hover:bg-neutral-900 transition"
           >
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#d6409f] text-sm font-bold text-white">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-200 dark:bg-neutral-800 text-sm font-bold text-neutral-800 dark:text-white shadow-sm border border-neutral-300/30 dark:border-neutral-700/30">
               T
             </span>
-            <span className="text-sm font-bold text-[#202020]">Tushar</span>
+            <span className="text-sm font-bold text-neutral-800 dark:text-white">
+              Tushar
+            </span>
             <ChevronDown />
           </button>
           {profileOpen && (
@@ -159,45 +183,28 @@ export function Sidebar({
           open={upgradeOpen}
           onClose={() => setUpgradeOpen(false)}
         />
-        <div className="flex items-center gap-1 text-neutral-500">
+        <div className="flex items-center gap-1.5 text-neutral-500">
           <div className="relative">
             <button
               onClick={() => setProductivityOpen((v) => !v)}
-              className="flex h-7 w-7 items-center justify-center rounded-md hover:bg-neutral-100 text-neutral-500 relative transition"
+              className="flex h-7 w-7 items-center justify-center rounded-md hover:bg-neutral-200/60 dark:hover:bg-neutral-900 text-neutral-500 dark:text-neutral-400 relative transition"
               title="Productivity stats"
             >
-              <svg className="-rotate-90 w-5 h-5">
-                <circle
-                  cx="10"
-                  cy="10"
-                  r="7"
-                  className="stroke-neutral-200"
-                  strokeWidth="2"
-                  fill="transparent"
-                />
-                <circle
-                  cx="10"
-                  cy="10"
-                  r="7"
-                  className="stroke-[#dc4c3e] transition-all duration-300"
-                  strokeWidth="2"
-                  fill="transparent"
-                  strokeDasharray={2 * Math.PI * 7}
-                  strokeDashoffset={
-                    2 * Math.PI * 7 -
-                    (dailyPercentage / 100) * (2 * Math.PI * 7)
-                  }
-                  strokeLinecap="round"
-                />
-              </svg>
-              <span className="absolute text-[8px] font-extrabold text-[#202020] inset-0 flex items-center justify-center pt-0.5 select-none">
-                {completedTodayCount}
-              </span>
+              <TrendsIcon />
+              {completedTodayCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-brand text-[9px] font-bold text-white shadow-md border border-neutral-50 dark:border-neutral-900">
+                  {completedTodayCount}
+                </span>
+              )}
             </button>
             {productivityOpen && (
               <ProductivityModal
                 onClose={() => setProductivityOpen(false)}
                 onOpenSettings={onOpenSettings}
+                onOpenReport={() => {
+                  setProductivityOpen(false);
+                  onOpenProductivityReport?.();
+                }}
               />
             )}
           </div>
@@ -205,6 +212,7 @@ export function Sidebar({
             <IconButton
               onClick={() => onNavigate("notifications")}
               title="Notifications"
+              className="text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-white"
             >
               <BellIcon />
               {state.notifications &&
@@ -213,7 +221,20 @@ export function Sidebar({
                 )}
             </IconButton>
           </div>
-          <IconButton>
+          <div className="relative">
+            <IconButton
+              onClick={onOpenFocusTimer}
+              title="Focus Timer"
+              className="text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-white"
+            >
+              <FocusTimerIcon />
+            </IconButton>
+          </div>
+          <IconButton
+            onClick={onToggleSidebar}
+            title="Collapse sidebar"
+            className="text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-white"
+          >
             <PanelIcon />
           </IconButton>
         </div>
@@ -223,17 +244,22 @@ export function Sidebar({
       <button
         id="sidebar-add-task"
         onClick={onAddTask}
-        className="mt-2 flex items-center gap-2 px-2 py-1.5 text-sm font-bold text-brand"
+        className="mt-3.5 flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-white hover:bg-neutral-100/80 border border-neutral-200 text-sm font-bold text-neutral-700 dark:bg-neutral-900 dark:border-neutral-800/85 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-xs"
       >
-        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brand text-white">
+        <span className="flex h-5 w-5 items-center justify-center rounded-md bg-neutral-100 dark:bg-white/10 text-neutral-500 dark:text-white border border-neutral-200 dark:border-transparent">
           <PlusIcon />
         </span>
         Add task
       </button>
 
       {/* primary nav */}
-      <nav className="mt-1 space-y-0.5">
-        <NavRow icon={<SearchIcon />} label="Search" />
+      <nav className="mt-4 space-y-0.5">
+        <NavRow
+          icon={<SearchIcon />}
+          label="Search"
+          active={false}
+          onClick={onOpenSearch}
+        />
         <NavRow
           id="sidebar-inbox"
           icon={<InboxIcon />}
@@ -266,16 +292,22 @@ export function Sidebar({
           active={activeView === "filters-labels"}
           onClick={() => onNavigate("filters-labels")}
         />
+        <NavRow
+          icon={<ChartIcon />}
+          label="Reporting"
+          active={activeView === "reporting"}
+          onClick={() => onNavigate("reporting")}
+        />
       </nav>
 
       {/* favorites */}
       {hasFavorites && (
-        <div className="mt-4">
-          <div className="flex items-center justify-between px-2 py-1 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+        <div className="mt-5">
+          <div className="flex items-center justify-between px-2 py-1 text-[10px] font-extrabold text-neutral-500 uppercase tracking-widest">
             <span>Favorites</span>
             <ChevronDown />
           </div>
-          <div className="mt-0.5 space-y-0.5">
+          <div className="mt-1 space-y-0.5">
             {favorites.map((p) => (
               <button
                 key={p.id}
@@ -283,20 +315,22 @@ export function Sidebar({
                 className={cn(
                   "flex w-full items-center justify-between rounded-md px-2 py-1.5 text-sm",
                   activeView === p.id
-                    ? "bg-brand-tint font-semibold text-brand"
-                    : "text-[#202020] hover:bg-neutral-100",
+                    ? "bg-neutral-200/70 font-bold text-neutral-900 dark:bg-neutral-800/60 dark:text-white"
+                    : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200/30 dark:hover:bg-neutral-900/50 hover:text-neutral-900 dark:hover:text-neutral-200",
                 )}
               >
                 <span className="flex items-center gap-2">
                   <span
-                    className="font-bold"
-                    style={{ color: activeView === p.id ? undefined : p.color }}
+                    className="font-bold text-neutral-500"
+                    style={{
+                      color: activeView === p.id ? undefined : p.color,
+                    }}
                   >
                     #
                   </span>
                   {p.name} {p.emoji && <span>{p.emoji}</span>}
                 </span>
-                <span className="text-xs text-neutral-400">
+                <span className="text-xs text-neutral-500 font-bold">
                   {getTaskCount(p.id)}
                 </span>
               </button>
@@ -315,8 +349,8 @@ export function Sidebar({
                     className={cn(
                       "flex w-full items-center justify-between rounded-md px-2 py-1.5 text-sm",
                       activeView === `filter:${f.id}`
-                        ? "bg-brand-tint font-semibold text-brand"
-                        : "text-[#202020] hover:bg-neutral-100",
+                        ? "bg-neutral-200/70 font-bold text-neutral-900 dark:bg-neutral-800/60 dark:text-white"
+                        : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200/30 dark:hover:bg-neutral-900/50 hover:text-neutral-900 dark:hover:text-neutral-200",
                     )}
                   >
                     <span className="flex items-center gap-2">
@@ -326,7 +360,9 @@ export function Sidebar({
                       />
                       <span className="truncate">{f.name}</span>
                     </span>
-                    <span className="text-xs text-neutral-400">{count}</span>
+                    <span className="text-xs text-neutral-500 font-bold">
+                      {count}
+                    </span>
                   </button>
                 );
               })}
@@ -344,19 +380,21 @@ export function Sidebar({
                     className={cn(
                       "flex w-full items-center justify-between rounded-md px-2 py-1.5 text-sm",
                       activeView === `label:${l.name}`
-                        ? "bg-brand-tint font-semibold text-brand"
-                        : "text-[#202020] hover:bg-neutral-100",
+                        ? "bg-neutral-200/70 font-bold text-neutral-900 dark:bg-neutral-800/60 dark:text-white"
+                        : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200/30 dark:hover:bg-neutral-900/50 hover:text-neutral-900 dark:hover:text-neutral-200",
                     )}
                   >
                     <span className="flex items-center gap-2">
-                      <span className="text-neutral-400 text-xs">@</span>
+                      <span className="text-neutral-500 text-xs">@</span>
                       <span
                         className="h-2 w-2 rounded-full shrink-0"
                         style={{ backgroundColor: l.color }}
                       />
                       <span className="truncate">{l.name}</span>
                     </span>
-                    <span className="text-xs text-neutral-400">{count}</span>
+                    <span className="text-xs text-neutral-500 font-bold">
+                      {count}
+                    </span>
                   </button>
                 );
               })}
@@ -368,26 +406,36 @@ export function Sidebar({
       <div className="mt-5">
         <div
           className={cn(
-            "group/hd flex items-center justify-between rounded-md px-2 py-1 text-xs font-semibold",
+            "group/hd flex items-center justify-between rounded-lg px-2 py-1 text-[12px] font-bold uppercase tracking-wider",
             activeView === "my-projects-overview"
-              ? "bg-brand-tint text-brand"
+              ? "text-neutral-900 dark:text-white"
               : "text-neutral-500",
           )}
         >
           <button
             onClick={() => onNavigate("my-projects-overview")}
-            className="flex flex-1 items-center gap-2 rounded-md py-0.5 text-left hover:text-[#202020]"
+            className="flex flex-1 items-center gap-2.5 rounded-md py-0.5 text-left hover:text-neutral-900 dark:hover:text-white font-bold"
           >
-            <span className="flex h-5 w-5 items-center justify-center rounded bg-[#84cc16] text-[10px] font-bold text-white">
-              B
-            </span>
-            My Projects
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-neutral-500 dark:text-neutral-400 shrink-0"
+            >
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+            </svg>
+            Projects
           </button>
           <span className="flex items-center gap-0.5 relative">
             <button
               aria-label="Add project or browse templates"
               onClick={() => setPlusMenuOpen((v) => !v)}
-              className="flex h-5 w-5 items-center justify-center rounded text-neutral-400 opacity-0 transition hover:bg-neutral-200 hover:text-neutral-700 group-hover/hd:opacity-100"
+              className="flex h-5 w-5 items-center justify-center rounded text-neutral-500 opacity-0 transition hover:bg-neutral-200/50 dark:hover:bg-neutral-850 hover:text-neutral-800 dark:hover:text-neutral-200 group-hover/hd:opacity-100"
             >
               <PlusIcon />
             </button>
@@ -397,58 +445,106 @@ export function Sidebar({
                   className="fixed inset-0 z-40"
                   onClick={() => setPlusMenuOpen(false)}
                 />
-                <div className="absolute right-0 top-6 z-50 w-44 rounded-lg border border-neutral-200 bg-white py-1 shadow-xl animate-pop-in text-[#202020]">
+                <div className="absolute right-0 top-6 z-50 w-44 rounded-lg border border-neutral-200 bg-white dark:border-neutral-850 dark:bg-neutral-900 py-1 shadow-xl animate-pop-in text-neutral-700 dark:text-neutral-300">
                   <button
                     onClick={() => {
                       setPlusMenuOpen(false);
                       setProjectModalOpen(true);
                     }}
-                    className="flex w-full items-center gap-2 px-2.5 py-1.5 text-left text-sm hover:bg-neutral-100 font-semibold"
+                    className="flex w-full items-center gap-2 px-2.5 py-1.5 text-left text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 font-semibold"
                   >
-                    ➕ Add project
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="shrink-0 text-neutral-500"
+                    >
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Add project
                   </button>
                   <button
                     onClick={() => {
                       setPlusMenuOpen(false);
                       setTemplatesOpen(true);
                     }}
-                    className="flex w-full items-center gap-2 px-2.5 py-1.5 text-left text-sm hover:bg-neutral-100 font-semibold border-t border-neutral-100"
+                    className="flex w-full items-center gap-2 px-2.5 py-1.5 text-left text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 font-semibold border-t border-neutral-100 dark:border-neutral-800"
                   >
-                    📋 Browse templates
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="shrink-0 text-neutral-500"
+                    >
+                      <rect
+                        x="8"
+                        y="2"
+                        width="8"
+                        height="4"
+                        rx="1"
+                        ry="1"
+                      ></rect>
+                      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                    </svg>
+                    Browse templates
                   </button>
                 </div>
               </>
             )}
-            <ChevronDown />
-          </span>
-        </div>
-        <div className="mt-0.5 space-y-0.5">
-          {myProjects.map((p) => (
             <button
-              key={p.id}
-              onClick={() => onNavigate(p.id)}
+              aria-label="Toggle projects list"
+              onClick={() => setProjectsCollapsed((c) => !c)}
               className={cn(
-                "flex w-full items-center justify-between rounded-md px-2 py-1.5 text-sm",
-                activeView === p.id
-                  ? "bg-brand-tint font-semibold text-brand"
-                  : "text-[#202020] hover:bg-neutral-100",
+                "transition-transform p-0.5 hover:bg-neutral-200/50 dark:hover:bg-neutral-850 rounded text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200",
+                projectsCollapsed && "-rotate-90",
               )}
             >
-              <span className="flex items-center gap-2">
-                <span
-                  className="font-bold"
-                  style={{ color: activeView === p.id ? undefined : p.color }}
-                >
-                  #
-                </span>
-                {p.name} {p.emoji && <span>{p.emoji}</span>}
-              </span>
-              <span className="text-xs text-neutral-400">
-                {getTaskCount(p.id)}
-              </span>
+              <ChevronDown />
             </button>
-          ))}
+          </span>
         </div>
+        {!projectsCollapsed && (
+          <div className="mt-1.5 space-y-0.5">
+            {myProjects.map((p) => (
+              <button
+                key={p.id}
+                onClick={() => onNavigate(p.id)}
+                className={cn(
+                  "flex w-full items-center justify-between rounded-md px-2 py-1.5 text-sm",
+                  activeView === p.id
+                    ? "bg-neutral-200/70 font-bold text-neutral-900 dark:bg-neutral-800/60 dark:text-white"
+                    : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200/30 dark:hover:bg-neutral-900/50 hover:text-neutral-900 dark:hover:text-neutral-200",
+                )}
+              >
+                <span className="flex items-center gap-2">
+                  <span
+                    className="font-bold text-neutral-500"
+                    style={{
+                      color: activeView === p.id ? undefined : p.color,
+                    }}
+                  >
+                    #
+                  </span>
+                  {p.name} {p.emoji && <span>{p.emoji}</span>}
+                </span>
+                <span className="text-xs text-neutral-500 font-bold">
+                  {getTaskCount(p.id)}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* team workspaces */}
@@ -462,15 +558,15 @@ export function Sidebar({
           <div key={team.id} className="mt-5">
             <div
               className={cn(
-                "flex items-center justify-between rounded-md px-2 py-1 text-xs font-semibold",
+                "flex items-center justify-between rounded-lg px-2 py-1 text-[10px] font-extrabold uppercase tracking-widest",
                 activeView === teamView
-                  ? "bg-brand-tint text-brand"
+                  ? "text-neutral-900 dark:text-white"
                   : "text-neutral-500",
               )}
             >
               <button
                 onClick={() => onNavigate(teamView)}
-                className="flex flex-1 items-center gap-2 py-0.5 text-left hover:text-[#202020]"
+                className="flex flex-1 items-center gap-2 py-0.5 text-left hover:text-neutral-900 dark:hover:text-white"
               >
                 <span
                   className="flex h-5 w-5 items-center justify-center rounded text-[10px] font-bold text-white"
@@ -494,7 +590,7 @@ export function Sidebar({
               </button>
             </div>
             {!collapsed && (
-              <div className="mt-0.5 space-y-0.5">
+              <div className="mt-1.5 space-y-0.5">
                 {teamProjects.map((p) => (
                   <button
                     key={p.id}
@@ -502,13 +598,13 @@ export function Sidebar({
                     className={cn(
                       "flex w-full items-center justify-between rounded-md px-2 py-1.5 text-sm",
                       activeView === p.id
-                        ? "bg-brand-tint font-semibold text-brand"
-                        : "text-[#202020] hover:bg-neutral-100",
+                        ? "bg-neutral-200/70 font-bold text-neutral-900 dark:bg-neutral-800/60 dark:text-white"
+                        : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200/30 dark:hover:bg-neutral-900/50 hover:text-neutral-900 dark:hover:text-neutral-200",
                     )}
                   >
                     <span className="flex items-center gap-2">
                       <span
-                        className="font-bold"
+                        className="font-bold text-neutral-500"
                         style={{
                           color: activeView === p.id ? undefined : p.color,
                         }}
@@ -517,13 +613,13 @@ export function Sidebar({
                       </span>
                       {p.name} {p.emoji && <span>{p.emoji}</span>}
                     </span>
-                    <span className="text-xs text-neutral-400">
+                    <span className="text-xs text-neutral-500 font-bold">
                       {getTaskCount(p.id)}
                     </span>
                   </button>
                 ))}
                 {teamProjects.length === 0 && (
-                  <p className="px-2 py-1 text-xs text-neutral-400">
+                  <p className="px-2.5 py-1 text-xs text-neutral-500">
                     No projects yet.
                   </p>
                 )}
@@ -536,7 +632,7 @@ export function Sidebar({
       {/* browse all projects */}
       <button
         onClick={() => setTemplatesOpen(true)}
-        className="mt-4 flex items-center gap-2.5 px-2 py-1.5 text-sm font-semibold text-neutral-600 hover:text-[#202020]"
+        className="mt-5 flex items-center gap-2.5 px-2.5 py-1.5 text-sm font-semibold text-neutral-500 hover:text-neutral-200 transition"
       >
         <BrowseIcon />
         Browse all projects
@@ -625,18 +721,24 @@ function NavRow({
       className={cn(
         "flex w-full items-center justify-between rounded-md px-2 py-1.5 text-sm",
         active
-          ? "bg-brand-tint font-semibold text-brand"
-          : "text-[#202020] hover:bg-neutral-100",
+          ? "bg-neutral-200/70 font-bold text-neutral-900 dark:bg-neutral-800/60 dark:text-white"
+          : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200/30 dark:hover:bg-neutral-900/50 hover:text-neutral-900 dark:hover:text-neutral-200",
       )}
     >
       <span className="flex items-center gap-2.5">
-        <span className={active ? "text-brand" : "text-neutral-500"}>
+        <span
+          className={
+            active
+              ? "text-neutral-900 dark:text-white"
+              : "text-neutral-500 dark:text-neutral-400"
+          }
+        >
           {icon}
         </span>
         <span>{label}</span>
       </span>
       {count != null && (
-        <span className="text-xs text-neutral-400">{count}</span>
+        <span className="text-xs text-neutral-500 font-bold">{count}</span>
       )}
     </button>
   );
@@ -860,6 +962,55 @@ function BrowseIcon() {
         strokeWidth="2"
         strokeLinecap="round"
       />
+    </svg>
+  );
+}
+function TrendsIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 20V10" />
+      <path d="M18 20V4" />
+      <path d="M6 20v-4" />
+    </svg>
+  );
+}
+function FocusTimerIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </svg>
+  );
+}
+
+function ChartIcon() {
+  return (
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 256 256"
+      fill="currentColor"
+      className="shrink-0"
+    >
+      <path d="M224,200H200V120a8,8,0,0,0-8-8H168a8,8,0,0,0-8,8v80H136V40a8,8,0,0,0-8-8H104a8,8,0,0,0-8,8V200H72V152a8,8,0,0,0-8-8H40a8,8,0,0,0-8,8v48H24a8,8,0,0,0,0,16H224a8,8,0,0,0,0-16ZM48,200V160H56v40Zm64,0V48h8v152Zm64,0V128h8v72Z" />
     </svg>
   );
 }

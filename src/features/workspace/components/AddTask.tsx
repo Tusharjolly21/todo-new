@@ -99,8 +99,8 @@ export function AddTaskEditor({
   }
 
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white shadow-sm">
-      <div className="px-4 pt-3">
+    <div className="w-full rounded-2xl border border-neutral-200 bg-white p-4.5 shadow-[0px_8px_24px_rgba(0,0,0,0.06)] focus-within:border-neutral-300 focus-within:shadow-[0px_8px_32px_rgba(0,0,0,0.08)] transition-all duration-200 flex flex-col gap-2.5">
+      <div className="px-1">
         <input
           autoFocus={autoFocus}
           value={title}
@@ -110,15 +110,15 @@ export function AddTaskEditor({
             if (e.key === "Escape") onCancel();
           }}
           placeholder="Task name"
-          className="w-full text-lg font-semibold text-[#202020] outline-none placeholder:font-semibold placeholder:text-neutral-400"
+          className="w-full bg-transparent text-[16px] font-bold text-neutral-800 !outline-none !focus:outline-none !focus-visible:outline-none placeholder:text-neutral-400"
         />
         <input
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Description"
-          className="mt-1 w-full text-sm text-neutral-600 outline-none placeholder:text-neutral-400"
+          className="mt-1.5 w-full bg-transparent text-sm text-neutral-500 !outline-none !focus:outline-none !focus-visible:outline-none placeholder:text-neutral-400"
         />
-        <div className="mt-4 flex flex-wrap items-center gap-2 pb-3">
+        <div className="mt-4 flex flex-wrap items-center gap-1.5 pb-2">
           {/* due date */}
           <div className="relative">
             <Chip
@@ -226,7 +226,7 @@ export function AddTaskEditor({
               type="button"
               onClick={() => setMoreOpen((v) => !v)}
               aria-label="More"
-              className="inline-flex h-[26px] items-center gap-1.5 rounded-md border border-neutral-200 px-2 text-xs font-medium text-neutral-600 hover:bg-neutral-50"
+              className="inline-flex h-[26px] items-center justify-center rounded-lg border border-neutral-200 bg-white px-2 text-xs font-medium text-neutral-500 hover:bg-neutral-50"
             >
               <DotsMini />
             </button>
@@ -325,14 +325,14 @@ export function AddTaskEditor({
         )}
       </div>
 
-      <div className="flex items-center justify-between border-t border-neutral-200 px-3 py-2.5">
+      <div className="flex flex-wrap items-center justify-between gap-2.5 border-t border-neutral-100 pt-3 px-1">
         <div className="relative">
           {!hideProjectPicker && (
             <>
               <button
                 type="button"
                 onClick={() => setProjectOpen((v) => !v)}
-                className="flex items-center gap-1.5 rounded-md bg-neutral-100 px-2.5 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-200"
+                className="flex items-center gap-1.5 rounded-lg bg-neutral-50 border border-neutral-200/50 px-2.5 py-1.5 text-xs font-semibold text-neutral-600 hover:bg-neutral-100 max-w-[140px] truncate"
               >
                 <ProjectGlyph project={project} />
                 {project.name}
@@ -358,12 +358,12 @@ export function AddTaskEditor({
               type="button"
               aria-label="Assign to"
               onClick={() => setAssigneeOpen((v) => !v)}
-              className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-neutral-100"
+              className="flex h-7 w-7 items-center justify-center rounded-lg hover:bg-neutral-50 border border-neutral-200/60 bg-white"
             >
               {assignee ? (
-                <MemberAvatar member={assignee} size={22} />
+                <MemberAvatar member={assignee} size={20} />
               ) : (
-                <span className="flex h-[22px] w-[22px] items-center justify-center rounded-full border border-dashed border-neutral-300 text-neutral-400">
+                <span className="flex h-[20px] w-[20px] items-center justify-center rounded-full border border-dashed border-neutral-300 text-neutral-400">
                   <PersonMini />
                 </span>
               )}
@@ -381,7 +381,7 @@ export function AddTaskEditor({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-md bg-neutral-100 px-3 py-1.5 text-sm font-semibold text-neutral-700 hover:bg-neutral-200"
+            className="rounded-lg bg-neutral-50 border border-neutral-200 px-3 py-1.5 text-xs font-bold text-neutral-600 hover:bg-neutral-100 transition"
           >
             Cancel
           </button>
@@ -390,7 +390,7 @@ export function AddTaskEditor({
             onClick={submit}
             disabled={!title.trim()}
             className={cn(
-              "rounded-md px-3 py-1.5 text-sm font-semibold text-white transition",
+              "rounded-lg px-3 py-1.5 text-xs font-bold text-white transition shadow-sm",
               title.trim()
                 ? "bg-brand hover:bg-brand-dark"
                 : "cursor-not-allowed bg-brand/50",
@@ -488,29 +488,41 @@ function Chip({
   return (
     <span
       className={cn(
-        "inline-flex h-[26px] items-center rounded-md border text-xs font-medium",
+        "inline-flex h-[28px] items-center rounded-lg border text-xs font-semibold transition-all duration-150",
         active
           ? brand
-            ? "border-brand text-brand"
-            : "border-current"
-          : "border-neutral-200 text-neutral-600 hover:bg-neutral-50",
+            ? "border-brand/20 bg-brand/5 text-brand"
+            : "border-current bg-neutral-50"
+          : "border-neutral-200 bg-white text-neutral-500 hover:bg-neutral-50 hover:text-neutral-800",
       )}
-      style={active && color ? { color } : undefined}
+      style={
+        active && color
+          ? { color, borderColor: `${color}20`, backgroundColor: `${color}08` }
+          : undefined
+      }
     >
       <button
         type="button"
         onClick={onOpen}
-        className="inline-flex items-center gap-1.5 py-1 pl-2.5 pr-1.5"
+        className={cn(
+          "inline-flex items-center justify-center gap-1 py-1 px-2 h-full",
+          !active && "w-7",
+        )}
+        title={label}
       >
         {icon}
-        {label}
+        {active && (
+          <span className="ml-1 text-[11px] truncate max-w-[100px]">
+            {label}
+          </span>
+        )}
       </button>
-      {onClear && (
+      {active && onClear && (
         <button
           type="button"
           aria-label="Clear"
           onClick={onClear}
-          className="flex h-full items-center pr-1.5 opacity-70 hover:opacity-100"
+          className="flex h-full items-center pr-2 pl-0.5 opacity-60 hover:opacity-100 transition"
         >
           <XMini />
         </button>

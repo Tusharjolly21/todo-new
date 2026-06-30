@@ -392,7 +392,7 @@ function CheckIcon() {
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
         d="M5 12.5l4.5 4.5L19 7"
-        stroke="#dc4c3e"
+        stroke="#171717"
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -433,12 +433,12 @@ function PerksIllustration({ className }: { className?: string }) {
     >
       <ellipse cx="100" cy="112" rx="84" ry="12" fill="#e4ebe0" />
       <path d="M40 112l50-26 70 14-50 26z" fill="#cdd8c6" />
-      <rect x="58" y="48" width="34" height="40" rx="3" fill="#f6b8af" />
-      <rect x="58" y="40" width="34" height="10" rx="2" fill="#dc4c3e" />
+      <rect x="58" y="48" width="34" height="40" rx="3" fill="#f5f5f5" />
+      <rect x="58" y="40" width="34" height="10" rx="2" fill="#171717" />
       <rect x="96" y="58" width="40" height="34" rx="3" fill="#f3c14b" />
       <path d="M96 58l20-12 40 8-20 12z" fill="#fadf9b" />
       <rect x="140" y="64" width="26" height="30" rx="3" fill="#cdd8c6" />
-      <circle cx="120" cy="100" r="7" fill="#dc4c3e" />
+      <circle cx="120" cy="100" r="7" fill="#171717" />
       <circle cx="74" cy="34" r="4" fill="#f3c14b" />
       <path
         d="M150 50c4-6 10-6 12 0"

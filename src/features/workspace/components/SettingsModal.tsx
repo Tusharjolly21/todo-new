@@ -180,18 +180,25 @@ interface ThemeDef {
 
 const THEMES: ThemeDef[] = [
   {
+    id: "obsidian",
+    name: "Obsidian (Default)",
+    accent: "#171717",
+    accentDark: "#0a0a0a",
+    tint: "#f5f5f5",
+  },
+  {
     id: "todoist",
-    name: "Todoist",
+    name: "Todoist Red",
     accent: "#dc4c3e",
     accentDark: "#c3392b",
     tint: "#fdf0ee",
   },
   {
     id: "dark",
-    name: "Dark",
-    accent: "#dc4c3e",
-    accentDark: "#c3392b",
-    tint: "#3a2422",
+    name: "Dark Mode",
+    accent: "#f5f5f5",
+    accentDark: "#e5e5e5",
+    tint: "#1c1c1e",
     dark: true,
   },
   {
@@ -428,7 +435,7 @@ export function SettingsModal({
 
   // Load theme on startup
   useEffect(() => {
-    const savedTheme = localStorage.getItem("todo_app_theme") || "todoist";
+    const savedTheme = localStorage.getItem("todo_app_theme") || "obsidian";
     setTheme(savedTheme);
     applyThemeVars(savedTheme);
   }, []);
@@ -1528,8 +1535,9 @@ export function SettingsModal({
                         Calendar Subscription URL (iCal)
                       </p>
                       <p className="mt-1 text-sm text-neutral-500">
-                        See your scheduled tasks as read-only events by subscribing
-                        from the URL. Updates will sync periodically.{" "}
+                        See your scheduled tasks as read-only events by
+                        subscribing from the URL. Updates will sync
+                        periodically.{" "}
                         <span className="text-brand">Learn more</span>
                       </p>
                       <div className="mt-3 flex items-center gap-2">
@@ -1539,7 +1547,12 @@ export function SettingsModal({
                           className="flex-1 truncate rounded-md border border-neutral-300 bg-neutral-50 px-3 py-2 text-sm text-neutral-600 outline-none"
                         />
                         <button
-                          onClick={() => copyText("https://ext.todoist.com/export/ical/todoist", "Link copied!")}
+                          onClick={() =>
+                            copyText(
+                              "https://ext.todoist.com/export/ical/todoist",
+                              "Link copied!",
+                            )
+                          }
                           className="rounded-md bg-amber-400 px-3 py-2 text-sm font-bold text-[#202020] hover:bg-amber-300"
                         >
                           Copy link
@@ -1571,9 +1584,9 @@ export function SettingsModal({
                       API token
                     </h4>
                     <p className="mt-1 text-sm text-neutral-500">
-                      Your API token provides full access to view and modify your
-                      Todoist data. Please treat this like a password and take care
-                      when sharing it.
+                      Your API token provides full access to view and modify
+                      your Todoist data. Please treat this like a password and
+                      take care when sharing it.
                     </p>
                     <input
                       readOnly
@@ -1583,7 +1596,9 @@ export function SettingsModal({
                     />
                     <div className="mt-2 flex gap-2">
                       <button
-                        onClick={() => copyText("0123456789abcdef", "Copied to clipboard")}
+                        onClick={() =>
+                          copyText("0123456789abcdef", "Copied to clipboard")
+                        }
                         className="rounded-md bg-neutral-100 px-3 py-1.5 text-sm font-semibold text-neutral-700 hover:bg-neutral-200"
                       >
                         Copy API token
@@ -1597,212 +1612,217 @@ export function SettingsModal({
 
                 {/* Browse (existing) */}
                 {integrationsView === "browse" && (
-                <div className="space-y-5">
-                {selectedIntegrationId ? (
-                  // INTEGRATION DETAIL VIEW (Screens 6 & 9)
-                  (() => {
-                    const integration = ALL_INTEGRATIONS.find(
-                      (item) => item.id === selectedIntegrationId,
-                    );
-                    if (!integration) return null;
-                    const isInstalled = !!installedIntegrations[integration.id];
+                  <div className="space-y-5">
+                    {selectedIntegrationId ? (
+                      // INTEGRATION DETAIL VIEW (Screens 6 & 9)
+                      (() => {
+                        const integration = ALL_INTEGRATIONS.find(
+                          (item) => item.id === selectedIntegrationId,
+                        );
+                        if (!integration) return null;
+                        const isInstalled =
+                          !!installedIntegrations[integration.id];
 
-                    return (
-                      <div className="space-y-6">
-                        <button
-                          onClick={() => setSelectedIntegrationId(null)}
-                          className="flex items-center gap-1 text-xs font-bold text-neutral-500 hover:text-neutral-700 transition"
-                        >
-                          <span>← Browse integrations</span>
-                        </button>
-
-                        <div className="flex items-start gap-4 justify-between">
-                          <div className="flex items-start gap-4">
-                            <span
-                              className={cn(
-                                "flex h-16 w-16 items-center justify-center rounded-2xl text-3xl shadow-sm border border-neutral-100",
-                                integration.iconBg,
-                                integration.iconColor,
-                              )}
+                        return (
+                          <div className="space-y-6">
+                            <button
+                              onClick={() => setSelectedIntegrationId(null)}
+                              className="flex items-center gap-1 text-xs font-bold text-neutral-500 hover:text-neutral-700 transition"
                             >
-                              {integration.emoji}
-                            </span>
-                            <div>
-                              <h2 className="text-xl font-bold text-[#202020]">
-                                {integration.name}
-                              </h2>
-                              <p className="text-xs text-neutral-400 mt-0.5">
-                                by {integration.creator}
+                              <span>← Browse integrations</span>
+                            </button>
+
+                            <div className="flex items-start gap-4 justify-between">
+                              <div className="flex items-start gap-4">
+                                <span
+                                  className={cn(
+                                    "flex h-16 w-16 items-center justify-center rounded-2xl text-3xl shadow-sm border border-neutral-100",
+                                    integration.iconBg,
+                                    integration.iconColor,
+                                  )}
+                                >
+                                  {integration.emoji}
+                                </span>
+                                <div>
+                                  <h2 className="text-xl font-bold text-[#202020]">
+                                    {integration.name}
+                                  </h2>
+                                  <p className="text-xs text-neutral-400 mt-0.5">
+                                    by {integration.creator}
+                                  </p>
+                                  <span className="inline-block mt-2 rounded bg-neutral-100 px-2 py-0.5 text-[10px] font-semibold text-neutral-600">
+                                    {integration.category}
+                                  </span>
+                                </div>
+                              </div>
+
+                              <button
+                                onClick={() => {
+                                  setInstalledIntegrations((prev) => ({
+                                    ...prev,
+                                    [integration.id]: !isInstalled,
+                                  }));
+                                }}
+                                className={cn(
+                                  "rounded-lg px-4 py-2 text-xs font-bold transition shadow-xs",
+                                  isInstalled
+                                    ? "bg-green-50 text-green-700 border border-green-200"
+                                    : "bg-brand text-white hover:bg-brand-dark",
+                                )}
+                              >
+                                {isInstalled ? "Added ✓" : "Add to Todoist"}
+                              </button>
+                            </div>
+
+                            <div className="h-px bg-neutral-100" />
+
+                            <div className="space-y-4 max-w-xl">
+                              <h3 className="text-sm font-bold text-[#202020]">
+                                About this integration
+                              </h3>
+                              <p className="text-xs text-neutral-600 leading-relaxed">
+                                {integration.longDescription}
                               </p>
-                              <span className="inline-block mt-2 rounded bg-neutral-100 px-2 py-0.5 text-[10px] font-semibold text-neutral-600">
-                                {integration.category}
-                              </span>
+                            </div>
+
+                            <div className="h-px bg-neutral-100" />
+
+                            <div className="grid grid-cols-2 gap-4 text-xs">
+                              <div>
+                                <span className="block font-bold text-neutral-400 uppercase text-[9px] tracking-wider">
+                                  Developer
+                                </span>
+                                <span className="block text-[#202020] mt-0.5">
+                                  {integration.creator}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="block font-bold text-neutral-400 uppercase text-[9px] tracking-wider">
+                                  Website
+                                </span>
+                                <a
+                                  href="#"
+                                  className="block text-brand hover:underline mt-0.5"
+                                >
+                                  Visit developer website
+                                </a>
+                              </div>
                             </div>
                           </div>
-
-                          <button
-                            onClick={() => {
-                              setInstalledIntegrations((prev) => ({
-                                ...prev,
-                                [integration.id]: !isInstalled,
-                              }));
-                            }}
-                            className={cn(
-                              "rounded-lg px-4 py-2 text-xs font-bold transition shadow-xs",
-                              isInstalled
-                                ? "bg-green-50 text-green-700 border border-green-200"
-                                : "bg-brand text-white hover:bg-brand-dark",
-                            )}
-                          >
-                            {isInstalled ? "Added ✓" : "Add to Todoist"}
-                          </button>
-                        </div>
-
-                        <div className="h-px bg-neutral-100" />
-
-                        <div className="space-y-4 max-w-xl">
-                          <h3 className="text-sm font-bold text-[#202020]">
-                            About this integration
+                        );
+                      })()
+                    ) : (
+                      // BROWSE LIST (Screens 1, 2, 7, 8)
+                      <div className="space-y-5">
+                        <div>
+                          <h3 className="text-xl font-bold text-[#202020]">
+                            Integrations
                           </h3>
-                          <p className="text-xs text-neutral-600 leading-relaxed">
-                            {integration.longDescription}
+                          <p className="text-xs text-neutral-500 mt-1">
+                            Connect your favorite apps and customize Todoist
+                            features.
                           </p>
                         </div>
 
-                        <div className="h-px bg-neutral-100" />
-
-                        <div className="grid grid-cols-2 gap-4 text-xs">
-                          <div>
-                            <span className="block font-bold text-neutral-400 uppercase text-[9px] tracking-wider">
-                              Developer
-                            </span>
-                            <span className="block text-[#202020] mt-0.5">
-                              {integration.creator}
-                            </span>
-                          </div>
-                          <div>
-                            <span className="block font-bold text-neutral-400 uppercase text-[9px] tracking-wider">
-                              Website
-                            </span>
-                            <a
-                              href="#"
-                              className="block text-brand hover:underline mt-0.5"
-                            >
-                              Visit developer website
-                            </a>
-                          </div>
+                        {/* Search and Filters */}
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            placeholder="Search integrations..."
+                            value={integrationQuery}
+                            onChange={(e) =>
+                              setIntegrationQuery(e.target.value)
+                            }
+                            className="flex-1 rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-[#202020] outline-none focus:border-brand"
+                          />
                         </div>
-                      </div>
-                    );
-                  })()
-                ) : (
-                  // BROWSE LIST (Screens 1, 2, 7, 8)
-                  <div className="space-y-5">
-                    <div>
-                      <h3 className="text-xl font-bold text-[#202020]">
-                        Integrations
-                      </h3>
-                      <p className="text-xs text-neutral-500 mt-1">
-                        Connect your favorite apps and customize Todoist
-                        features.
-                      </p>
-                    </div>
 
-                    {/* Search and Filters */}
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        placeholder="Search integrations..."
-                        value={integrationQuery}
-                        onChange={(e) => setIntegrationQuery(e.target.value)}
-                        className="flex-1 rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-[#202020] outline-none focus:border-brand"
-                      />
-                    </div>
-
-                    <div className="flex gap-1.5 overflow-x-auto pb-1">
-                      {[
-                        "All",
-                        "Productivity",
-                        "Calendar",
-                        "Developer",
-                        "Communication",
-                      ].map((cat) => (
-                        <button
-                          key={cat}
-                          onClick={() => setIntegrationCat(cat)}
-                          className={cn(
-                            "px-3 py-1 rounded-full text-xs font-bold border transition",
-                            integrationCat === cat
-                              ? "bg-[#202020] text-white border-[#202020]"
-                              : "bg-white text-neutral-500 border-neutral-200 hover:text-[#202020]",
-                          )}
-                        >
-                          {cat}
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Grid List */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                      {ALL_INTEGRATIONS.filter((item) => {
-                        const matchCat =
-                          integrationCat === "All" ||
-                          item.category === integrationCat;
-                        const matchQuery =
-                          item.name
-                            .toLowerCase()
-                            .includes(integrationQuery.toLowerCase()) ||
-                          item.description
-                            .toLowerCase()
-                            .includes(integrationQuery.toLowerCase());
-                        return matchCat && matchQuery;
-                      }).length === 0 ? (
-                        <p className="text-xs text-neutral-400 py-6 text-center col-span-2">
-                          No integrations match your search.
-                        </p>
-                      ) : (
-                        ALL_INTEGRATIONS.filter((item) => {
-                          const matchCat =
-                            integrationCat === "All" ||
-                            item.category === integrationCat;
-                          const matchQuery =
-                            item.name
-                              .toLowerCase()
-                              .includes(integrationQuery.toLowerCase()) ||
-                            item.description
-                              .toLowerCase()
-                              .includes(integrationQuery.toLowerCase());
-                          return matchCat && matchQuery;
-                        }).map((item) => (
-                          <div
-                            key={item.id}
-                            onClick={() => setSelectedIntegrationId(item.id)}
-                            className="flex items-start gap-3.5 rounded-xl border border-neutral-200 bg-white p-4 text-left hover:shadow-md transition cursor-pointer hover:border-neutral-300 animate-fade-up"
-                          >
-                            <span
+                        <div className="flex gap-1.5 overflow-x-auto pb-1">
+                          {[
+                            "All",
+                            "Productivity",
+                            "Calendar",
+                            "Developer",
+                            "Communication",
+                          ].map((cat) => (
+                            <button
+                              key={cat}
+                              onClick={() => setIntegrationCat(cat)}
                               className={cn(
-                                "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-xl shadow-xs border border-neutral-100",
-                                item.iconBg,
-                                item.iconColor,
+                                "px-3 py-1 rounded-full text-xs font-bold border transition",
+                                integrationCat === cat
+                                  ? "bg-[#202020] text-white border-[#202020]"
+                                  : "bg-white text-neutral-500 border-neutral-200 hover:text-[#202020]",
                               )}
                             >
-                              {item.emoji}
-                            </span>
-                            <div className="min-w-0">
-                              <span className="block text-sm font-bold text-[#202020] truncate">
-                                {item.name}
-                              </span>
-                              <span className="block text-[11px] text-neutral-500 mt-1 leading-normal pr-1">
-                                {item.description}
-                              </span>
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
+                              {cat}
+                            </button>
+                          ))}
+                        </div>
+
+                        {/* Grid List */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                          {ALL_INTEGRATIONS.filter((item) => {
+                            const matchCat =
+                              integrationCat === "All" ||
+                              item.category === integrationCat;
+                            const matchQuery =
+                              item.name
+                                .toLowerCase()
+                                .includes(integrationQuery.toLowerCase()) ||
+                              item.description
+                                .toLowerCase()
+                                .includes(integrationQuery.toLowerCase());
+                            return matchCat && matchQuery;
+                          }).length === 0 ? (
+                            <p className="text-xs text-neutral-400 py-6 text-center col-span-2">
+                              No integrations match your search.
+                            </p>
+                          ) : (
+                            ALL_INTEGRATIONS.filter((item) => {
+                              const matchCat =
+                                integrationCat === "All" ||
+                                item.category === integrationCat;
+                              const matchQuery =
+                                item.name
+                                  .toLowerCase()
+                                  .includes(integrationQuery.toLowerCase()) ||
+                                item.description
+                                  .toLowerCase()
+                                  .includes(integrationQuery.toLowerCase());
+                              return matchCat && matchQuery;
+                            }).map((item) => (
+                              <div
+                                key={item.id}
+                                onClick={() =>
+                                  setSelectedIntegrationId(item.id)
+                                }
+                                className="flex items-start gap-3.5 rounded-xl border border-neutral-200 bg-white p-4 text-left hover:shadow-md transition cursor-pointer hover:border-neutral-300 animate-fade-up"
+                              >
+                                <span
+                                  className={cn(
+                                    "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-xl shadow-xs border border-neutral-100",
+                                    item.iconBg,
+                                    item.iconColor,
+                                  )}
+                                >
+                                  {item.emoji}
+                                </span>
+                                <div className="min-w-0">
+                                  <span className="block text-sm font-bold text-[#202020] truncate">
+                                    {item.name}
+                                  </span>
+                                  <span className="block text-[11px] text-neutral-500 mt-1 leading-normal pr-1">
+                                    {item.description}
+                                  </span>
+                                </div>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-                </div>
                 )}
               </div>
             )}
@@ -1812,7 +1832,9 @@ export function SettingsModal({
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-sm font-bold text-[#202020]">Plan</p>
-                    <p className="mt-1 text-lg font-bold text-[#202020]">Beginner</p>
+                    <p className="mt-1 text-lg font-bold text-[#202020]">
+                      Beginner
+                    </p>
                     <p className="mt-1 text-sm text-neutral-600">
                       You are on{" "}
                       <span className="text-brand">the Beginner plan</span> with
@@ -1845,16 +1867,30 @@ export function SettingsModal({
                   <div className="mt-5 grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2">
                     {[
                       ["⏳", "Task Durations", "Better time-blocking."],
-                      ["🎙️", "Unlimited Ramble", "Turn your thoughts into tasks with voice input."],
+                      [
+                        "🎙️",
+                        "Unlimited Ramble",
+                        "Turn your thoughts into tasks with voice input.",
+                      ],
                       ["🎯", "Deadlines", "Distinguish critical dates."],
-                      ["📧", "Email Assist", "Turn forwarded emails into organized tasks."],
-                      ["🐤", "Task Assist", "Get work unstuck and move forward faster."],
+                      [
+                        "📧",
+                        "Email Assist",
+                        "Turn forwarded emails into organized tasks.",
+                      ],
+                      [
+                        "🐤",
+                        "Task Assist",
+                        "Get work unstuck and move forward faster.",
+                      ],
                       ["📅", "Calendar layout", "Time-block like a pro."],
                     ].map(([emoji, title, desc]) => (
                       <div key={title} className="flex items-start gap-3">
                         <span className="text-xl">{emoji}</span>
                         <div>
-                          <p className="text-sm font-bold text-[#202020]">{title}</p>
+                          <p className="text-sm font-bold text-[#202020]">
+                            {title}
+                          </p>
                           <p className="text-sm text-neutral-500">{desc}</p>
                         </div>
                       </div>
@@ -1955,8 +1991,9 @@ export function SettingsModal({
             {activeTab === "quick-add" && (
               <div className="animate-fade-up text-[#202020]">
                 <p className="text-sm leading-relaxed text-neutral-600">
-                  To reorder your task actions, use drag and drop to move actions
-                  up or down the list. <span className="text-brand">Learn more</span>
+                  To reorder your task actions, use drag and drop to move
+                  actions up or down the list.{" "}
+                  <span className="text-brand">Learn more</span>
                 </p>
 
                 <h4 className="mt-5 text-sm font-bold text-[#202020]">
@@ -2003,7 +2040,9 @@ export function SettingsModal({
                         )}
                       >
                         <button
-                          onClick={() => setQuickActions((list) => [...list, a])}
+                          onClick={() =>
+                            setQuickActions((list) => [...list, a])
+                          }
                           aria-label={`Add ${a}`}
                           className="text-green-600"
                         >
@@ -2052,8 +2091,8 @@ export function SettingsModal({
               <div className="animate-fade-up text-[#202020]">
                 <p className="text-sm leading-relaxed text-neutral-600">
                   Celebrating your progress goes a long way toward achieving
-                  long-term success. And setting goals can help you stay on track!{" "}
-                  <span className="text-brand">Learn more</span>
+                  long-term success. And setting goals can help you stay on
+                  track! <span className="text-brand">Learn more</span>
                 </p>
 
                 {/* Karma */}
@@ -2061,22 +2100,28 @@ export function SettingsModal({
                   Todoist Karma
                 </h4>
                 <div className="mt-2 flex items-center gap-2.5">
-                  <ToggleSwitch checked={karmaOn} onChange={() => setKarmaOn((v) => !v)} />
-                  <span className="text-sm text-neutral-500">{karmaOn ? "On" : "Off"}</span>
+                  <ToggleSwitch
+                    checked={karmaOn}
+                    onChange={() => setKarmaOn((v) => !v)}
+                  />
+                  <span className="text-sm text-neutral-500">
+                    {karmaOn ? "On" : "Off"}
+                  </span>
                 </div>
                 <p className="mt-2 max-w-xl text-sm leading-relaxed text-neutral-500">
                   Stay motivated and accountable with Todoist Karma. Achieve new
                   levels by earning points for completing tasks, reaching your
                   daily and weekly goals, and using advanced features like
-                  recurring due dates. <span className="text-brand">Learn more</span>
+                  recurring due dates.{" "}
+                  <span className="text-brand">Learn more</span>
                 </p>
 
                 {/* Goals */}
                 <div className="mt-6 border-t border-neutral-100 pt-5">
                   <h4 className="text-base font-bold text-[#202020]">Goals</h4>
                   <p className="mt-0.5 text-sm text-neutral-500">
-                    Small steps add up to big achievements. Set task goals to keep
-                    your momentum.
+                    Small steps add up to big achievements. Set task goals to
+                    keep your momentum.
                   </p>
                   <label className="mt-4 block text-sm font-bold text-[#202020]">
                     Daily tasks
@@ -2128,23 +2173,30 @@ export function SettingsModal({
 
                 {/* Days off */}
                 <div className="mt-6 border-t border-neutral-100 pt-5">
-                  <h4 className="text-base font-bold text-[#202020]">Days off</h4>
+                  <h4 className="text-base font-bold text-[#202020]">
+                    Days off
+                  </h4>
                   <div className="mt-3 flex flex-wrap gap-4">
-                    {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
-                      <label key={d} className="flex cursor-pointer items-center gap-2">
-                        <Checkbox
-                          checked={daysOff[d]}
-                          onChange={() =>
-                            setDaysOff((s) => ({ ...s, [d]: !s[d] }))
-                          }
-                        />
-                        <span className="text-sm text-[#202020]">{d}</span>
-                      </label>
-                    ))}
+                    {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
+                      (d) => (
+                        <label
+                          key={d}
+                          className="flex cursor-pointer items-center gap-2"
+                        >
+                          <Checkbox
+                            checked={daysOff[d]}
+                            onChange={() =>
+                              setDaysOff((s) => ({ ...s, [d]: !s[d] }))
+                            }
+                          />
+                          <span className="text-sm text-[#202020]">{d}</span>
+                        </label>
+                      ),
+                    )}
                   </div>
                   <p className="mt-3 text-sm text-neutral-500">
-                    When you take a break, your Karma and streaks can take a break
-                    too.
+                    When you take a break, your Karma and streaks can take a
+                    break too.
                   </p>
                 </div>
 
@@ -2189,8 +2241,8 @@ export function SettingsModal({
                       </p>
                       <p className="mt-0.5 max-w-md text-sm text-neutral-500">
                         Free accounts only get reminders at the time of a task.
-                        Upgrade to add multiple reminders, trigger them at specific
-                        times or locations, and more.
+                        Upgrade to add multiple reminders, trigger them at
+                        specific times or locations, and more.
                       </p>
                     </div>
                   </div>
@@ -2200,8 +2252,9 @@ export function SettingsModal({
                 </div>
 
                 <p className="mt-5 text-sm text-neutral-600">
-                  The secret to effortlessly remembering everything? Have Todoist
-                  remind you. <span className="text-brand">Learn more</span>
+                  The secret to effortlessly remembering everything? Have
+                  Todoist remind you.{" "}
+                  <span className="text-brand">Learn more</span>
                 </p>
 
                 <h4 className="mt-5 text-sm font-bold text-[#202020]">
@@ -2219,8 +2272,8 @@ export function SettingsModal({
                   <option>1 day before</option>
                 </select>
                 <p className="mt-1.5 text-sm text-neutral-500">
-                  When enabled, a reminder before the task&apos;s time will be added
-                  by default.
+                  When enabled, a reminder before the task&apos;s time will be
+                  added by default.
                 </p>
 
                 <h4 className="mt-6 text-sm font-bold text-[#202020]">
@@ -2232,14 +2285,19 @@ export function SettingsModal({
                     ["Mobile notifications", remMobile, setRemMobile],
                     ["Emails", remEmail, setRemEmail],
                   ].map(([label, val, setter]) => (
-                    <div key={label as string} className="flex items-center gap-2.5">
+                    <div
+                      key={label as string}
+                      className="flex items-center gap-2.5"
+                    >
                       <ToggleSwitch
                         checked={val as boolean}
                         onChange={() =>
                           (setter as (v: boolean) => void)(!(val as boolean))
                         }
                       />
-                      <span className="text-sm text-[#202020]">{label as string}</span>
+                      <span className="text-sm text-[#202020]">
+                        {label as string}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -2251,20 +2309,24 @@ export function SettingsModal({
                       Send test reminder
                     </h4>
                     <p className="mt-1 text-sm text-neutral-500">
-                      Wondering how reminders help you stay productive, or want to
-                      check if your device settings are correct? Trigger a test
-                      reminder to see it in action. You should receive it within 1
-                      minute.
+                      Wondering how reminders help you stay productive, or want
+                      to check if your device settings are correct? Trigger a
+                      test reminder to see it in action. You should receive it
+                      within 1 minute.
                     </p>
                     <div className="mt-3 flex gap-2">
                       <button
-                        onClick={() => setToastMessage("Test reminder sent (web)")}
+                        onClick={() =>
+                          setToastMessage("Test reminder sent (web)")
+                        }
                         className="rounded-md bg-neutral-100 px-3 py-1.5 text-sm font-semibold text-neutral-700 hover:bg-neutral-200"
                       >
                         Test web
                       </button>
                       <button
-                        onClick={() => setToastMessage("Test reminder sent (mobile)")}
+                        onClick={() =>
+                          setToastMessage("Test reminder sent (mobile)")
+                        }
                         className="rounded-md bg-neutral-100 px-3 py-1.5 text-sm font-semibold text-neutral-700 hover:bg-neutral-200"
                       >
                         Test mobile
@@ -2288,7 +2350,9 @@ export function SettingsModal({
 
                 {/* Your devices */}
                 <div className="mt-6 border-t border-neutral-100 pt-5">
-                  <h4 className="text-sm font-bold text-[#202020]">Your devices</h4>
+                  <h4 className="text-sm font-bold text-[#202020]">
+                    Your devices
+                  </h4>
                   <p className="mt-1 text-sm text-neutral-500">
                     The following devices are connected to your Todoist.
                   </p>
@@ -2385,18 +2449,23 @@ export function SettingsModal({
             {activeTab === "calendars" && (
               <div className="animate-fade-up text-[#202020]">
                 <p className="text-sm text-neutral-600">
-                  Show events in Todoist and sync scheduled tasks to your calendar.
+                  Show events in Todoist and sync scheduled tasks to your
+                  calendar.
                 </p>
 
                 <div className="mt-4 flex flex-wrap gap-3">
                   <button
-                    onClick={() => setToastMessage("Connecting Google Calendar…")}
+                    onClick={() =>
+                      setToastMessage("Connecting Google Calendar…")
+                    }
                     className="flex items-center gap-2.5 rounded-md border border-neutral-300 px-4 py-2.5 text-sm font-semibold text-[#202020] hover:bg-neutral-50"
                   >
                     <span className="text-lg">📅</span> Connect Google Calendar
                   </button>
                   <button
-                    onClick={() => setToastMessage("Connecting Outlook Calendar…")}
+                    onClick={() =>
+                      setToastMessage("Connecting Outlook Calendar…")
+                    }
                     className="flex items-center gap-2.5 rounded-md border border-neutral-300 px-4 py-2.5 text-sm font-semibold text-[#202020] hover:bg-neutral-50"
                   >
                     <span className="text-lg">🗓️</span> Connect Outlook Calendar
@@ -3450,12 +3519,20 @@ function Checkbox({
       onClick={onChange}
       className={cn(
         "flex h-5 w-5 shrink-0 items-center justify-center rounded border transition",
-        checked ? "border-brand bg-brand text-white" : "border-neutral-300 bg-white",
+        checked
+          ? "border-brand bg-brand text-white"
+          : "border-neutral-300 bg-white",
       )}
     >
       {checked && (
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
-          <path d="M5 12l5 5L20 6" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+          <path
+            d="M5 12l5 5L20 6"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       )}
     </button>
@@ -3466,30 +3543,63 @@ function InfoMini() {
   return (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
       <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
-      <path d="M12 11v5M12 8h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path
+        d="M12 11v5M12 8h.01"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
 function SparkIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+    >
       <path d="M12 2l1.6 6.4L20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6z" />
     </svg>
   );
 }
 function MinusCircle() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+    >
       <circle cx="12" cy="12" r="10" />
-      <path d="M7 12h10" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" />
+      <path
+        d="M7 12h10"
+        stroke="#fff"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
 function PlusCircle() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+    >
       <circle cx="12" cy="12" r="10" />
-      <path d="M12 7v10M7 12h10" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" />
+      <path
+        d="M12 7v10M7 12h10"
+        stroke="#fff"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -3507,46 +3617,126 @@ function QuickActionIcon({ name }: { name: string }) {
   return <span aria-hidden>{map[name] ?? "•"}</span>;
 }
 
-const sg = { width: 18, height: 18, viewBox: "0 0 24 24", fill: "none" } as const;
+const sg = {
+  width: 18,
+  height: 18,
+  viewBox: "0 0 24 24",
+  fill: "none",
+} as const;
 function InboxGlyph() {
   return (
     <svg {...sg} aria-hidden>
-      <path d="M4 13l2-7h12l2 7v5H4v-5z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-      <path d="M4 13h5l1 2h4l1-2h5" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path
+        d="M4 13l2-7h12l2 7v5H4v-5z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M4 13h5l1 2h4l1-2h5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
 function TodayGlyph() {
   return (
     <svg {...sg} aria-hidden>
-      <rect x="4" y="5" width="16" height="16" rx="2" stroke="currentColor" strokeWidth="2" />
-      <path d="M4 9h16M8 3v4M16 3v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <rect
+        x="4"
+        y="5"
+        width="16"
+        height="16"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
+      <path
+        d="M4 9h16M8 3v4M16 3v4"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
 function UpcomingGlyph() {
   return (
     <svg {...sg} aria-hidden>
-      <rect x="4" y="5" width="16" height="16" rx="2" stroke="currentColor" strokeWidth="2" />
+      <rect
+        x="4"
+        y="5"
+        width="16"
+        height="16"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
       <path d="M4 9h16" stroke="currentColor" strokeWidth="2" />
-      <path d="M9 14l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M9 14l2 2 4-4"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
 function FiltersGlyph() {
   return (
     <svg {...sg} aria-hidden>
-      <rect x="4" y="4" width="7" height="7" rx="2" stroke="currentColor" strokeWidth="2" />
-      <rect x="13" y="4" width="7" height="7" rx="2" stroke="currentColor" strokeWidth="2" />
-      <rect x="4" y="13" width="7" height="7" rx="2" stroke="currentColor" strokeWidth="2" />
-      <rect x="13" y="13" width="7" height="7" rx="2" stroke="currentColor" strokeWidth="2" />
+      <rect
+        x="4"
+        y="4"
+        width="7"
+        height="7"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
+      <rect
+        x="13"
+        y="4"
+        width="7"
+        height="7"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
+      <rect
+        x="4"
+        y="13"
+        width="7"
+        height="7"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
+      <rect
+        x="13"
+        y="13"
+        width="7"
+        height="7"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
     </svg>
   );
 }
 function ReportingGlyph() {
   return (
     <svg {...sg} aria-hidden>
-      <path d="M4 13h3l2 5 4-12 2 7h5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M4 13h3l2 5 4-12 2 7h5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }

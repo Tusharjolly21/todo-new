@@ -4,7 +4,7 @@ import { siteConfig } from "@/config/site";
 export function LogoMark({ size = 26 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect width="24" height="24" rx="6" fill="#dc4c3e" />
+      <rect width="24" height="24" rx="6" fill="#171717" />
       <path
         d="M6 12.2l3.4 3.4L18 7"
         stroke="white"
