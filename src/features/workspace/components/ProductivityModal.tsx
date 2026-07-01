@@ -190,7 +190,7 @@ export function ProductivityModal({
 
   const streaks = calculateStreaks();
 
-  const radius = 32;
+  const radius = 26;
   const strokeWidth = 6;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset =

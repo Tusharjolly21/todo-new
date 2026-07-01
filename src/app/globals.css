@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Force uniform font-family across all standard UI elements, pages, buttons, and inputs */
+*:not(code):not(pre):not(kbd):not(samp):not(.font-mono):not(.font-mono *) {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+}
+
 /* Force pointer cursor on all interactive elements and custom clickable items */
 button,
 select,

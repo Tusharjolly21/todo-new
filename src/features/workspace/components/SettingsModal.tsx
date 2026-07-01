@@ -3,6 +3,29 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils/cn";
 import { useTasks } from "../state";
+import {
+  CalendarBlank as PhCalendarBlank,
+  CalendarCheck as PhCalendarCheck,
+  User as PhUser,
+  Paperclip as PhPaperclip,
+  Flag as PhFlag,
+  Alarm as PhAlarm,
+  Tag as PhTag,
+  Target as PhTarget,
+  MapPin as PhMapPin,
+  Timer as PhTimer,
+  Microphone as PhMicrophone,
+  EnvelopeSimple as PhEnvelope,
+  Sparkle as PhSparkle,
+  DeviceMobile as PhDeviceMobile,
+  PushPin as PhPushPin,
+  Flask as PhFlask,
+  Buildings as PhBuildings,
+  GoogleLogo as PhGoogleLogo,
+  AppleLogo as PhAppleLogo,
+  FacebookLogo as PhFacebookLogo,
+  MicrosoftOutlookLogo as PhOutlookLogo,
+} from "@phosphor-icons/react";
 
 interface SettingsModalProps {
   open: boolean;
@@ -13,6 +36,7 @@ interface SettingsModalProps {
 type Tab =
   | "account"
   | "general"
+  | "advanced"
   | "subscription"
   | "theme"
   | "themes"
@@ -255,25 +279,110 @@ function applyThemeVars(id: string) {
   root.classList.toggle("dark", !!t.dark);
 }
 
+const AccountIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
+  </svg>
+);
+const GeneralIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="3" />
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+  </svg>
+);
+const AdvancedIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="4" y1="21" x2="4" y2="14" />
+    <line x1="4" y1="10" x2="4" y2="3" />
+    <line x1="12" y1="21" x2="12" y2="12" />
+    <line x1="12" y1="8" x2="12" y2="3" />
+    <line x1="20" y1="21" x2="20" y2="16" />
+    <line x1="20" y1="12" x2="20" y2="3" />
+    <line x1="1" y1="14" x2="7" y2="14" />
+    <line x1="9" y1="8" x2="15" y2="8" />
+    <line x1="17" y1="16" x2="23" y2="16" />
+  </svg>
+);
+const SubscriptionIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="5" width="20" height="14" rx="2" />
+    <line x1="2" y1="10" x2="22" y2="10" />
+  </svg>
+);
+const ThemeIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 14.7255 3.09032 17.1962 4.85857 19C5.34776 19.4929 6.00287 19.8396 6.5 20.5C7.03926 21.2165 6.77254 22 8 22H12Z" />
+    <circle cx="7.5" cy="10.5" r="1.5" fill="currentColor" />
+    <circle cx="11.5" cy="7.5" r="1.5" fill="currentColor" />
+    <circle cx="16.5" cy="9.5" r="1.5" fill="currentColor" />
+    <circle cx="15.5" cy="14.5" r="1.5" fill="currentColor" />
+  </svg>
+);
+const SidebarIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <line x1="9" y1="3" x2="9" y2="21" />
+  </svg>
+);
+const QuickAddIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="4" width="20" height="16" rx="2" />
+    <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M7 16h10" />
+  </svg>
+);
+const ProductivityIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+  </svg>
+);
+const RemindersIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="13" r="8" />
+    <polyline points="12 9 12 13 15 15" />
+    <line x1="5" y1="3" x2="2" y2="6" />
+    <line x1="19" y1="3" x2="22" y2="6" />
+  </svg>
+);
+const NotificationsIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+  </svg>
+);
+const BackupsIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21.2 15c.9-1.2 1-2.9.2-4.1-1-1.6-2.9-2.2-4.7-1.4C15.8 6.4 13 4 9.8 4 6 4 3 7 3 10.8c0 1.2.3 2.3.9 3.2M12 12v9m-3-3l3 3 3-3" />
+  </svg>
+);
+const IntegrationsIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 22a7 7 0 0 0 7-7h-2a5 5 0 0 1-10 0H5a7 7 0 0 0 7 7zM5 15V9a7 7 0 0 1 14 0v6" />
+  </svg>
+);
+
 export function SettingsModal({
   open,
   onClose,
   initialTab,
 }: SettingsModalProps) {
   const { state, dispatch } = useTasks();
-  const [activeTab, setActiveTab] = useState<Tab>(initialTab || "general");
+  const [activeTab, setActiveTab] = useState<Tab>(initialTab || "account");
   const [theme, setTheme] = useState("todoist");
   const [pendingTheme, setPendingTheme] = useState<string | null>(null);
   const [syncTheme, setSyncTheme] = useState(true);
   const [autoDark, setAutoDark] = useState(false);
   const [discardOpen, setDiscardOpen] = useState(false);
-  const [name, setName] = useState("Tushar Jolly");
-  const [email, setEmail] = useState("tushar.gts7650@gmail.com");
+  const [name, setName] = useState("John Doe");
+  const [email, setEmail] = useState("account@refero.design");
   const [lang, setLang] = useState("en");
   const [dateFormat, setDateFormat] = useState("DD-MM-YYYY");
   const [emailNotif, setEmailNotif] = useState(true);
-  const [pushNotif, setPushNotif] = useState(false);
   const [gcalConnected, setGcalConnected] = useState(false);
+  const [sidebarSearch, setSidebarSearch] = useState("");
+  const [avatarSrc, setAvatarSrc] = useState<string | null>(
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80"
+  );
 
   // General settings configuration
   const [homeView, setHomeView] = useState("Inbox");
@@ -480,794 +589,177 @@ export function SettingsModal({
       onClick={onClose}
     >
       <div
-        className="flex w-full max-w-4xl h-[520px] animate-pop-in overflow-hidden rounded-2xl bg-white shadow-2xl"
+        className="flex w-full max-w-[850px] h-[580px] animate-pop-in overflow-hidden rounded-2xl bg-white dark:bg-[#151515] border border-neutral-200/60 dark:border-neutral-800 shadow-2xl relative font-sans"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Left: Sidebar Tabs */}
-        <aside className="w-[220px] shrink-0 bg-[#fafafa] border-r border-neutral-200/80 p-3 flex flex-col h-full">
-          <div className="flex-1 overflow-y-auto space-y-4 no-scrollbar pr-1">
+        <aside className="w-[210px] shrink-0 bg-[#fafafa] dark:bg-[#1a1a1a]/40 border-r border-neutral-200/80 dark:border-neutral-800 p-3 flex flex-col h-full select-none">
+          <div className="flex-1 overflow-y-auto space-y-4 no-scrollbar pr-0.5">
             <div>
-              <h2 className="text-[11px] font-bold text-neutral-400 px-2.5 mb-2 uppercase tracking-wider">
+              <h2 className="text-[19px] font-bold text-[#202020] dark:text-neutral-100 px-2.5 mb-3.5 select-none">
                 Settings
               </h2>
-              <div className="space-y-0.5">
-                <TabButton
-                  active={activeTab === "account"}
-                  onClick={() => setActiveTab("account")}
-                >
-                  Account
-                </TabButton>
-                <TabButton
-                  active={activeTab === "general"}
-                  onClick={() => setActiveTab("general")}
-                >
-                  General
-                </TabButton>
-                <TabButton
-                  active={activeTab === "subscription"}
-                  onClick={() => setActiveTab("subscription")}
-                >
-                  Subscription
-                </TabButton>
-                <TabButton
-                  active={activeTab === "theme" || activeTab === "themes"}
-                  onClick={() => setActiveTab("theme")}
-                >
-                  Theme
-                </TabButton>
-                <TabButton
-                  active={activeTab === "sidebar"}
-                  onClick={() => setActiveTab("sidebar")}
-                >
-                  Sidebar
-                </TabButton>
-                <TabButton
-                  active={activeTab === "quick-add"}
-                  onClick={() => setActiveTab("quick-add")}
-                >
-                  Quick Add
-                </TabButton>
-                <TabButton
-                  active={activeTab === "productivity"}
-                  onClick={() => setActiveTab("productivity")}
-                >
-                  Productivity
-                </TabButton>
-                <TabButton
-                  active={activeTab === "reminders"}
-                  onClick={() => setActiveTab("reminders")}
-                >
-                  <div className="flex items-center justify-between w-full">
-                    <span>Reminders</span>
-                    <span className="text-[9px] font-bold px-1 py-0.5 rounded bg-brand-tint text-brand scale-90">
-                      PRO
-                    </span>
-                  </div>
-                </TabButton>
-                <TabButton
-                  active={activeTab === "notifications"}
-                  onClick={() => setActiveTab("notifications")}
-                >
-                  Notifications
-                </TabButton>
-                <TabButton
-                  active={activeTab === "backups"}
-                  onClick={() => setActiveTab("backups")}
-                >
-                  <div className="flex items-center justify-between w-full">
-                    <span>Backups</span>
-                    <span className="text-[9px] font-bold px-1 py-0.5 rounded bg-brand-tint text-brand scale-90">
-                      PRO
-                    </span>
-                  </div>
-                </TabButton>
-                <TabButton
-                  active={activeTab === "integrations"}
-                  onClick={() => setActiveTab("integrations")}
-                >
-                  Integrations
-                </TabButton>
-                <TabButton
-                  active={activeTab === "calendars"}
-                  onClick={() => setActiveTab("calendars")}
-                >
-                  Calendars
-                </TabButton>
-              </div>
-            </div>
 
-            <div>
-              <h2 className="text-[11px] font-bold text-neutral-400 px-2.5 mb-2 uppercase tracking-wider">
-                Nicelydone
-              </h2>
+              {/* Search Box */}
+              <div className="relative px-2.5 mb-3.5 select-none">
+                <svg
+                  className="absolute left-5.5 top-1/2 -translate-y-1/2 text-neutral-400"
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Search"
+                  value={sidebarSearch}
+                  onChange={(e) => setSidebarSearch(e.target.value)}
+                  className="w-full pl-8 pr-3 py-1.5 text-[13px] font-medium rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 outline-none focus:border-[#de4c4a] shadow-3xs text-[#202020] dark:text-white"
+                />
+              </div>
+
               <div className="space-y-0.5">
-                <TabButton
-                  active={activeTab === "team-settings"}
-                  onClick={() => setActiveTab("team-settings")}
-                >
-                  Team settings
-                </TabButton>
-                <TabButton
-                  active={activeTab === "members"}
-                  onClick={() => setActiveTab("members")}
-                >
-                  Members
-                </TabButton>
-                <TabButton
-                  active={activeTab === "billing"}
-                  onClick={() => setActiveTab("billing")}
-                >
-                  Billing
-                </TabButton>
+                {[
+                  { id: "account" as Tab, label: "Account", icon: <AccountIcon /> },
+                  { id: "general" as Tab, label: "General", icon: <GeneralIcon /> },
+                  { id: "advanced" as Tab, label: "Advanced", icon: <AdvancedIcon /> },
+                  { id: "subscription" as Tab, label: "Subscription", icon: <SubscriptionIcon /> },
+                  { id: "theme" as Tab, label: "Theme", icon: <ThemeIcon /> },
+                  { id: "sidebar" as Tab, label: "Sidebar", icon: <SidebarIcon /> },
+                  { id: "quick-add" as Tab, label: "Quick Add", icon: <QuickAddIcon /> },
+                  { id: "productivity" as Tab, label: "Productivity", icon: <ProductivityIcon /> },
+                  { id: "reminders" as Tab, label: "Reminders", icon: <RemindersIcon /> },
+                  { id: "notifications" as Tab, label: "Notifications", icon: <NotificationsIcon /> },
+                  { id: "backups" as Tab, label: "Backups", icon: <BackupsIcon /> },
+                  { id: "integrations" as Tab, label: "Integrations", icon: <IntegrationsIcon /> },
+                ].filter(item =>
+                  item.label.toLowerCase().includes(sidebarSearch.toLowerCase())
+                ).map((item) => (
+                  <TabButton
+                    key={item.id}
+                    active={activeTab === item.id || (item.id === "theme" && activeTab === "themes")}
+                    onClick={() => setActiveTab(item.id)}
+                    icon={item.icon}
+                  >
+                    {item.id === "reminders" ? (
+                      <div className="flex items-center justify-between w-full">
+                        <span>{item.label}</span>
+                        <span className="text-[8px] font-extrabold px-1.5 py-0.5 rounded bg-[#f5efe9] text-[#cf8038] tracking-wider uppercase scale-90">
+                          PRO
+                        </span>
+                      </div>
+                    ) : (
+                      item.label
+                    )}
+                  </TabButton>
+                ))}
               </div>
             </div>
           </div>
 
-          <div className="border-t border-neutral-200/60 pt-2 mt-2 space-y-1">
+          {/* Bottom section: Add team */}
+          <div className="pt-2 border-t border-neutral-100 dark:border-neutral-850">
             <button
               onClick={() => alert("Add team flow")}
-              className="w-full text-left rounded-lg px-2.5 py-2 text-sm font-semibold text-neutral-600 hover:bg-neutral-100 transition flex items-center gap-1.5"
+              className="w-full text-left rounded-lg px-2.5 py-1.5 text-xs font-semibold text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-850 transition flex items-center gap-2 cursor-pointer select-none"
             >
-              <span>+</span>
+              <span className="text-neutral-400 font-bold text-sm">+</span>
               <span>Add team</span>
-            </button>
-            <button
-              onClick={onClose}
-              className="w-full text-center text-xs font-semibold py-1.5 text-neutral-500 rounded hover:bg-neutral-100 hover:text-neutral-800 transition"
-            >
-              Close
             </button>
           </div>
         </aside>
 
         {/* Right: Tab content */}
-        <div className="flex-1 p-8 overflow-y-auto flex flex-col justify-between">
-          <div className="space-y-6">
-            {activeTab === "general" && (
-              <div className="space-y-6 animate-fade-up text-[#202020]">
-                <div>
-                  <h3 className="text-lg font-bold text-[#202020]">General</h3>
-                </div>
+        <div className="flex-1 flex flex-col h-full overflow-hidden bg-white dark:bg-[#121212]">
+          {/* Settings Tab Header with close button */}
+          <div className="flex items-center justify-between px-6 pt-5 pb-1 shrink-0 select-none">
+            <h3 className="text-sm font-bold text-neutral-850 dark:text-neutral-100 flex items-center gap-2">
+              {activeTab === "reminders"
+                ? "Reminders"
+                : activeTab === "quick-add"
+                  ? "Quick Add"
+                  : activeTab === "team-settings"
+                    ? "Team settings"
+                    : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
+              {activeTab === "reminders" && (
+                <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-[#f5efe9] text-[#cf8038] tracking-wider uppercase select-none">
+                  PRO
+                </span>
+              )}
+            </h3>
+            <button
+              onClick={onClose}
+              className="text-neutral-400 hover:text-neutral-655 dark:hover:text-neutral-200 transition cursor-pointer select-none"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
 
-                <div className="space-y-4">
-                  {/* Language */}
-                  <div className="flex flex-col gap-1.5 max-w-sm">
-                    <label className="text-xs font-bold text-neutral-600">
-                      Language
-                    </label>
-                    <select
-                      value={lang}
-                      onChange={(e) => setLang(e.target.value)}
-                      className="rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand"
-                    >
-                      <option value="en">English</option>
-                      <option value="es">Español</option>
-                      <option value="fr">Français</option>
-                      <option value="de">Deutsch</option>
-                    </select>
-                  </div>
+          <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6 text-[#202020] dark:text-neutral-200">
+            {activeTab === "advanced" && (
+              <div className="space-y-5 animate-fade-up text-[#202020] dark:text-neutral-200">
+                <p className="text-xs leading-relaxed text-neutral-600 dark:text-neutral-400 select-none">
+                  Customize advanced client preferences and keyboard shortcut options.{" "}
+                  <span className="text-[#de4c4a] hover:underline cursor-pointer">Learn more.</span>
+                </p>
 
-                  {/* Home view */}
-                  <div className="flex flex-col gap-1.5 max-w-sm">
-                    <label className="text-xs font-bold text-neutral-600">
-                      Home view
-                    </label>
-                    <select
-                      value={homeView}
-                      onChange={(e) => setHomeView(e.target.value)}
-                      className="rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand"
-                    >
-                      <option value="Inbox">Inbox</option>
-                      <option value="Today">Today</option>
-                      <option value="Upcoming">Upcoming</option>
-                    </select>
-                  </div>
-
-                  {/* Date & Time Section Header */}
-                  <div className="pt-2">
-                    <h4 className="text-sm font-bold text-[#202020] border-b pb-1">
-                      Date &amp; time
-                    </h4>
-                  </div>
-
-                  {/* Time zone */}
-                  <div className="flex flex-col gap-1.5 max-w-sm">
-                    <label className="text-xs font-bold text-neutral-600">
-                      Time zone
-                    </label>
-                    <select
-                      value={timezone}
-                      onChange={(e) => setTimezone(e.target.value)}
-                      className="rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand"
-                    >
-                      <option value="Asia/Kolkata">Asia/Kolkata</option>
-                      <option value="UTC">UTC</option>
-                      <option value="America/New_York">America/New_York</option>
-                      <option value="Europe/London">Europe/London</option>
-                    </select>
-                  </div>
-
-                  {/* Time format */}
-                  <div className="flex flex-col gap-1.5 max-w-sm">
-                    <label className="text-xs font-bold text-neutral-600">
-                      Time format
-                    </label>
-                    <select
-                      value={timeFormat}
-                      onChange={(e) => setTimeFormat(e.target.value)}
-                      className="rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand"
-                    >
-                      <option value="13:00">13:00</option>
-                      <option value="1:00 PM">1:00 PM</option>
-                    </select>
-                  </div>
-
-                  {/* Date format */}
-                  <div className="flex flex-col gap-1.5 max-w-sm">
-                    <label className="text-xs font-bold text-neutral-600">
-                      Date format
-                    </label>
-                    <select
-                      value={dateFormat}
-                      onChange={(e) => setDateFormat(e.target.value)}
-                      className="rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand"
-                    >
-                      <option value="DD-MM-YYYY">DD-MM-YYYY</option>
-                      <option value="MM-DD-YYYY">MM-DD-YYYY</option>
-                      <option value="YYYY-MM-DD">YYYY-MM-DD</option>
-                    </select>
-                  </div>
-
-                  {/* Week start */}
-                  <div className="flex flex-col gap-1.5 max-w-sm">
-                    <label className="text-xs font-bold text-neutral-600">
-                      Week start
-                    </label>
-                    <select
-                      value={weekStart}
-                      onChange={(e) => setWeekStart(e.target.value)}
-                      className="rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand"
-                    >
-                      <option value="Monday">Monday</option>
-                      <option value="Sunday">Sunday</option>
-                    </select>
-                    <span className="text-[10px] text-neutral-400">
-                      Begin your week on this day in Upcoming and calendar
-                      views.
-                    </span>
-                  </div>
-
-                  {/* Next week */}
-                  <div className="flex flex-col gap-1.5 max-w-sm">
-                    <label className="text-xs font-bold text-neutral-600">
-                      Next week
-                    </label>
-                    <select
-                      value={nextWeek}
-                      onChange={(e) => setNextWeek(e.target.value)}
-                      className="rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand"
-                    >
-                      <option value="Monday">Monday</option>
-                      <option value="Tuesday">Tuesday</option>
-                    </select>
-                    <span className="text-[10px] text-neutral-400">
-                      Postpone tasks to this day when using &ldquo;Next
-                      week&rdquo;.
-                    </span>
-                  </div>
-
-                  {/* Weekend */}
-                  <div className="flex flex-col gap-1.5 max-w-sm">
-                    <label className="text-xs font-bold text-neutral-600">
-                      Weekend
-                    </label>
-                    <select
-                      value={weekend}
-                      onChange={(e) => setWeekend(e.target.value)}
-                      className="rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand"
-                    >
-                      <option value="Saturday">Saturday</option>
-                      <option value="Sunday">Sunday</option>
-                    </select>
-                    <span className="text-[10px] text-neutral-400">
-                      Postpone tasks to this day when using
-                      &ldquo;Weekend&rdquo;.
-                    </span>
-                  </div>
-
-                  <span className="block text-[10px] text-neutral-400">
-                    Date &amp; time settings do not affect how Karma is
-                    calculated. To set your days off for Karma, head to{" "}
-                    <button
-                      type="button"
-                      onClick={() => setActiveTab("productivity")}
-                      className="text-brand hover:underline font-semibold"
-                    >
-                      Productivity settings
-                    </button>
-                    .
-                  </span>
-
-                  {/* Smart date recognition */}
-                  <div className="flex items-start justify-between gap-4 py-3 border-t max-w-sm">
+                <div className="pt-3.5 border-t border-neutral-100 dark:border-neutral-900/60 space-y-4">
+                  <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <span className="block text-xs font-bold text-[#202020]">
-                        Smart date recognition
-                      </span>
-                      <span className="block text-[10px] text-neutral-400">
-                        Automatically recognize dates when typing a task&apos;s
-                        name.
-                      </span>
+                      <span className="block text-xs font-bold text-[#202020] dark:text-white">Experimental features</span>
+                      <span className="text-[10px] text-neutral-500 block max-w-md">Test new productivity features before they are fully released.</span>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => setSmartDateRec(!smartDateRec)}
-                      className={cn(
-                        "flex h-5 w-9 shrink-0 items-center rounded-full px-0.5 transition",
-                        smartDateRec ? "bg-brand" : "bg-neutral-300",
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          "h-4 w-4 rounded-full bg-white shadow transition-transform",
-                          smartDateRec && "translate-x-4",
-                        )}
-                      />
-                    </button>
-                  </div>
-
-                  {/* Sound effects */}
-                  <div className="pt-2">
-                    <h4 className="text-sm font-bold text-[#202020] border-b pb-1">
-                      Sound effects
-                    </h4>
-                  </div>
-
-                  <div className="space-y-2 max-w-sm">
-                    <div className="flex items-center justify-between text-xs font-bold text-neutral-600">
-                      <span>Desktop and web</span>
-                      <button
-                        type="button"
-                        onClick={() => setSoundDesktop(!soundDesktop)}
-                        className={cn(
-                          "flex h-5 w-9 items-center rounded-full px-0.5 transition",
-                          soundDesktop ? "bg-brand" : "bg-neutral-300",
-                        )}
-                      >
-                        <span
-                          className={cn(
-                            "h-4 w-4 rounded-full bg-white shadow transition-transform",
-                            soundDesktop && "translate-x-4",
-                          )}
-                        />
-                      </button>
-                    </div>
-                    <div className="flex items-center justify-between text-xs font-bold text-neutral-600">
-                      <span>Mobile</span>
-                      <button
-                        type="button"
-                        onClick={() => setSoundMobile(!soundMobile)}
-                        className={cn(
-                          "flex h-5 w-9 items-center rounded-full px-0.5 transition",
-                          soundMobile ? "bg-brand" : "bg-neutral-300",
-                        )}
-                      >
-                        <span
-                          className={cn(
-                            "h-4 w-4 rounded-full bg-white shadow transition-transform",
-                            soundMobile && "translate-x-4",
-                          )}
-                        />
-                      </button>
-                    </div>
-                    <span className="block text-[10px] text-neutral-400">
-                      Play sounds when you complete tasks or use Ramble.
-                    </span>
-                  </div>
-
-                  {/* Advanced settings */}
-                  <div className="pt-4">
-                    <h4 className="text-sm font-bold text-[#202020] border-b pb-1">
-                      Advanced
-                    </h4>
-                  </div>
-
-                  <div className="space-y-4 max-w-sm">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="space-y-0.5">
-                        <span className="block text-xs font-bold text-[#202020]">
-                          Reset sub-tasks
-                        </span>
-                        <span className="block text-[10px] text-neutral-400">
-                          Reset sub-tasks when you complete a recurring task.{" "}
-                          <span className="text-brand hover:underline cursor-pointer">
-                            Learn more
-                          </span>
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setResetSubtasks(!resetSubtasks)}
-                        className={cn(
-                          "flex h-5 w-9 shrink-0 items-center rounded-full px-0.5 transition",
-                          resetSubtasks ? "bg-brand" : "bg-neutral-300",
-                        )}
-                      >
-                        <span
-                          className={cn(
-                            "h-4 w-4 rounded-full bg-white shadow transition-transform",
-                            resetSubtasks && "translate-x-4",
-                          )}
-                        />
-                      </button>
-                    </div>
-
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="space-y-0.5">
-                        <span className="block text-xs font-bold text-[#202020]">
-                          Auto accept project invites
-                        </span>
-                        <span className="block text-[10px] text-neutral-400">
-                          Automatically accept project invites from known
-                          collaborators.
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setAutoAcceptInvites(!autoAcceptInvites)}
-                        className={cn(
-                          "flex h-5 w-9 shrink-0 items-center rounded-full px-0.5 transition",
-                          autoAcceptInvites ? "bg-brand" : "bg-neutral-300",
-                        )}
-                      >
-                        <span
-                          className={cn(
-                            "h-4 w-4 rounded-full bg-white shadow transition-transform",
-                            autoAcceptInvites && "translate-x-4",
-                          )}
-                        />
-                      </button>
-                    </div>
-
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="space-y-0.5">
-                        <span className="flex items-center gap-1.5 text-xs font-bold text-[#202020]">
-                          Email Assist
-                          <span className="rounded bg-brand-tint px-1 py-0.5 text-[8px] font-bold text-brand uppercase">
-                            BETA
-                          </span>
-                        </span>
-                        <span className="block text-[10px] text-neutral-400">
-                          Automatically add key details to tasks created from
-                          emails.
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setEmailAssist(!emailAssist)}
-                        className={cn(
-                          "flex h-5 w-9 shrink-0 items-center rounded-full px-0.5 transition",
-                          emailAssist ? "bg-brand" : "bg-neutral-300",
-                        )}
-                      >
-                        <span
-                          className={cn(
-                            "h-4 w-4 rounded-full bg-white shadow transition-transform",
-                            emailAssist && "translate-x-4",
-                          )}
-                        />
-                      </button>
-                    </div>
-
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="space-y-0.5">
-                        <span className="block text-xs font-bold text-[#202020]">
-                          Experimental features
-                        </span>
-                        <span className="block text-[10px] text-neutral-400">
-                          Preview early versions of new features before anyone
-                          else.{" "}
-                          <span className="text-brand hover:underline cursor-pointer">
-                            Learn more
-                          </span>
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setExperimentalFeatures(!experimentalFeatures)
-                        }
-                        className={cn(
-                          "flex h-5 w-9 shrink-0 items-center rounded-full px-0.5 transition",
-                          experimentalFeatures ? "bg-brand" : "bg-neutral-300",
-                        )}
-                      >
-                        <span
-                          className={cn(
-                            "h-4 w-4 rounded-full bg-white shadow transition-transform",
-                            experimentalFeatures && "translate-x-4",
-                          )}
-                        />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="pt-2 text-xs">
-                    Do you have more feedback?{" "}
-                    <button
-                      type="button"
-                      className="text-brand hover:underline font-semibold"
-                    >
-                      Let&apos;s talk
-                    </button>
-                    .
-                  </div>
-
-                  {/* Clear local data */}
-                  <div className="pt-4 border-t max-w-sm space-y-3">
-                    <div>
-                      <h4 className="text-xs font-bold text-[#202020]">
-                        Clear local data
-                      </h4>
-                      <p className="text-[10px] text-neutral-400 leading-normal mt-0.5">
-                        Reloads your latest data from the server while
-                        preserving local preferences like your theme and display
-                        settings.
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setToastMessage("Data reloaded successfully");
-                        setTimeout(() => setToastMessage(null), 1500);
-                      }}
-                      className="rounded-lg border border-red-200 px-3.5 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50 transition"
-                    >
-                      Reload
-                    </button>
+                    <ToggleSwitch checked={false} onChange={() => {}} />
                   </div>
                 </div>
               </div>
             )}
 
+            {activeTab === "general" && (
+              <GeneralTabContent
+                lang={lang}
+                setLang={setLang}
+                homeView={homeView}
+                setHomeView={setHomeView}
+                timezone={timezone}
+                setTimezone={setTimezone}
+                timeFormat={timeFormat}
+                setTimeFormat={setTimeFormat}
+                dateFormat={dateFormat}
+                setDateFormat={setDateFormat}
+                weekStart={weekStart}
+                setWeekStart={setWeekStart}
+                onClose={onClose}
+                setToastMessage={setToastMessage}
+              />
+            )}
+
             {activeTab === "account" && twoFAStage === "idle" && (
-              <div className="space-y-6 animate-fade-up text-[#202020]">
-                <div>
-                  <h3 className="text-lg font-bold text-[#202020]">Account</h3>
-                </div>
-
-                <div className="space-y-5">
-                  {/* Plan */}
-                  <div className="flex items-center justify-between gap-4 max-w-xl">
-                    <div className="space-y-0.5">
-                      <span className="block text-xs font-bold text-neutral-600">
-                        Plan
-                      </span>
-                      <span className="block text-sm font-extrabold text-[#202020]">
-                        Beginner
-                      </span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setActiveTab("subscription")}
-                      className="rounded-lg border border-neutral-300 px-3.5 py-1.5 text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition"
-                    >
-                      Manage plan
-                    </button>
-                  </div>
-
-                  {/* Photo */}
-                  <div className="space-y-2 border-t pt-4">
-                    <span className="block text-xs font-bold text-neutral-600">
-                      Photo
-                    </span>
-                    <div className="flex items-center gap-4">
-                      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#d6409f] text-lg font-bold text-white shadow-sm">
-                        T
-                      </span>
-                      <div className="flex gap-2">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setToastMessage("Avatar image upload mock");
-                            setTimeout(() => setToastMessage(null), 1500);
-                          }}
-                          className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition"
-                        >
-                          Change photo
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setToastMessage("Avatar image removed");
-                            setTimeout(() => setToastMessage(null), 1500);
-                          }}
-                          className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50 transition"
-                        >
-                          Remove photo
-                        </button>
-                      </div>
-                    </div>
-                    <p className="text-[10px] text-neutral-400">
-                      Pick a photo up to 4MB. Your avatar photo will be public.
-                    </p>
-                  </div>
-
-                  {/* Name */}
-                  <div className="flex flex-col gap-1.5 max-w-sm border-t pt-4">
-                    <label className="text-xs font-bold text-neutral-600">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="rounded-md border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand font-medium"
-                    />
-                    <span className="text-[10px] text-neutral-400 self-end">
-                      12/255
-                    </span>
-                  </div>
-
-                  {/* Email */}
-                  <div className="flex flex-col gap-1.5 max-w-sm border-t pt-4">
-                    <label className="text-xs font-bold text-neutral-600">
-                      Email
-                    </label>
-                    <p className="text-sm font-semibold text-[#202020]">
-                      {email}
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const newMail = prompt("Enter new email:", email);
-                        if (newMail) setEmail(newMail);
-                      }}
-                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition w-32 mt-1.5"
-                    >
-                      Change email
-                    </button>
-                  </div>
-
-                  {/* Password */}
-                  <div className="flex flex-col gap-1.5 max-w-sm border-t pt-4">
-                    <label className="text-xs font-bold text-neutral-600">
-                      Password
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setToastMessage("Password change flow");
-                        setTimeout(() => setToastMessage(null), 1500);
-                      }}
-                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition w-32"
-                    >
-                      Add password
-                    </button>
-                  </div>
-
-                  {/* Two-factor authentication */}
-                  <div className="border-t pt-4 max-w-xl">
-                    <h4 className="text-xs font-bold text-neutral-600">
-                      Two-factor authentication
-                    </h4>
-                    <button
-                      type="button"
-                      role="switch"
-                      aria-checked={twoFAEnabled}
-                      onClick={() => {
-                        if (twoFAEnabled) {
-                          setTwoFAEnabled(false);
-                          setToastMessage("Two-factor authentication disabled");
-                          setTimeout(() => setToastMessage(null), 1800);
-                        } else {
-                          setTwoFACode("");
-                          setTwoFAStage("enable");
-                        }
-                      }}
-                      className={cn(
-                        "mt-2 flex h-5 w-9 items-center rounded-full px-0.5 transition",
-                        twoFAEnabled ? "bg-brand" : "bg-neutral-300",
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          "h-4 w-4 rounded-full bg-white shadow transition-transform",
-                          twoFAEnabled && "translate-x-4",
-                        )}
-                      />
-                    </button>
-                    <p className="mt-1.5 text-[10px] text-neutral-400">
-                      {twoFAEnabled
-                        ? "2FA is enabled on your Todoist account."
-                        : "2FA is disabled on your Todoist account."}
-                    </p>
-                  </div>
-
-                  {/* Connected accounts */}
-                  <div className="border-t pt-4 max-w-xl space-y-3">
-                    <div>
-                      <h4 className="text-xs font-bold text-neutral-600">
-                        Connected accounts
-                      </h4>
-                      <p className="text-[10px] text-neutral-400 mt-1">
-                        Log in to Todoist with your Google, Facebook, or Apple
-                        account.
-                      </p>
-                    </div>
-                    <div className="bg-neutral-50 border p-3 rounded-lg text-[11px] leading-relaxed text-neutral-600 space-y-1.5">
-                      <p>
-                        You can log in to Todoist with your Google account{" "}
-                        <strong>{email}</strong>.
-                      </p>
-                      <p>
-                        Your password is not set, so we cannot disconnect you
-                        from your Google account. If you want to disconnect,
-                        please{" "}
-                        <button
-                          type="button"
-                          className="text-brand hover:underline font-semibold"
-                        >
-                          set your password
-                        </button>{" "}
-                        first.
-                      </p>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          alert("Facebook account connect link...")
-                        }
-                        className="flex items-center gap-2 rounded-lg border border-neutral-300 px-3.5 py-2 text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition"
-                      >
-                        <span className="text-[#1877f2] text-sm">📘</span>{" "}
-                        Connect with Facebook
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => alert("Apple account connect link...")}
-                        className="flex items-center gap-2 rounded-lg border border-neutral-300 px-3.5 py-2 text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition"
-                      >
-                        <span className="text-[#000000] text-sm">🍎</span>{" "}
-                        Connect with Apple
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Delete account */}
-                  <div className="border-t pt-4 max-w-xl space-y-3">
-                    <div>
-                      <h4 className="text-xs font-bold text-red-600">
-                        Delete account
-                      </h4>
-                      <p className="text-[10px] text-neutral-400 mt-1">
-                        Deleting your account is permanent. You will immediately
-                        lose access to all your data.{" "}
-                        <span className="text-brand hover:underline cursor-pointer">
-                          Here&apos;s how to export your data first
-                        </span>
-                        .
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const conf = confirm(
-                          "Are you sure you want to delete your account permanently?",
-                        );
-                        if (conf) {
-                          alert("Account deleted.");
-                          onClose();
-                        }
-                      }}
-                      className="rounded-lg border border-red-200 px-3.5 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50 transition"
-                    >
-                      Delete account
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <AccountTabContent
+                name={name}
+                setName={setName}
+                email={email}
+                setEmail={setEmail}
+                avatarSrc={avatarSrc}
+                setAvatarSrc={setAvatarSrc}
+                setToastMessage={setToastMessage}
+                twoFAEnabled={twoFAEnabled}
+                setTwoFAEnabled={setTwoFAEnabled}
+                twoFAStage={twoFAStage}
+                setTwoFAStage={setTwoFAStage}
+                twoFACode={twoFACode}
+                setTwoFACode={setTwoFACode}
+                twoFAVerified={twoFAVerified}
+                onClose={onClose}
+              />
             )}
 
             {/* Enable 2FA multi-step panel */}
@@ -1404,91 +896,121 @@ export function SettingsModal({
             )}
 
             {(activeTab === "themes" || activeTab === "theme") && (
-              <div className="animate-fade-up">
-                <p className="text-sm leading-relaxed text-neutral-600">
-                  Personalize your tasks with colors to match your style, mood,
-                  and personality.{" "}
-                  <span className="text-brand">Learn more</span>.
+              <div className="space-y-5 animate-fade-up text-[#202020] dark:text-neutral-200">
+                <p className="text-xs leading-relaxed text-neutral-655 dark:text-neutral-400 select-none">
+                  Personalize your Todoist with colors to match your style, mood, and personality.{" "}
+                  <span className="text-[#de4c4a] hover:underline cursor-pointer">Learn more.</span>
                 </p>
 
-                {/* Sync theme */}
-                <div className="mt-4 flex items-center gap-3">
-                  <ToggleSwitch
-                    checked={syncTheme}
-                    onChange={() => setSyncTheme((v) => !v)}
-                  />
-                  <span className="text-sm font-bold text-[#202020]">
-                    Sync theme
-                  </span>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <ToggleSwitch
+                      checked={syncTheme}
+                      onChange={() => setSyncTheme((v) => !v)}
+                    />
+                    <span className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                      Sync theme
+                    </span>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <ToggleSwitch
+                      checked={autoDark}
+                      onChange={() => setAutoDark((v) => !v)}
+                    />
+                    <span className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                      Auto Dark Mode
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-neutral-450 dark:text-neutral-500 pl-12 select-none leading-snug">
+                    Automatically switch between light and dark themes when your system does.
+                  </p>
                 </div>
-
-                {/* Auto Dark Mode */}
-                <div className="mt-4 flex items-center gap-3">
-                  <ToggleSwitch
-                    checked={autoDark}
-                    onChange={() => setAutoDark((v) => !v)}
-                  />
-                  <span className="text-sm font-bold text-[#202020]">
-                    Auto Dark Mode
-                  </span>
-                </div>
-                <p className="mt-2 text-sm text-neutral-500">
-                  Automatically switch between light and dark themes when your
-                  system does.
-                </p>
 
                 {/* Your themes */}
-                <h4 className="mt-5 text-base font-bold text-[#202020]">
-                  Your themes
-                </h4>
-                <div className="mt-3 grid grid-cols-2 gap-4 lg:grid-cols-3">
-                  {THEMES.map((t) => (
-                    <button
-                      key={t.id}
-                      onClick={() => previewTheme(t.id)}
-                      className={cn(
-                        "rounded-xl border p-3 text-left transition hover:shadow-sm",
-                        selectedTheme === t.id
-                          ? "border-2 border-brand"
-                          : "border-neutral-200",
-                        t.dark && "bg-[#1f1f1f]",
-                      )}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span
-                          className="text-sm font-bold"
-                          style={{ color: t.dark ? "#f5f5f5" : t.accent }}
+                <div className="pt-3.5 border-t border-neutral-100 dark:border-neutral-900/60 space-y-3">
+                  <h4 className="text-xs font-bold text-[#202020] dark:text-white">Your themes</h4>
+                  
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {[
+                      { id: "todoist", label: "Todoist", accent: "#dc4c3e", dark: false },
+                      { id: "obsidian", label: "Noir", accent: "#1f1f1f", dark: false },
+                      { id: "dark", label: "Dark", accent: "#111111", dark: true },
+                      { id: "moonstone", label: "Neutral", accent: "#e5e5e5", dark: false },
+                      { id: "tangerine", label: "Tangerine", accent: "#f97316", dark: false },
+                    ].map((th) => {
+                      const isSelected = selectedTheme === th.id;
+                      return (
+                        <button
+                          key={th.id}
+                          onClick={() => {
+                            setTheme(th.id);
+                            localStorage.setItem("todo_app_theme", th.id);
+                            applyThemeVars(th.id);
+                          }}
+                          className={cn(
+                            "rounded-xl border p-2.5 text-left relative overflow-hidden bg-neutral-50 dark:bg-neutral-900/40 select-none cursor-pointer",
+                            isSelected
+                              ? "border-[#de4c4a] ring-1 ring-[#de4c4a]"
+                              : "border-neutral-200 dark:border-neutral-800 hover:border-neutral-300"
+                          )}
                         >
-                          {t.name}
-                        </span>
-                        {selectedTheme === t.id && (
-                          <span style={{ color: t.accent }}>
-                            <CheckMark />
-                          </span>
-                        )}
-                      </div>
-                      <ThemePreview accent={t.accent} dark={t.dark} />
-                    </button>
-                  ))}
+                          <div className="flex items-center justify-between text-[10px] font-bold text-neutral-700 dark:text-neutral-300">
+                            <span>{th.label}</span>
+                            {isSelected && (
+                              <span className="text-[#de4c4a] font-bold text-xs select-none">✓</span>
+                            )}
+                          </div>
+                          <div className="mt-2 h-7 rounded bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 flex overflow-hidden">
+                            <div className="w-1.5 h-full" style={{ backgroundColor: th.accent }} />
+                            <div className="flex-1 p-1 space-y-1">
+                              <div className="w-6 h-1 rounded-full bg-neutral-200 dark:bg-neutral-800" />
+                              <div className="w-10 h-0.5 rounded-full bg-neutral-105 dark:bg-neutral-900" />
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
 
-                {/* Update / Cancel footer */}
-                {themeDirty && (
-                  <div className="mt-6 flex justify-end gap-3 border-t border-neutral-100 pt-4">
-                    <button
-                      onClick={() => setDiscardOpen(true)}
-                      className="rounded-md bg-neutral-100 px-4 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-200"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={commitTheme}
-                      className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
-                    >
-                      Update
+                {/* Pro themes */}
+                <div className="pt-3.5 border-t border-neutral-100 dark:border-neutral-900/60 space-y-3">
+                  <div className="flex justify-between items-center select-none">
+                    <h4 className="text-xs font-bold text-[#202020] dark:text-white">Pro themes</h4>
+                    <button className="text-[10px] font-bold text-[#de4c4a] hover:underline cursor-pointer">
+                      Unlock all themes
                     </button>
                   </div>
-                )}
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {[
+                      { label: "Sunflower", accent: "#fbbf24" },
+                      { label: "Clover", accent: "#10b981" },
+                      { label: "Blueberry", accent: "#3b82f6" },
+                      { label: "Royal Blue", accent: "#1e3a8a" },
+                      { label: "Sky", accent: "#0ea5e9" },
+                      { label: "Amethyst", accent: "#8b5cf6" },
+                    ].map((th) => (
+                      <div
+                        key={th.label}
+                        className="rounded-xl border border-neutral-150 dark:border-neutral-850 p-2.5 bg-neutral-50/50 dark:bg-neutral-900/20 opacity-70 relative select-none"
+                      >
+                        <div className="flex items-center justify-between text-[10px] font-bold text-neutral-600 dark:text-neutral-400">
+                          <span>{th.label}</span>
+                          <span className="text-[9px] text-amber-500">★</span>
+                        </div>
+                        <div className="mt-2 h-7 rounded bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 flex overflow-hidden">
+                          <div className="w-1.5 h-full" style={{ backgroundColor: th.accent }} />
+                          <div className="flex-1 p-1 space-y-1">
+                            <div className="w-6 h-1 rounded-full bg-neutral-200 dark:bg-neutral-800" />
+                            <div className="w-10 h-0.5 rounded-full bg-neutral-105 dark:bg-neutral-900" />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
 
@@ -1519,7 +1041,7 @@ export function SettingsModal({
                 {integrationsView === "installed" && (
                   <div>
                     <div className="flex flex-col items-center py-10 text-center">
-                      <span className="text-4xl">⚗️</span>
+                      <span className="text-neutral-300"><PhFlask size={40} /></span>
                       <p className="mt-4 text-sm text-neutral-600">
                         Integrations you&apos;ve installed will show up here
                       </p>
@@ -1828,94 +1350,73 @@ export function SettingsModal({
             )}
 
             {activeTab === "subscription" && (
-              <div className="animate-fade-up text-[#202020]">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-sm font-bold text-[#202020]">Plan</p>
-                    <p className="mt-1 text-lg font-bold text-[#202020]">
-                      Beginner
-                    </p>
-                    <p className="mt-1 text-sm text-neutral-600">
-                      You are on{" "}
-                      <span className="text-brand">the Beginner plan</span> with
-                      all the basics you need to start organizing your life.
-                    </p>
-                  </div>
-                  <button className="flex items-center gap-1.5 text-sm text-neutral-500 hover:text-[#202020]">
-                    <InfoMini /> Billing FAQ
+              <div className="space-y-5 animate-fade-up text-[#202020] dark:text-neutral-200">
+                {/* Plan and Billing and payments */}
+                <div className="flex items-center justify-between text-xs select-none">
+                  <span className="font-bold text-[#202020] dark:text-white">Plan</span>
+                  <button className="text-[#de4c4a] hover:underline flex items-center gap-1 font-semibold cursor-pointer">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M12 16v-4M12 8h.01" />
+                    </svg>
+                    Billing and payments
                   </button>
                 </div>
+                
+                <h4 className="text-xs font-bold text-[#202020] dark:text-white">Todoist Free</h4>
 
-                {/* Unlock card */}
-                <div className="mt-5 rounded-xl border border-neutral-200 bg-neutral-50/60 p-5">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                      <span className="text-amber-500">
-                        <SparkIcon />
-                      </span>
-                      <h4 className="text-base font-bold text-[#202020]">
-                        Unlock the full power of Todoist
-                      </h4>
-                    </div>
-                    <button
-                      onClick={() => setToastMessage("Starting Pro trial…")}
-                      className="rounded-md bg-amber-400 px-3.5 py-2 text-sm font-bold text-[#202020] hover:bg-amber-300 transition"
-                    >
-                      Try Pro for free
-                    </button>
-                  </div>
-                  <div className="mt-5 grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2">
-                    {[
-                      ["⏳", "Task Durations", "Better time-blocking."],
-                      [
-                        "🎙️",
-                        "Unlimited Ramble",
-                        "Turn your thoughts into tasks with voice input.",
-                      ],
-                      ["🎯", "Deadlines", "Distinguish critical dates."],
-                      [
-                        "📧",
-                        "Email Assist",
-                        "Turn forwarded emails into organized tasks.",
-                      ],
-                      [
-                        "🐤",
-                        "Task Assist",
-                        "Get work unstuck and move forward faster.",
-                      ],
-                      ["📅", "Calendar layout", "Time-block like a pro."],
-                    ].map(([emoji, title, desc]) => (
-                      <div key={title} className="flex items-start gap-3">
-                        <span className="text-xl">{emoji}</span>
-                        <div>
-                          <p className="text-sm font-bold text-[#202020]">
-                            {title}
-                          </p>
-                          <p className="text-sm text-neutral-500">{desc}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Teamwork */}
-                <div className="mt-6 flex items-center justify-between gap-4 border-t border-neutral-100 pt-6">
-                  <div className="flex items-start gap-3">
-                    <span className="text-2xl">🏢</span>
+                {/* Main Upgrade Card panel */}
+                <div className="rounded-xl border border-neutral-200/80 dark:border-neutral-800 bg-white dark:bg-[#181818] p-5 shadow-3xs flex flex-col md:flex-row justify-between items-start gap-4">
+                  <div className="space-y-3.5 flex-1">
                     <div>
-                      <h4 className="text-base font-bold text-[#202020]">
-                        Organize your teamwork, too!
-                      </h4>
-                      <p className="mt-0.5 max-w-md text-sm text-neutral-500">
-                        Add a team to Todoist and get a shared workspace to
-                        collaborate with your teammates - alongside but separate
-                        from your personal tasks and projects.
+                      <h5 className="text-xs font-bold text-[#202020] dark:text-white">Todoist Pro</h5>
+                      <p className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-0.5">
+                        Unlock features to do your best work, from €5/month.
                       </p>
                     </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                      {[
+                        { label: "Unlimited reminders", desc: "Never forget an important date or deadline again.", icon: <span className="text-orange-500">⏰</span> },
+                        { label: "Comments & Files", desc: "Add important details to your tasks and projects.", icon: <span className="text-teal-500">💬</span> },
+                        { label: "Filters & Labels", desc: "Add richer context and create custom task views.", icon: <span className="text-blue-500">🏷️</span> },
+                        { label: "Productivity Trends", desc: "Visualize your weekly & monthly progress with color-coded charts.", icon: <span className="text-orange-400">📈</span> },
+                        { label: "Automatic Backups", desc: "Never worry about losing your important data.", icon: <span className="text-neutral-500">☁️</span> },
+                        { label: "10+ themes, and more", desc: "Unlock premium style customization colors.", icon: <span className="text-neutral-400">⋯</span> },
+                      ].map((feat) => (
+                        <div key={feat.label} className="flex gap-2.5 items-start">
+                          <span className="shrink-0 text-base leading-none">{feat.icon}</span>
+                          <div>
+                            <p className="text-[10px] font-bold text-neutral-800 dark:text-neutral-200 leading-snug">{feat.label}</p>
+                            <p className="text-[9px] text-neutral-450 dark:text-neutral-500 mt-0.5 leading-snug">{feat.desc}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <button className="shrink-0 rounded-md bg-neutral-100 px-3.5 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-200">
-                    Add a team
+
+                  <button className="shrink-0 rounded-lg bg-[#de4c4a] px-4 py-2 text-xs font-bold text-white hover:bg-[#c5392d] transition select-none cursor-pointer">
+                    Upgrade now
                   </button>
+                </div>
+
+                {/* Bottom plan text links */}
+                <div className="pt-2 space-y-4">
+                  <p className="text-[10px] font-medium text-neutral-600 dark:text-neutral-400">
+                    Working with a team? <span className="text-[#de4c4a] hover:underline cursor-pointer">Try the Business plan.</span>
+                  </p>
+
+                  <div className="border-t border-neutral-100 dark:border-neutral-900/60 pt-4 flex justify-between items-start gap-4">
+                    <div>
+                      <h4 className="text-xs font-bold text-[#202020] dark:text-white">Billing information</h4>
+                      <p className="text-[10px] text-neutral-400 dark:text-neutral-500 mt-0.5">
+                        Add your billing address and VAT ID so they appear on invoices.
+                      </p>
+                    </div>
+                    <button className="rounded-lg border border-neutral-200 dark:border-neutral-850 bg-neutral-50 dark:bg-neutral-900 px-3.5 py-1.5 text-xs font-bold text-[#202020] dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer select-none">
+                      Update
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -1989,390 +1490,37 @@ export function SettingsModal({
             )}
 
             {activeTab === "quick-add" && (
-              <div className="animate-fade-up text-[#202020]">
-                <p className="text-sm leading-relaxed text-neutral-600">
-                  To reorder your task actions, use drag and drop to move
-                  actions up or down the list.{" "}
-                  <span className="text-brand">Learn more</span>
-                </p>
-
-                <h4 className="mt-5 text-sm font-bold text-[#202020]">
-                  Show task actions
-                </h4>
-                <div className="mt-2 max-w-md overflow-hidden rounded-lg border border-neutral-200">
-                  {quickActions.map((a, i) => (
-                    <div
-                      key={a}
-                      className={cn(
-                        "flex items-center gap-3 px-3 py-2.5 text-sm",
-                        i > 0 && "border-t border-neutral-100",
-                      )}
-                    >
-                      <button
-                        onClick={() =>
-                          setQuickActions((list) => list.filter((x) => x !== a))
-                        }
-                        aria-label={`Remove ${a}`}
-                        className="text-red-500"
-                      >
-                        <MinusCircle />
-                      </button>
-                      <span className="text-neutral-500">
-                        <QuickActionIcon name={a} />
-                      </span>
-                      <span className="text-[#202020]">{a}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <h4 className="mt-5 text-sm font-bold text-[#202020]">
-                  More actions
-                </h4>
-                <div className="mt-2 max-w-md overflow-hidden rounded-lg border border-neutral-200">
-                  {["Labels", "Deadline", "Location"]
-                    .filter((a) => !quickActions.includes(a))
-                    .map((a, i) => (
-                      <div
-                        key={a}
-                        className={cn(
-                          "flex items-center gap-3 px-3 py-2.5 text-sm",
-                          i > 0 && "border-t border-neutral-100",
-                        )}
-                      >
-                        <button
-                          onClick={() =>
-                            setQuickActions((list) => [...list, a])
-                          }
-                          aria-label={`Add ${a}`}
-                          className="text-green-600"
-                        >
-                          <PlusCircle />
-                        </button>
-                        <span className="text-neutral-500">
-                          <QuickActionIcon name={a} />
-                        </span>
-                        <span className="text-[#202020]">{a}</span>
-                      </div>
-                    ))}
-                </div>
-
-                <h4 className="mt-6 text-sm font-bold text-[#202020]">
-                  Show action labels
-                </h4>
-                <div className="mt-2 flex items-center gap-2.5">
-                  <ToggleSwitch
-                    checked={showActionLabels}
-                    onChange={() => setShowActionLabels((v) => !v)}
-                  />
-                  <span className="text-sm text-neutral-500">
-                    {showActionLabels ? "On" : "Off"}
-                  </span>
-                </div>
-
-                <p className="mt-4 text-xs text-neutral-400">Example:</p>
-                <div className="mt-2 flex max-w-xl flex-wrap items-center gap-2 rounded-lg border border-neutral-200 p-3">
-                  {quickActions.slice(0, 5).map((a) => (
-                    <span
-                      key={a}
-                      className="inline-flex items-center gap-1.5 rounded-md border border-neutral-200 px-2 py-1 text-xs text-neutral-600"
-                    >
-                      <QuickActionIcon name={a} />
-                      {showActionLabels && a}
-                    </span>
-                  ))}
-                  <span className="inline-flex items-center rounded-md border border-neutral-200 px-2 py-1 text-xs text-neutral-500">
-                    ⋯
-                  </span>
-                </div>
-              </div>
+              <QuickAddTabContent
+                quickActions={quickActions}
+                setQuickActions={setQuickActions}
+                showActionLabels={showActionLabels}
+                setShowActionLabels={setShowActionLabels}
+              />
             )}
 
             {activeTab === "productivity" && (
-              <div className="animate-fade-up text-[#202020]">
-                <p className="text-sm leading-relaxed text-neutral-600">
-                  Celebrating your progress goes a long way toward achieving
-                  long-term success. And setting goals can help you stay on
-                  track! <span className="text-brand">Learn more</span>
-                </p>
-
-                {/* Karma */}
-                <h4 className="mt-5 text-sm font-bold text-[#202020]">
-                  Todoist Karma
-                </h4>
-                <div className="mt-2 flex items-center gap-2.5">
-                  <ToggleSwitch
-                    checked={karmaOn}
-                    onChange={() => setKarmaOn((v) => !v)}
-                  />
-                  <span className="text-sm text-neutral-500">
-                    {karmaOn ? "On" : "Off"}
-                  </span>
-                </div>
-                <p className="mt-2 max-w-xl text-sm leading-relaxed text-neutral-500">
-                  Stay motivated and accountable with Todoist Karma. Achieve new
-                  levels by earning points for completing tasks, reaching your
-                  daily and weekly goals, and using advanced features like
-                  recurring due dates.{" "}
-                  <span className="text-brand">Learn more</span>
-                </p>
-
-                {/* Goals */}
-                <div className="mt-6 border-t border-neutral-100 pt-5">
-                  <h4 className="text-base font-bold text-[#202020]">Goals</h4>
-                  <p className="mt-0.5 text-sm text-neutral-500">
-                    Small steps add up to big achievements. Set task goals to
-                    keep your momentum.
-                  </p>
-                  <label className="mt-4 block text-sm font-bold text-[#202020]">
-                    Daily tasks
-                  </label>
-                  <input
-                    type="number"
-                    value={state.productivityGoalDaily ?? 5}
-                    onChange={(e) =>
-                      dispatch({
-                        type: "UPDATE_GOALS",
-                        daily: Number(e.target.value),
-                        weekly: state.productivityGoalWeekly ?? 30,
-                      })
-                    }
-                    className="mt-2 w-full max-w-xs rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm text-[#202020] outline-none focus:border-brand"
-                  />
-                  <label className="mt-4 block text-sm font-bold text-[#202020]">
-                    Weekly tasks
-                  </label>
-                  <input
-                    type="number"
-                    value={state.productivityGoalWeekly ?? 30}
-                    onChange={(e) =>
-                      dispatch({
-                        type: "UPDATE_GOALS",
-                        daily: state.productivityGoalDaily ?? 5,
-                        weekly: Number(e.target.value),
-                      })
-                    }
-                    className="mt-2 w-full max-w-xs rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm text-[#202020] outline-none focus:border-brand"
-                  />
-
-                  <p className="mt-4 text-sm font-bold text-[#202020]">
-                    Goal celebrations
-                  </p>
-                  <div className="mt-2 flex items-center gap-2.5">
-                    <ToggleSwitch
-                      checked={goalCelebrations}
-                      onChange={() => setGoalCelebrations((v) => !v)}
-                    />
-                    <span className="text-sm text-neutral-500">
-                      {goalCelebrations ? "On" : "Off"}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-sm text-neutral-500">
-                    Celebrate reaching daily and weekly task goals.
-                  </p>
-                </div>
-
-                {/* Days off */}
-                <div className="mt-6 border-t border-neutral-100 pt-5">
-                  <h4 className="text-base font-bold text-[#202020]">
-                    Days off
-                  </h4>
-                  <div className="mt-3 flex flex-wrap gap-4">
-                    {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
-                      (d) => (
-                        <label
-                          key={d}
-                          className="flex cursor-pointer items-center gap-2"
-                        >
-                          <Checkbox
-                            checked={daysOff[d]}
-                            onChange={() =>
-                              setDaysOff((s) => ({ ...s, [d]: !s[d] }))
-                            }
-                          />
-                          <span className="text-sm text-[#202020]">{d}</span>
-                        </label>
-                      ),
-                    )}
-                  </div>
-                  <p className="mt-3 text-sm text-neutral-500">
-                    When you take a break, your Karma and streaks can take a
-                    break too.
-                  </p>
-                </div>
-
-                {/* Vacation mode */}
-                <div className="mt-6 border-t border-neutral-100 pt-5">
-                  <h4 className="text-base font-bold text-[#202020]">
-                    Vacation mode
-                  </h4>
-                  <div className="mt-2 flex items-center gap-2.5">
-                    <ToggleSwitch
-                      checked={state.vacationMode ?? false}
-                      onChange={() =>
-                        dispatch({
-                          type: "TOGGLE_VACATION_MODE",
-                          val: !(state.vacationMode ?? false),
-                        })
-                      }
-                    />
-                    <span className="text-sm text-neutral-500">
-                      {state.vacationMode ? "On" : "Off"}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-sm text-neutral-500">
-                    Time off means your streaks and Karma stay, even if you
-                    don&apos;t hit your task goals.
-                  </p>
-                </div>
-              </div>
+              <ProductivityTabContent
+                karmaOn={karmaOn}
+                setKarmaOn={setKarmaOn}
+                daysOff={daysOff}
+                setDaysOff={setDaysOff}
+                state={state}
+                dispatch={dispatch}
+              />
             )}
 
             {activeTab === "reminders" && (
-              <div className="animate-fade-up text-[#202020]">
-                {/* upgrade banner */}
-                <div className="flex items-center justify-between gap-4 rounded-xl border border-neutral-200 bg-neutral-50/60 p-4">
-                  <div className="flex items-start gap-2.5">
-                    <span className="text-amber-500">
-                      <SparkIcon />
-                    </span>
-                    <div>
-                      <p className="text-sm font-bold text-[#202020]">
-                        Give your memory a rest
-                      </p>
-                      <p className="mt-0.5 max-w-md text-sm text-neutral-500">
-                        Free accounts only get reminders at the time of a task.
-                        Upgrade to add multiple reminders, trigger them at
-                        specific times or locations, and more.
-                      </p>
-                    </div>
-                  </div>
-                  <button className="shrink-0 rounded-md bg-amber-400 px-3.5 py-2 text-sm font-bold text-[#202020] hover:bg-amber-300">
-                    Upgrade
-                  </button>
-                </div>
-
-                <p className="mt-5 text-sm text-neutral-600">
-                  The secret to effortlessly remembering everything? Have
-                  Todoist remind you.{" "}
-                  <span className="text-brand">Learn more</span>
-                </p>
-
-                <h4 className="mt-5 text-sm font-bold text-[#202020]">
-                  Automatic reminders
-                </h4>
-                <select
-                  value={autoReminder}
-                  onChange={(e) => setAutoReminder(e.target.value)}
-                  className="mt-2 w-full max-w-md rounded-md border border-neutral-300 bg-white px-3 py-2.5 text-sm text-[#202020] outline-none focus:border-brand"
-                >
-                  <option>At time of task</option>
-                  <option>10 minutes before</option>
-                  <option>30 minutes before</option>
-                  <option>1 hour before</option>
-                  <option>1 day before</option>
-                </select>
-                <p className="mt-1.5 text-sm text-neutral-500">
-                  When enabled, a reminder before the task&apos;s time will be
-                  added by default.
-                </p>
-
-                <h4 className="mt-6 text-sm font-bold text-[#202020]">
-                  How would you like to get reminded?
-                </h4>
-                <div className="mt-2 max-w-md space-y-3">
-                  {[
-                    ["Desktop notifications", remDesktop, setRemDesktop],
-                    ["Mobile notifications", remMobile, setRemMobile],
-                    ["Emails", remEmail, setRemEmail],
-                  ].map(([label, val, setter]) => (
-                    <div
-                      key={label as string}
-                      className="flex items-center gap-2.5"
-                    >
-                      <ToggleSwitch
-                        checked={val as boolean}
-                        onChange={() =>
-                          (setter as (v: boolean) => void)(!(val as boolean))
-                        }
-                      />
-                      <span className="text-sm text-[#202020]">
-                        {label as string}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Send test reminder */}
-                <div className="mt-6 flex items-start justify-between gap-6 border-t border-neutral-100 pt-5">
-                  <div className="max-w-sm">
-                    <h4 className="text-sm font-bold text-[#202020]">
-                      Send test reminder
-                    </h4>
-                    <p className="mt-1 text-sm text-neutral-500">
-                      Wondering how reminders help you stay productive, or want
-                      to check if your device settings are correct? Trigger a
-                      test reminder to see it in action. You should receive it
-                      within 1 minute.
-                    </p>
-                    <div className="mt-3 flex gap-2">
-                      <button
-                        onClick={() =>
-                          setToastMessage("Test reminder sent (web)")
-                        }
-                        className="rounded-md bg-neutral-100 px-3 py-1.5 text-sm font-semibold text-neutral-700 hover:bg-neutral-200"
-                      >
-                        Test web
-                      </button>
-                      <button
-                        onClick={() =>
-                          setToastMessage("Test reminder sent (mobile)")
-                        }
-                        className="rounded-md bg-neutral-100 px-3 py-1.5 text-sm font-semibold text-neutral-700 hover:bg-neutral-200"
-                      >
-                        Test mobile
-                      </button>
-                    </div>
-                  </div>
-                  <div className="shrink-0">
-                    <p className="text-sm text-neutral-500">Preview</p>
-                    <div className="mt-2 flex w-64 items-center gap-3 rounded-lg border border-neutral-200 p-3 shadow-sm">
-                      <span className="text-lg">📌</span>
-                      <div className="flex-1">
-                        <p className="text-sm font-semibold text-[#202020]">
-                          Get groceries
-                        </p>
-                        <p className="text-xs text-neutral-400">Today 09:00</p>
-                      </div>
-                      <span className="text-xs text-neutral-400">now</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Your devices */}
-                <div className="mt-6 border-t border-neutral-100 pt-5">
-                  <h4 className="text-sm font-bold text-[#202020]">
-                    Your devices
-                  </h4>
-                  <p className="mt-1 text-sm text-neutral-500">
-                    The following devices are connected to your Todoist.
-                  </p>
-                  <div className="mt-3 max-w-md divide-y divide-neutral-100">
-                    {["Apple Watch", "iPhone"].map((d) => (
-                      <div
-                        key={d}
-                        className="flex items-center justify-between py-3 text-sm"
-                      >
-                        <span className="flex items-center gap-2 text-[#202020]">
-                          <span></span> {d}
-                        </span>
-                        <button className="text-neutral-400 hover:text-neutral-600">
-                          ✕
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              <RemindersTabContent
+                autoReminder={autoReminder}
+                setAutoReminder={setAutoReminder}
+                remDesktop={remDesktop}
+                setRemDesktop={setRemDesktop}
+                remMobile={remMobile}
+                setRemMobile={setRemMobile}
+                remEmail={remEmail}
+                setRemEmail={setRemEmail}
+                setToastMessage={setToastMessage}
+              />
             )}
 
             {activeTab === "backups" && (
@@ -2460,7 +1608,7 @@ export function SettingsModal({
                     }
                     className="flex items-center gap-2.5 rounded-md border border-neutral-300 px-4 py-2.5 text-sm font-semibold text-[#202020] hover:bg-neutral-50"
                   >
-                    <span className="text-lg">📅</span> Connect Google Calendar
+                    <PhGoogleLogo size={18} /> Connect Google Calendar
                   </button>
                   <button
                     onClick={() =>
@@ -2468,7 +1616,7 @@ export function SettingsModal({
                     }
                     className="flex items-center gap-2.5 rounded-md border border-neutral-300 px-4 py-2.5 text-sm font-semibold text-[#202020] hover:bg-neutral-50"
                   >
-                    <span className="text-lg">🗓️</span> Connect Outlook Calendar
+                    <PhOutlookLogo size={18} /> Connect Outlook Calendar
                   </button>
                 </div>
 
@@ -2477,8 +1625,8 @@ export function SettingsModal({
                 </h4>
                 <div className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div className="overflow-hidden rounded-xl border border-neutral-200">
-                    <div className="flex h-40 items-center justify-center bg-[#fdeee9] text-4xl">
-                      🗓️
+                    <div className="flex h-40 items-center justify-center bg-[#fdeee9] text-brand">
+                      <PhCalendarBlank size={48} />
                     </div>
                     <div className="p-4">
                       <p className="text-sm font-bold text-[#202020]">
@@ -2491,8 +1639,8 @@ export function SettingsModal({
                     </div>
                   </div>
                   <div className="overflow-hidden rounded-xl border border-neutral-200">
-                    <div className="flex h-40 items-center justify-center bg-[#eaf3ec] text-4xl">
-                      📆
+                    <div className="flex h-40 items-center justify-center bg-[#eaf3ec] text-green-700">
+                      <PhCalendarCheck size={48} />
                     </div>
                     <div className="p-4">
                       <p className="text-sm font-bold text-[#202020]">
@@ -2509,120 +1657,108 @@ export function SettingsModal({
               </div>
             )}
             {activeTab === "notifications" && (
-              <div className="animate-fade-up text-[#202020]">
-                <p className="text-sm text-neutral-600">
-                  Customize how you&apos;d like to be notified about updates in
-                  Todoist. <span className="text-brand">Learn more</span>
-                </p>
-
-                <div className="mt-4 flex items-center gap-2.5">
-                  <ToggleSwitch
-                    checked={desktopNotif}
-                    onChange={() => setDesktopNotif((v) => !v)}
-                  />
-                  <span className="text-sm text-[#202020]">
-                    Desktop and web notifications
-                  </span>
+              <div className="space-y-5 animate-fade-up text-[#202020] dark:text-neutral-200">
+                {/* Shared projects */}
+                <div className="space-y-1 select-none">
+                  <h4 className="text-xs font-bold text-[#202020] dark:text-white">Shared projects</h4>
+                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                    Keep work moving forward with notifications about teammate's comments, completed tasks, and more.
+                  </p>
                 </div>
 
-                {/* Project notifications matrix */}
-                <div className="mt-6">
-                  <div className="flex items-center justify-between border-b border-neutral-100 pb-2">
-                    <h4 className="text-base font-bold text-[#202020]">
-                      Project notifications
-                    </h4>
-                    <div className="flex items-center gap-8 pr-1 text-xs font-semibold text-neutral-500">
-                      <span className="flex items-center gap-1">📧 Email</span>
-                      <span className="flex items-center gap-1">📱 Mobile</span>
-                    </div>
-                  </div>
-                  {NOTIF_ROWS.map((row) => (
-                    <div
-                      key={row}
-                      className="flex items-center justify-between border-b border-neutral-100 py-3"
-                    >
-                      <span className="text-sm text-[#202020]">{row}</span>
-                      <div className="flex items-center gap-10 pr-2">
-                        <Checkbox
-                          checked={notifMatrix[row].email}
-                          onChange={() =>
-                            setNotifMatrix((m) => ({
-                              ...m,
-                              [row]: { ...m[row], email: !m[row].email },
-                            }))
-                          }
-                        />
-                        <Checkbox
-                          checked={notifMatrix[row].mobile}
-                          onChange={() =>
-                            setNotifMatrix((m) => ({
-                              ...m,
-                              [row]: { ...m[row], mobile: !m[row].mobile },
-                            }))
-                          }
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Account & update emails */}
-                <h4 className="mt-7 text-base font-bold text-[#202020]">
-                  Account &amp; update emails
-                </h4>
-                <div className="mt-3 space-y-4">
-                  {[
-                    [
-                      "Daily digest",
-                      "Personalized productivity stats plus your tasks for today. Sent every morning.",
-                      emailDigest,
-                      setEmailDigest,
-                      false,
-                    ],
-                    [
-                      "What's new",
-                      "Exciting features and updates from the Todoist team. Sent no more than once a month.",
-                      whatsNew,
-                      setWhatsNew,
-                      false,
-                    ],
-                    [
-                      "Tips and tricks",
-                      "Get ahead of the game with insider tips and powerful productivity advice.",
-                      tipsTricks,
-                      setTipsTricks,
-                      false,
-                    ],
-                    [
-                      "New login alert",
-                      "Get an email notification every time a new device is logged into your account.",
-                      loginAlert,
-                      setLoginAlert,
-                      true,
-                    ],
-                  ].map(([label, desc, val, setter, rec]) => (
-                    <div key={label as string}>
-                      <div className="flex items-center gap-2.5">
-                        <ToggleSwitch
-                          checked={val as boolean}
-                          onChange={() =>
-                            (setter as (v: boolean) => void)(!(val as boolean))
-                          }
-                        />
-                        <span className="text-sm font-bold text-[#202020]">
-                          {label as string}
-                        </span>
-                        {rec && (
-                          <span className="rounded bg-green-100 px-1.5 py-0.5 text-[10px] font-bold text-green-700">
-                            RECOMMENDED
+                {/* Notifications options table */}
+                <div className="border border-neutral-200/80 dark:border-neutral-800 rounded-xl overflow-hidden shadow-3xs">
+                  <table className="w-full text-left border-collapse text-[11px]">
+                    <thead>
+                      <tr className="bg-neutral-50 dark:bg-neutral-900/60 border-b border-neutral-200/80 dark:border-neutral-800 text-neutral-400 font-extrabold tracking-wider uppercase select-none">
+                        <th className="px-4 py-2.5 font-bold">Send notifications about</th>
+                        <th className="px-4 py-2.5 font-bold text-center w-20">
+                          <span className="flex items-center justify-center gap-1 select-none">
+                            ✉️ Email
                           </span>
-                        )}
-                      </div>
-                      <p className="mt-1 ml-[3.25rem] text-sm text-neutral-500">
-                        {desc as string}
-                      </p>
+                        </th>
+                        <th className="px-4 py-2.5 font-bold text-center w-20">
+                          <span className="flex items-center justify-center gap-1 select-none">
+                            📱 Mobile
+                          </span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-neutral-100 dark:divide-neutral-850">
+                      {[
+                        { key: "comments", label: "Comments for you" },
+                        { key: "assigned", label: "Tasks assigned to you" },
+                        { key: "completed", label: "Tasks completed", sub: "Only for tasks you've created or assigned" },
+                        { key: "uncompleted", label: "Tasks uncompleted", sub: "Only for tasks you've created or assigned" },
+                        { key: "joining", label: "Collaborators joining project" },
+                        { key: "declining", label: "Collaborators declining projects" },
+                        { key: "leaving", label: "Collaborators leaving project" },
+                        { key: "removed", label: "Collaborators being removed from projects" },
+                      ].map((row) => (
+                        <tr key={row.key} className="hover:bg-neutral-50/30 dark:hover:bg-neutral-900/10">
+                          <td className="px-4 py-3">
+                            <span className="font-bold text-neutral-700 dark:text-neutral-200">{row.label}</span>
+                            {row.sub && (
+                              <span className="block text-[9px] text-neutral-400 dark:text-neutral-500 font-medium mt-0.5">
+                                {row.sub}
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-4 py-3 text-center">
+                            <Checkbox
+                              checked={notifMatrix[row.label]?.email ?? false}
+                              onChange={() =>
+                                setNotifMatrix((s) => ({
+                                  ...s,
+                                  [row.label]: {
+                                    ...s[row.label],
+                                    email: !s[row.label]?.email,
+                                  },
+                                }))
+                              }
+                            />
+                          </td>
+                          <td className="px-4 py-3 text-center">
+                            <Checkbox
+                              checked={notifMatrix[row.label]?.mobile ?? false}
+                              onChange={() =>
+                                setNotifMatrix((s) => ({
+                                  ...s,
+                                  [row.label]: {
+                                    ...s[row.label],
+                                    mobile: !s[row.label]?.mobile,
+                                  },
+                                }))
+                              }
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Todoist emails digest */}
+                <div className="pt-3.5 border-t border-neutral-100 dark:border-neutral-900/60 space-y-2 select-none">
+                  <h4 className="text-xs font-bold text-[#202020] dark:text-white">Todoist emails</h4>
+                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                    Stay in-the-know about all things Todoist.
+                  </p>
+                  
+                  <div className="pt-1.5 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <ToggleSwitch
+                        checked={emailDigest}
+                        onChange={() => setEmailDigest((v) => !v)}
+                      />
+                      <span className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                        Daily digest
+                      </span>
                     </div>
-                  ))}
+                    <p className="text-[10px] text-neutral-450 dark:text-neutral-500 pl-12 select-none leading-snug">
+                      Personalized productivity stats plus your tasks due today. Sent every morning.
+                    </p>
+                  </div>
                 </div>
               </div>
             )}
@@ -3250,25 +2386,6 @@ export function SettingsModal({
               </div>
             )}
           </div>
-
-          <div className="border-t border-neutral-100 pt-4 flex justify-end gap-2.5">
-            <button
-              onClick={onClose}
-              className="rounded-lg bg-neutral-100 px-4 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-200 transition"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={() => {
-                // Mock save confirmation toast
-                alert("Preferences updated!");
-                onClose();
-              }}
-              className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark transition"
-            >
-              Save Settings
-            </button>
-          </div>
         </div>
       </div>
       {discardOpen && (
@@ -3332,22 +2449,34 @@ function TabButton({
   children,
   active,
   onClick,
+  icon,
 }: {
   children: React.ReactNode;
   active: boolean;
   onClick: () => void;
+  icon?: React.ReactNode;
 }) {
   return (
     <button
       onClick={onClick}
       className={cn(
-        "w-full text-left rounded-lg px-2.5 py-2 text-sm font-semibold transition",
+        "w-full text-left rounded-lg px-2.5 py-1.5 text-[13px] flex items-center gap-3 transition select-none cursor-pointer",
         active
-          ? "bg-brand-tint text-brand"
-          : "text-[#202020] hover:bg-neutral-100",
+          ? "bg-[#efefef] dark:bg-neutral-800 text-[#202020] dark:text-white font-bold"
+          : "text-[#202020] dark:text-neutral-300 font-medium hover:bg-neutral-100/70 dark:hover:bg-neutral-900/60 hover:text-[#202020] dark:hover:text-white",
       )}
     >
-      {children}
+      {icon && (
+        <span
+          className={cn(
+            "shrink-0 transition-colors",
+            active ? "text-[#202020] dark:text-white" : "text-neutral-500 dark:text-neutral-400"
+          )}
+        >
+          {icon}
+        </span>
+      )}
+      <span className="flex-1 min-w-0">{children}</span>
     </button>
   );
 }
@@ -3442,14 +2571,14 @@ function ToggleSwitch({
       aria-checked={checked}
       onClick={onChange}
       className={cn(
-        "flex h-6 w-11 shrink-0 items-center rounded-full px-0.5 transition",
-        checked ? "bg-brand" : "bg-neutral-300",
+        "flex h-5.5 w-10 shrink-0 items-center rounded-full px-0.5 transition cursor-pointer select-none",
+        checked ? "bg-[#de4c4a]" : "bg-neutral-300 dark:bg-neutral-700",
       )}
     >
       <span
         className={cn(
-          "h-5 w-5 rounded-full bg-white shadow transition-transform",
-          checked && "translate-x-5",
+          "h-4.5 w-4.5 rounded-full bg-white shadow transition-transform",
+          checked && "translate-x-4.5",
         )}
       />
     </button>
@@ -3518,21 +2647,15 @@ function Checkbox({
       aria-checked={checked}
       onClick={onChange}
       className={cn(
-        "flex h-5 w-5 shrink-0 items-center justify-center rounded border transition",
+        "flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded border transition select-none cursor-pointer",
         checked
-          ? "border-brand bg-brand text-white"
-          : "border-neutral-300 bg-white",
+          ? "border-[#de4c4a] bg-[#de4c4a] text-white"
+          : "border-neutral-300 bg-white dark:bg-neutral-900 dark:border-neutral-800",
       )}
     >
       {checked && (
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
-          <path
-            d="M5 12l5 5L20 6"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="20 6 9 17 4 12" />
         </svg>
       )}
     </button>
@@ -3604,17 +2727,21 @@ function PlusCircle() {
   );
 }
 function QuickActionIcon({ name }: { name: string }) {
-  const map: Record<string, string> = {
-    Date: "📅",
-    Assignee: "👤",
-    Attachment: "📎",
-    Priority: "🚩",
-    Reminders: "⏰",
-    Labels: "🏷️",
-    Deadline: "🎯",
-    Location: "📍",
+  const map: Record<string, React.ReactNode> = {
+    Date: <PhCalendarBlank size={15} />,
+    Assignee: <PhUser size={15} />,
+    Attachment: <PhPaperclip size={15} />,
+    Priority: <PhFlag size={15} />,
+    Reminders: <PhAlarm size={15} />,
+    Labels: <PhTag size={15} />,
+    Deadline: <PhTarget size={15} />,
+    Location: <PhMapPin size={15} />,
   };
-  return <span aria-hidden>{map[name] ?? "•"}</span>;
+  return (
+    <span aria-hidden className="inline-flex items-center">
+      {map[name] ?? "•"}
+    </span>
+  );
 }
 
 const sg = {
@@ -3738,5 +2865,815 @@ function ReportingGlyph() {
         strokeLinejoin="round"
       />
     </svg>
+  );
+}
+
+interface GeneralTabContentProps {
+  lang: string;
+  setLang: (v: string) => void;
+  homeView: string;
+  setHomeView: (v: string) => void;
+  timezone: string;
+  setTimezone: (v: string) => void;
+  timeFormat: string;
+  setTimeFormat: (v: string) => void;
+  dateFormat: string;
+  setDateFormat: (v: string) => void;
+  weekStart: string;
+  setWeekStart: (v: string) => void;
+  onClose: () => void;
+  setToastMessage: (v: string | null) => void;
+}
+
+function GeneralTabContent({
+  lang,
+  setLang,
+  homeView,
+  setHomeView,
+  timezone,
+  setTimezone,
+  timeFormat,
+  setTimeFormat,
+  dateFormat,
+  setDateFormat,
+  weekStart,
+  setWeekStart,
+  onClose,
+  setToastMessage,
+}: GeneralTabContentProps) {
+  return (
+    <div className="space-y-4 animate-fade-up">
+      {/* Language */}
+      <div className="flex flex-col gap-1.5 max-w-sm">
+        <label className="text-[13px] font-bold text-[#202020] dark:text-neutral-100">
+          Language
+        </label>
+        <div className="relative w-full">
+          <select
+            value={lang}
+            onChange={(e) => setLang(e.target.value)}
+            className="w-full text-[13px] font-medium text-[#202020] dark:text-white bg-white dark:bg-neutral-900 border border-neutral-250 dark:border-neutral-800 rounded-lg px-3 py-1.5 pr-8 outline-none focus:border-[#de4c4a] shadow-3xs cursor-pointer appearance-none"
+          >
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-neutral-450">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* Home view */}
+      <div className="flex flex-col gap-1.5 max-w-sm">
+        <label className="text-[13px] font-bold text-[#202020] dark:text-neutral-100">
+          Home view
+        </label>
+        <div className="relative w-full">
+          <select
+            value={homeView}
+            onChange={(e) => setHomeView(e.target.value)}
+            className="w-full text-[13px] font-medium text-[#202020] dark:text-white bg-white dark:bg-neutral-900 border border-neutral-255 dark:border-neutral-800 rounded-lg px-3 py-1.5 pr-8 outline-none focus:border-[#de4c4a] shadow-3xs cursor-pointer appearance-none"
+          >
+            <option value="Inbox">Inbox</option>
+            <option value="Today">Today</option>
+            <option value="Upcoming">Upcoming</option>
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-neutral-455">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* Date & Time Section Header */}
+      <div className="pt-3 border-t border-neutral-100 dark:border-neutral-900/60 max-w-sm">
+        <h4 className="text-[15px] font-bold text-[#202020] dark:text-white">
+          Date &amp; time
+        </h4>
+      </div>
+
+      {/* Time zone */}
+      <div className="flex flex-col gap-1.5 max-w-sm">
+        <label className="text-[13px] font-bold text-[#202020] dark:text-neutral-100">
+          Time zone
+        </label>
+        <div className="relative w-full">
+          <select
+            value={timezone}
+            onChange={(e) => setTimezone(e.target.value)}
+            className="w-full text-[13px] font-medium text-[#202020] dark:text-white bg-white dark:bg-neutral-900 border border-neutral-255 dark:border-neutral-800 rounded-lg px-3 py-1.5 pr-8 outline-none focus:border-[#de4c4a] shadow-3xs cursor-pointer appearance-none"
+          >
+            <option value="Europe/Stockholm">Europe/Stockholm</option>
+            <option value="Asia/Kolkata">Asia/Kolkata</option>
+            <option value="UTC">UTC</option>
+            <option value="America/New_York">America/New_York</option>
+            <option value="Europe/London">Europe/London</option>
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-neutral-455">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* Time format */}
+      <div className="flex flex-col gap-1.5 max-w-sm">
+        <label className="text-[13px] font-bold text-[#202020] dark:text-neutral-100">
+          Time format
+        </label>
+        <div className="relative w-full">
+          <select
+            value={timeFormat}
+            onChange={(e) => setTimeFormat(e.target.value)}
+            className="w-full text-[13px] font-medium text-[#202020] dark:text-white bg-white dark:bg-neutral-900 border border-neutral-255 dark:border-neutral-800 rounded-lg px-3 py-1.5 pr-8 outline-none focus:border-[#de4c4a] shadow-3xs cursor-pointer appearance-none"
+          >
+            <option value="13:00">13:00</option>
+            <option value="1:00 PM">1:00 PM</option>
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-neutral-455">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* Date format */}
+      <div className="flex flex-col gap-1.5 max-w-sm">
+        <label className="text-[13px] font-bold text-[#202020] dark:text-neutral-100">
+          Date format
+        </label>
+        <div className="relative w-full">
+          <select
+            value={dateFormat}
+            onChange={(e) => setDateFormat(e.target.value)}
+            className="w-full text-[13px] font-medium text-[#202020] dark:text-white bg-white dark:bg-neutral-900 border border-neutral-255 dark:border-neutral-800 rounded-lg px-3 py-1.5 pr-8 outline-none focus:border-[#de4c4a] shadow-3xs cursor-pointer appearance-none"
+          >
+            <option value="DD-MM-YYYY">DD-MM-YYYY</option>
+            <option value="MM-DD-YYYY">MM-DD-YYYY</option>
+            <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-neutral-455">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* Week start */}
+      <div className="flex flex-col gap-1.5 max-w-sm">
+        <label className="text-[13px] font-bold text-[#202020] dark:text-neutral-100">
+          Week start
+        </label>
+        <div className="relative w-full">
+          <select
+            value={weekStart}
+            onChange={(e) => setWeekStart(e.target.value)}
+            className="w-full text-[13px] font-medium text-[#202020] dark:text-white bg-white dark:bg-neutral-900 border border-neutral-255 dark:border-neutral-800 rounded-lg px-3 py-1.5 pr-8 outline-none focus:border-[#de4c4a] shadow-3xs cursor-pointer appearance-none"
+          >
+            <option value="Monday">Monday</option>
+            <option value="Sunday">Sunday</option>
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-neutral-455">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div className="border-t border-neutral-100 dark:border-neutral-800 pt-4 flex justify-end gap-2.5">
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded-lg bg-[#f5f5f5] dark:bg-neutral-850 px-4 py-2 text-[13px] font-semibold text-[#202020] dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer select-none"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setToastMessage("Settings updated successfully");
+            setTimeout(() => setToastMessage(null), 1500);
+            onClose();
+          }}
+          className="rounded-lg bg-[#de4c4a] px-4 py-2 text-[13px] font-semibold text-white hover:bg-[#c5392d] transition cursor-pointer select-none"
+        >
+          Update
+        </button>
+      </div>
+    </div>
+  );
+}
+
+interface AccountTabContentProps {
+  name: string;
+  setName: (v: string) => void;
+  email: string;
+  setEmail: (v: string) => void;
+  avatarSrc: string | null;
+  setAvatarSrc: (v: string | null) => void;
+  setToastMessage: (v: string | null) => void;
+  twoFAEnabled: boolean;
+  setTwoFAEnabled: (v: boolean) => void;
+  twoFAStage: "idle" | "enable";
+  setTwoFAStage: (v: "idle" | "enable") => void;
+  twoFACode: string;
+  setTwoFACode: (v: string) => void;
+  twoFAVerified: boolean;
+  onClose: () => void;
+}
+
+function AccountTabContent({
+  name,
+  setName,
+  email,
+  setEmail,
+  avatarSrc,
+  setAvatarSrc,
+  setToastMessage,
+  twoFAEnabled,
+  setTwoFAEnabled,
+  twoFAStage,
+  setTwoFAStage,
+  twoFACode,
+  setTwoFACode,
+  onClose,
+}: AccountTabContentProps) {
+  return (
+    <div className="space-y-5 animate-fade-up text-[#202020] dark:text-neutral-200">
+      {/* Photo */}
+      <div className="space-y-2 pt-0.5">
+        <span className="block text-[13px] font-bold text-[#202020] dark:text-neutral-100">
+          Photo
+        </span>
+        <div className="flex items-center gap-4">
+          {avatarSrc ? (
+            <img src={avatarSrc} className="w-14 h-14 rounded-full object-cover shadow-3xs" />
+          ) : (
+            <div className="w-14 h-14 rounded-full bg-[#efefef] text-neutral-800 flex items-center justify-center font-extrabold text-base select-none">
+              JD
+            </div>
+          )}
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                const url = prompt("Enter a mock photo image URL (or leave blank):");
+                if (url !== null) {
+                  setAvatarSrc(url || null);
+                  setToastMessage("Photo updated!");
+                  setTimeout(() => setToastMessage(null), 1500);
+                }
+              }}
+              className="rounded-lg bg-[#f5f5f5] dark:bg-neutral-855 px-3 py-1.5 text-[13px] font-semibold text-[#202020] dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer select-none"
+            >
+              Change photo
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setAvatarSrc(null);
+                setToastMessage("Photo removed!");
+                setTimeout(() => setToastMessage(null), 1500);
+              }}
+              className="rounded-lg border border-[#de4c4a] px-3 py-1.5 text-[13px] font-semibold text-[#de4c4a] hover:bg-[#de4c4a]/5 transition cursor-pointer select-none"
+            >
+              Remove photo
+            </button>
+          </div>
+        </div>
+        <p className="text-[12px] text-[#666666] dark:text-neutral-400 leading-normal select-none">
+          Pick a photo up to 4MB.
+        </p>
+      </div>
+
+      {/* Name */}
+      <div className="flex flex-col gap-1 max-w-sm pt-2">
+        <label className="text-[13px] font-bold text-[#202020] dark:text-neutral-100">
+          Name
+        </label>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full mt-1 rounded-lg border border-neutral-250 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-3 py-2 text-[13px] font-medium text-[#202020] dark:text-white outline-none focus:border-[#de4c4a] shadow-3xs"
+        />
+      </div>
+
+      {/* Email */}
+      <div className="flex flex-col gap-1 max-w-sm pt-2">
+        <label className="text-[13px] font-bold text-[#202020] dark:text-neutral-100">
+          Email
+        </label>
+        <p className="text-[13px] font-medium text-[#202020] dark:text-neutral-200 mt-1 select-none">
+          {email}
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            const newMail = prompt("Enter new email:", email);
+            if (newMail) setEmail(newMail);
+          }}
+          className="rounded-lg bg-[#f5f5f5] dark:bg-neutral-855 px-3 py-1.5 text-[13px] font-semibold text-[#202020] dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer select-none w-32 mt-2"
+        >
+          Change email
+        </button>
+      </div>
+
+      {/* Password */}
+      <div className="flex flex-col gap-1 max-w-sm pt-2">
+        <label className="text-[13px] font-bold text-[#202020] dark:text-neutral-100">
+          Password
+        </label>
+        <button
+          type="button"
+          onClick={() => {
+            setToastMessage("Password change flow");
+            setTimeout(() => setToastMessage(null), 1500);
+          }}
+          className="rounded-lg bg-[#f5f5f5] dark:bg-neutral-855 px-3 py-1.5 text-[13px] font-semibold text-[#202020] dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer select-none w-36 mt-2"
+        >
+          Change password
+        </button>
+      </div>
+
+      {/* Two-factor authentication */}
+      <div className="flex flex-col gap-1.5 max-w-sm pt-2">
+        <label className="text-[13px] font-bold text-[#202020] dark:text-neutral-100">
+          Two-factor authentication
+        </label>
+        <div className="mt-1">
+          <ToggleSwitch
+            checked={twoFAEnabled}
+            onChange={() => {
+              if (twoFAEnabled) {
+                setTwoFAEnabled(false);
+                setToastMessage("Two-factor authentication disabled");
+                setTimeout(() => setToastMessage(null), 1800);
+              } else {
+                setTwoFACode("");
+                setTwoFAStage("enable");
+              }
+            }}
+          />
+        </div>
+        <p className="text-[12px] text-[#666666] dark:text-neutral-400 select-none mt-1">
+          2FA is disabled on your Todoist account.
+        </p>
+      </div>
+
+      <div className="border-t border-neutral-100 dark:border-neutral-900/60 my-5" />
+
+      {/* Connected accounts */}
+      <div className="space-y-3 pt-2 max-w-sm select-none">
+        <h4 className="text-[13px] font-bold text-[#202020] dark:text-neutral-100">Connected accounts</h4>
+        <p className="text-[12px] text-[#666666] dark:text-neutral-450 leading-normal">
+          Log in to Todoist with your Google, Facebook, or Apple account.
+        </p>
+        
+        <div className="space-y-2 pt-1">
+          {/* Google */}
+          <button
+            onClick={() => alert("Google login integration flow")}
+            className="w-full flex items-center justify-center gap-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-4 py-2 text-[13px] font-semibold text-[#202020] dark:text-white hover:bg-neutral-50 dark:hover:bg-neutral-855 transition cursor-pointer"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.136 4.114-3.51 0-6.386-2.876-6.386-6.386s2.876-6.386 6.386-6.386c1.644 0 3.125.62 4.28 1.637l3.123-3.123C19.294 2.213 15.992 1 12.24 1A10.74 10.74 0 001.5 11.74a10.74 10.74 0 0010.74 10.74c5.845 0 10.74-4.21 10.74-10.74 0-.69-.06-1.356-.177-1.995H12.24z" />
+            </svg>
+            Log in with Google
+          </button>
+
+          {/* Facebook */}
+          <button
+            onClick={() => alert("Facebook login integration flow")}
+            className="w-full flex items-center justify-center gap-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-4 py-2 text-[13px] font-semibold text-[#202020] dark:text-white hover:bg-neutral-50 dark:hover:bg-neutral-855 transition cursor-pointer"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+            </svg>
+            Log in with Facebook
+          </button>
+
+          {/* Apple */}
+          <button
+            onClick={() => alert("Apple login integration flow")}
+            className="w-full flex items-center justify-center gap-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#181818] px-4 py-2 text-[13px] font-semibold text-[#202020] dark:text-white hover:bg-neutral-50 dark:hover:bg-neutral-855 transition cursor-pointer"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.22.67-2.94 1.51-.64.73-1.2 1.87-1.05 2.98 1.12.09 2.27-.58 2.97-1.43z" />
+            </svg>
+            Log in with Apple
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface ProductivityTabContentProps {
+  karmaOn: boolean;
+  setKarmaOn: (v: boolean) => void;
+  daysOff: Record<string, boolean>;
+  setDaysOff: (v: Record<string, boolean> | ((prev: Record<string, boolean>) => Record<string, boolean>)) => void;
+  state: any;
+  dispatch: any;
+}
+
+function ProductivityTabContent({
+  karmaOn,
+  setKarmaOn,
+  daysOff,
+  setDaysOff,
+  state,
+  dispatch,
+}: ProductivityTabContentProps) {
+  return (
+    <div className="space-y-5 animate-fade-up text-[#202020] dark:text-neutral-200">
+      <p className="text-[13px] leading-relaxed text-neutral-600 dark:text-neutral-400 select-none">
+        Celebrating your progress goes a long way toward achieving long-term success. And setting goals can help you stay on track!{" "}
+        <span className="text-[#de4c4a] hover:underline cursor-pointer">Learn more.</span>
+      </p>
+
+      {/* Karma */}
+      <div className="space-y-2">
+        <h4 className="text-[13px] font-bold text-[#202020] dark:text-white">Todoist Karma</h4>
+        <div className="flex items-center gap-2">
+          <ToggleSwitch
+            checked={karmaOn}
+            onChange={() => setKarmaOn(!karmaOn)}
+          />
+          <span className="text-[13px] font-semibold text-[#202020] dark:text-neutral-300">
+            {karmaOn ? "On" : "Off"}
+          </span>
+        </div>
+        <p className="text-[12px] leading-normal text-[#666666] dark:text-neutral-400">
+          Stay motivated and accountable with Todoist Karma. Achieve new levels by earning points for completing tasks, reaching your daily and weekly goals, and using advanced features like recurring due dates.{" "}
+          <span className="text-[#de4c4a] hover:underline cursor-pointer">Learn more.</span>
+        </p>
+      </div>
+
+      {/* Goals */}
+      <div className="pt-3.5 border-t border-neutral-100 dark:border-neutral-900/60 space-y-2">
+        <h4 className="text-[13px] font-bold text-[#202020] dark:text-white">Goals</h4>
+        <p className="text-[12px] text-[#666666] dark:text-neutral-400 select-none leading-normal">
+          Small steps add up to big achievements. Set task goals to keep your momentum.
+        </p>
+        
+        <div className="space-y-3 max-w-[240px] pt-1">
+          <div className="space-y-1">
+            <label className="text-[13px] font-bold text-[#202020] dark:text-neutral-200">Daily tasks</label>
+            <input
+              type="number"
+              value={state.productivityGoalDaily ?? 5}
+              onChange={(e) =>
+                dispatch({
+                  type: "UPDATE_GOALS",
+                  daily: Number(e.target.value),
+                  weekly: state.productivityGoalWeekly ?? 30,
+                })
+              }
+              className="w-full mt-1 rounded-lg border border-neutral-250 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-3 py-1.5 text-[13px] font-semibold text-[#202020] dark:text-white outline-none focus:border-[#de4c4a] shadow-3xs"
+            />
+          </div>
+          
+          <div className="space-y-1">
+            <label className="text-[13px] font-bold text-[#202020] dark:text-neutral-200">Weekly tasks</label>
+            <input
+              type="number"
+              value={state.productivityGoalWeekly ?? 30}
+              onChange={(e) =>
+                dispatch({
+                  type: "UPDATE_GOALS",
+                  daily: state.productivityGoalDaily ?? 5,
+                  weekly: Number(e.target.value),
+                })
+              }
+              className="w-full mt-1 rounded-lg border border-neutral-250 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-3 py-1.5 text-[13px] font-semibold text-[#202020] dark:text-white outline-none focus:border-[#de4c4a] shadow-3xs"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Days off */}
+      <div className="pt-3.5 border-t border-neutral-100 dark:border-neutral-900/60 space-y-2.5">
+        <h4 className="text-[13px] font-bold text-[#202020] dark:text-white">Days off</h4>
+        <div className="flex flex-wrap gap-4 select-none pt-0.5">
+          {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
+            <label key={d} className="flex items-center gap-2 cursor-pointer group">
+              <Checkbox
+                checked={daysOff[d]}
+                onChange={() => setDaysOff((s) => ({ ...s, [d]: !s[d] }))}
+              />
+              <span className="text-xs font-semibold text-[#202020] dark:text-neutral-300 group-hover:text-neutral-900 transition">
+                {d}
+              </span>
+            </label>
+          ))}
+        </div>
+        <p className="text-[12px] text-[#666666] dark:text-neutral-400 leading-normal">
+          When you take a break, your Karma and streaks can take a break too.
+        </p>
+      </div>
+
+      {/* Vacation mode */}
+      <div className="pt-3.5 border-t border-neutral-100 dark:border-neutral-900/60 space-y-2">
+        <h4 className="text-[13px] font-bold text-[#202020] dark:text-white">Vacation mode</h4>
+        <div className="flex items-center gap-2">
+          <ToggleSwitch
+            checked={state.vacationMode ?? false}
+            onChange={() =>
+              dispatch({
+                type: "TOGGLE_VACATION_MODE",
+                val: !(state.vacationMode ?? false),
+              })
+            }
+          />
+          <span className="text-[13px] font-semibold text-[#202020] dark:text-neutral-300">
+            {state.vacationMode ? "On" : "Off"}
+          </span>
+        </div>
+        <p className="text-[12px] text-[#666666] dark:text-neutral-400 leading-normal">
+          Time off means your streaks and Karma stay, even if you don't hit your task goals.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+interface QuickAddTabContentProps {
+  quickActions: string[];
+  setQuickActions: (v: string[] | ((prev: string[]) => string[])) => void;
+  showActionLabels: boolean;
+  setShowActionLabels: (v: boolean | ((prev: boolean) => boolean)) => void;
+}
+
+function QuickAddTabContent({
+  quickActions,
+  setQuickActions,
+  showActionLabels,
+  setShowActionLabels,
+}: QuickAddTabContentProps) {
+  return (
+    <div className="space-y-5 animate-fade-up text-[#202020] dark:text-neutral-200">
+      <p className="text-[13px] leading-relaxed text-neutral-600 dark:text-neutral-400 select-none">
+        To reorder your task actions, use drag and drop to move actions up or down the list.{" "}
+        <span className="text-[#de4c4a] hover:underline cursor-pointer">Learn more.</span>
+      </p>
+
+      {/* Show task actions */}
+      <div className="space-y-2">
+        <h4 className="text-[13px] font-bold text-[#202020] dark:text-white">Show task actions</h4>
+        <div className="mt-2 max-w-sm overflow-hidden rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-3xs">
+          {quickActions.map((a, i) => (
+            <div
+              key={a}
+              className={cn(
+                "flex items-center gap-3 px-3 py-2 text-[13px] font-medium text-[#202020] dark:text-white",
+                i > 0 && "border-t border-neutral-100 dark:border-neutral-800",
+              )}
+            >
+              <button
+                onClick={() =>
+                  setQuickActions((list) => list.filter((x) => x !== a))
+                }
+                aria-label={`Remove ${a}`}
+                className="text-red-500 hover:text-red-700 cursor-pointer"
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/>
+                </svg>
+              </button>
+              <span className="text-neutral-400 dark:text-neutral-500">
+                <QuickActionIcon name={a} />
+              </span>
+              <span>{a}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* More task actions */}
+      <div className="space-y-2 pt-2">
+        <h4 className="text-[13px] font-bold text-[#202020] dark:text-white">More task actions</h4>
+        <div className="mt-2 max-w-sm overflow-hidden rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-3xs">
+          {["Labels", "Deadline", "Location"]
+            .filter((a) => !quickActions.includes(a))
+            .map((a, i) => (
+              <div
+                key={a}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2 text-[13px] font-medium text-[#202020] dark:text-white",
+                  i > 0 && "border-t border-neutral-100 dark:border-neutral-800",
+                )}
+              >
+                <button
+                  onClick={() =>
+                    setQuickActions((list) => [...list, a])
+                  }
+                  aria-label={`Add ${a}`}
+                  className="text-green-600 hover:text-green-800 cursor-pointer"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                  </svg>
+                </button>
+                <span className="text-neutral-400 dark:text-neutral-500">
+                  <QuickActionIcon name={a} />
+                </span>
+                <span>{a}</span>
+              </div>
+            ))}
+        </div>
+      </div>
+
+      {/* Show action labels */}
+      <div className="space-y-2 pt-2">
+        <h4 className="text-[13px] font-bold text-[#202020] dark:text-white">Show action labels</h4>
+        <div className="mt-2 flex items-center gap-2.5">
+          <ToggleSwitch
+            checked={showActionLabels}
+            onChange={() => setShowActionLabels((v) => !v)}
+          />
+          <span className="text-[13px] font-semibold text-[#202020] dark:text-neutral-300">
+            {showActionLabels ? "On" : "Off"}
+          </span>
+        </div>
+        
+        <p className="text-[12px] text-neutral-400 dark:text-neutral-500 font-semibold pt-2">Example:</p>
+        <div className="mt-1.5 flex max-w-sm flex-wrap items-center gap-2 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-[#fafafa] dark:bg-neutral-900/60 p-2.5 shadow-3xs select-none">
+          {quickActions.map((a) => (
+            <span
+              key={a}
+              className="inline-flex items-center gap-1.5 rounded-md border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-2 py-1 text-xs text-neutral-600 dark:text-neutral-400 shadow-3xs"
+            >
+              <QuickActionIcon name={a} />
+              {showActionLabels && <span className="text-[11px] font-semibold text-[#202020] dark:text-white">{a}</span>}
+            </span>
+          ))}
+          <span className="inline-flex items-center rounded-md border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-2 py-1 text-xs text-neutral-500 dark:text-neutral-450 shadow-3xs">
+            ⋯
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface RemindersTabContentProps {
+  autoReminder: string;
+  setAutoReminder: (v: string) => void;
+  remDesktop: boolean;
+  setRemDesktop: (v: boolean) => void;
+  remMobile: boolean;
+  setRemMobile: (v: boolean) => void;
+  remEmail: boolean;
+  setRemEmail: (v: boolean) => void;
+  setToastMessage: (v: string | null) => void;
+}
+
+function RemindersTabContent({
+  autoReminder,
+  setAutoReminder,
+  remDesktop,
+  setRemDesktop,
+  remMobile,
+  setRemMobile,
+  remEmail,
+  setRemEmail,
+  setToastMessage,
+}: RemindersTabContentProps) {
+  return (
+    <div className="space-y-5 animate-fade-up text-[#202020] dark:text-neutral-200">
+      <p className="text-xs leading-relaxed text-neutral-600 dark:text-neutral-400 select-none">
+        The secret to effortlessly remembering everything? Have Todoist remind you.{" "}
+        <span className="text-[#de4c4a] hover:underline cursor-pointer">Learn more.</span>
+      </p>
+
+      {/* Automatic reminders */}
+      <div className="space-y-2">
+        <h4 className="text-[13px] font-bold text-[#202020] dark:text-white">Automatic reminders</h4>
+        <div className="relative w-full max-w-sm">
+          <select
+            value={autoReminder}
+            onChange={(e) => setAutoReminder(e.target.value)}
+            className="w-full text-[13px] font-medium text-[#202020] dark:text-white bg-white dark:bg-neutral-900 border border-neutral-250 dark:border-neutral-800 rounded-lg px-3 py-1.5 pr-8 outline-none focus:border-[#de4c4a] shadow-3xs cursor-pointer appearance-none"
+          >
+            <option>At time of task</option>
+            <option>10 minutes before</option>
+            <option>30 minutes before</option>
+            <option>1 hour before</option>
+            <option>1 day before</option>
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-neutral-450">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+        </div>
+        <p className="text-[12px] text-[#666666] dark:text-neutral-400 select-none leading-snug">
+          When enabled, a reminder before the task's time will be added by default.
+        </p>
+      </div>
+
+      {/* How would you like to get reminded */}
+      <div className="pt-3.5 border-t border-neutral-100 dark:border-neutral-900/60 space-y-2.5">
+        <h4 className="text-[13px] font-bold text-[#202020] dark:text-white">How would you like to get reminded?</h4>
+        <div className="space-y-3">
+          {[
+            { label: "Desktop notifications", val: remDesktop, setter: setRemDesktop },
+            { label: "Mobile notifications", val: remMobile, setter: setRemMobile },
+            { label: "Emails", val: remEmail, setter: setRemEmail },
+          ].map((item) => (
+            <div key={item.label} className="flex items-center gap-2.5">
+              <ToggleSwitch
+                checked={item.val}
+                onChange={() => item.setter(!item.val)}
+              />
+              <span className="text-xs font-semibold text-neutral-700 dark:text-neutral-300 select-none">
+                {item.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Send test reminder */}
+      <div className="pt-3.5 border-t border-neutral-100 dark:border-neutral-900/60 flex flex-col md:flex-row justify-between items-start gap-6">
+        <div className="max-w-sm space-y-1.5">
+          <h4 className="text-[13px] font-bold text-[#202020] dark:text-white">Send test reminder</h4>
+          <p className="text-[12px] text-[#666666] dark:text-neutral-400 leading-normal select-none">
+            Wondering how reminders help you stay productive, or want to check if your device settings are correct? Trigger a test reminder to see it in action. You should receive it within 1 minute.
+          </p>
+          <div className="flex gap-2 pt-1 select-none">
+            <button
+              onClick={() => {
+                setToastMessage("Test reminder sent (web)");
+                setTimeout(() => setToastMessage(null), 1500);
+              }}
+              className="rounded-lg bg-[#f5f5f5] dark:bg-neutral-855 px-3 py-1.5 text-xs font-bold text-[#202020] dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer"
+            >
+              Test web
+            </button>
+            <button
+              onClick={() => {
+                setToastMessage("Test reminder sent (mobile)");
+                setTimeout(() => setToastMessage(null), 1500);
+              }}
+              className="rounded-lg bg-[#f5f5f5] dark:bg-neutral-855 px-3 py-1.5 text-xs font-bold text-[#202020] dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer"
+            >
+              Test mobile
+            </button>
+          </div>
+        </div>
+        
+        <div className="shrink-0 w-full md:w-auto">
+          <p className="text-[11px] font-bold text-neutral-400 uppercase select-none">Preview</p>
+          <div className="mt-1.5 flex w-60 items-center gap-3 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#181818] p-2.5 shadow-3xs select-none">
+            <span className="text-[#de4c4a]">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+            </span>
+            <div className="flex-1 min-w-0">
+              <p className="text-[11px] font-bold text-[#202020] dark:text-white truncate">Get groceries</p>
+              <p className="text-[9px] text-neutral-400 mt-0.5">Today 09:00</p>
+            </div>
+            <span className="text-[9px] text-neutral-400">now</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Your devices */}
+      <div className="pt-3.5 border-t border-neutral-100 dark:border-neutral-900/60 space-y-2">
+        <h4 className="text-[13px] font-bold text-[#202020] dark:text-white">Your devices</h4>
+        <p className="text-[12px] text-[#666666] dark:text-neutral-400 select-none">
+          The following devices are connected to your Todoist.
+        </p>
+        <div className="max-w-md divide-y divide-neutral-150 dark:divide-neutral-855 pt-0.5">
+          {["Apple Watch", "iPhone"].map((d) => (
+            <div key={d} className="flex items-center justify-between py-2 text-xs">
+              <span className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300 font-semibold">
+                {d === "Apple Watch" ? "⌚" : "📱"} {d}
+              </span>
+              <button
+                onClick={() => alert(`Disconnected ${d}`)}
+                className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 cursor-pointer transition text-xs font-bold px-1.5"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

@@ -6,6 +6,28 @@ import { Button, Wordmark } from "@/components/ui";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils/cn";
 import { LandingIcon, type IconName } from "./LandingIcons";
+import {
+  Tray as PhTray,
+  CalendarBlank as PhCalendarBlank,
+  Kanban as PhKanban,
+  ChartLineUp as PhChartLineUp,
+  UsersThree as PhUsersThree,
+  Crown as PhCrown,
+  Star as PhStar,
+  Plus as PhPlus,
+  ListChecks as PhListChecks,
+  FolderSimple as PhFolderSimple,
+  ShareNetwork as PhShareNetwork,
+  Flag as PhFlag,
+  Alarm as PhAlarm,
+  PuzzlePiece as PhPuzzlePiece,
+  Funnel as PhFunnel,
+  CheckCircle as PhCheckCircle,
+  DownloadSimple as PhDownloadSimple,
+  SquaresFour as PhSquaresFour,
+  SlidersHorizontal as PhSliders,
+  Brain as PhBrain,
+} from "@phosphor-icons/react";
 
 type ActiveView =
   | "home"
@@ -309,22 +331,23 @@ export function LandingPage() {
             {/* Interactive Mockup View Switcher */}
             <div className="flex flex-wrap items-center justify-center gap-2 mb-10 max-w-4xl mx-auto px-6">
               {[
-                { id: "inbox", label: "📥 Inbox & Tasks" },
-                { id: "calendar", label: "📅 Schedule Calendar" },
-                { id: "board", label: "📋 Kanban Board" },
-                { id: "productivity", label: "📈 Karma & Progress" },
-                { id: "teams", label: "👥 Team Workspace" },
+                { id: "inbox", label: "Inbox & Tasks", Icon: PhTray },
+                { id: "calendar", label: "Schedule Calendar", Icon: PhCalendarBlank },
+                { id: "board", label: "Kanban Board", Icon: PhKanban },
+                { id: "productivity", label: "Karma & Progress", Icon: PhChartLineUp },
+                { id: "teams", label: "Team Workspace", Icon: PhUsersThree },
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setMockupTab(tab.id as any)}
                   className={cn(
-                    "px-4 py-2 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer",
+                    "flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer",
                     mockupTab === tab.id
                       ? "bg-brand text-white shadow-md shadow-brand/20 scale-[1.05]"
                       : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200/80",
                   )}
                 >
+                  <tab.Icon size={14} weight="bold" />
                   {tab.label}
                 </button>
               ))}
@@ -334,27 +357,55 @@ export function LandingPage() {
             <section className="px-6 pb-20 max-w-6xl mx-auto relative">
               <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,rgba(222,72,58,0.06),transparent_65%)] pointer-events-none" />
 
-              {/* MacBook Bezel chassis container */}
-              <div className="mx-auto max-w-5xl rounded-[30px] border-4 border-neutral-800 bg-[#161616] p-3 shadow-2xl relative overflow-hidden transition-all duration-500 hover:shadow-brand/10 hover:border-neutral-700/80">
-                {/* Webcam dot indicator */}
-                <div className="absolute top-1.5 left-1/2 -translate-x-1/2 flex items-center gap-1 z-20">
-                  <span className="w-1.5 h-1.5 rounded-full bg-neutral-900 border border-neutral-800" />
-                  <span className="w-1 h-1 rounded-full bg-blue-500/80 animate-pulse" />
+              {/* MacBook lid / screen */}
+              <div className="mx-auto max-w-5xl rounded-t-[22px] border-[10px] border-b-[14px] border-neutral-900 bg-neutral-900 shadow-2xl relative transition-all duration-500 hover:shadow-brand/10">
+                {/* Webcam */}
+                <div className="absolute top-[3px] left-1/2 -translate-x-1/2 z-20 flex items-center gap-1">
+                  <span className="h-1 w-1 rounded-full bg-neutral-700" />
                 </div>
 
-                {/* Inner screen aspect container */}
-                <div className="rounded-[20px] bg-white overflow-hidden aspect-[16/10] flex flex-col relative select-none">
-                  {/* Mock browser header */}
-                  <div className="bg-neutral-50 border-b border-neutral-100 px-4 py-2.5 flex items-center justify-between shrink-0">
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                {/* Inner screen */}
+                <div className="rounded-[10px] bg-white overflow-hidden aspect-[16/10] flex flex-col relative select-none">
+                  {/* Chrome tab strip */}
+                  <div className="flex items-center gap-2 bg-[#dee1e6] px-3 pt-2 shrink-0">
+                    <div className="flex items-center gap-1.5 pr-1">
+                      <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
+                      <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
+                      <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
                     </div>
-                    <div className="bg-neutral-200/60 rounded px-20 py-0.5 text-[9px] text-neutral-500 font-semibold truncate max-w-sm">
-                      https://todoist.com/app/{mockupTab}
+                    {/* active tab */}
+                    <div className="flex items-center gap-1.5 rounded-t-lg bg-white px-3 py-1.5 text-[10px] font-semibold text-neutral-700 shadow-[0_-1px_2px_rgba(0,0,0,0.04)]">
+                      <span className="h-3 w-3 rounded-sm bg-brand text-[7px] font-bold text-white flex items-center justify-center">
+                        T
+                      </span>
+                      <span className="max-w-[120px] truncate">Todoist: To-Do List</span>
+                      <span className="text-neutral-400">×</span>
                     </div>
-                    <div className="w-10" />
+                    {/* inactive tab */}
+                    <div className="hidden sm:flex items-center gap-1.5 rounded-t-lg px-3 py-1.5 text-[10px] font-medium text-neutral-500">
+                      <span className="h-3 w-3 rounded-sm bg-neutral-300" />
+                      <span className="max-w-[90px] truncate">Inbox</span>
+                    </div>
+                    <span className="text-neutral-500 text-sm leading-none pb-1">+</span>
+                  </div>
+                  {/* Chrome toolbar */}
+                  <div className="flex items-center gap-2 bg-white border-b border-neutral-200 px-3 py-1.5 shrink-0">
+                    <div className="flex items-center gap-2.5 text-neutral-400">
+                      <BrowserGlyph d="M15 5l-7 7 7 7" />
+                      <BrowserGlyph d="M9 5l7 7-7 7" />
+                      <BrowserGlyph d="M4 9a8 8 0 0114-5M20 12a8 8 0 01-14 5" />
+                    </div>
+                    <div className="flex flex-1 items-center gap-1.5 rounded-full bg-neutral-100 px-3 py-1 text-[9px] text-neutral-500">
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" aria-hidden>
+                        <rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" strokeWidth="2" />
+                        <path d="M8 11V8a4 4 0 018 0v3" stroke="currentColor" strokeWidth="2" />
+                      </svg>
+                      <span className="truncate font-medium">todoist.com/app/{mockupTab}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-neutral-400">
+                      <span className="text-xs"></span>
+                      <span className="h-4 w-4 rounded-full bg-gradient-to-br from-brand to-amber-400" />
+                    </div>
                   </div>
                   {/* Mock dashboard content */}
                   <div className="flex-1 flex overflow-hidden">
@@ -584,7 +635,7 @@ export function LandingPage() {
                               Karma &amp; Productivity Metrics
                             </h3>
                             <span className="text-[10px] text-amber-500 font-bold flex items-center gap-1">
-                              👑 Level: Master
+                              <PhCrown size={12} weight="fill" /> Level: Master
                             </span>
                           </div>
                           <div className="grid grid-cols-3 gap-3">
@@ -728,6 +779,121 @@ export function LandingPage() {
                       )}
                     </main>
                   </div>
+                </div>
+              </div>
+              {/* MacBook base / hinge */}
+              <div className="mx-auto max-w-[calc(64rem+40px)] relative">
+                <div className="mx-auto h-3 w-full rounded-b-xl bg-gradient-to-b from-neutral-300 to-neutral-400 shadow-md" />
+                <div className="mx-auto h-1.5 w-28 rounded-b-lg bg-neutral-400/80" />
+              </div>
+            </section>
+
+            {/* Social proof band */}
+            <SocialProofBand />
+
+            {/* ===================== FEATURE SECTIONS ===================== */}
+
+            {/* 1 — text left / mockup right */}
+            <FeatureSplit
+              eyebrow="Capture everything"
+              title="Get it all out of your head"
+              body="Add tasks in seconds with natural language. Type “Pay rent every 1st at 9am” and we’ll set the date, time, and recurrence for you — so nothing slips."
+              bullets={[
+                "Natural-language due dates & recurrence",
+                "Priorities, labels, reminders & sub-tasks",
+                "Quick Add from anywhere with one shortcut",
+              ]}
+              cta={{ label: "Start for free", href: siteConfig.routes.signup }}
+            >
+              <MockInbox />
+            </FeatureSplit>
+
+            {/* 2 — mockup left / text right */}
+            <FeatureSplit
+              reverse
+              tinted
+              eyebrow="Plan your week"
+              title="See your schedule at a glance"
+              body="Switch any project to a calendar or board layout. Drag tasks across days, time-block your focus hours, and keep deadlines visible."
+              bullets={[
+                "Calendar & Kanban board layouts",
+                "Drag-and-drop scheduling",
+                "Time-blocking with task durations",
+              ]}
+            >
+              <MockCalendar />
+            </FeatureSplit>
+
+            {/* 3 — text left / mockup right */}
+            <FeatureSplit
+              eyebrow="Stay motivated"
+              title="Build momentum with Karma"
+              body="Set daily and weekly goals, keep your streak alive, and watch your productivity trend upward with visual progress and celebrations."
+              bullets={[
+                "Daily & weekly task goals",
+                "Streaks, levels and Karma points",
+                "Vacation mode that protects your streak",
+              ]}
+            >
+              <MockKarma />
+            </FeatureSplit>
+
+            {/* Quote + simple→advanced rail */}
+            <QuoteSlider onExplore={() => setActiveView("teams")} />
+
+            {/* Feature grid */}
+            <FeatureGrid nav={setActiveView} />
+
+            {/* Stats band */}
+            <section className="bg-[#fcf7f5] py-16">
+              <div className="mx-auto grid max-w-4xl grid-cols-2 gap-8 px-6 text-center md:grid-cols-4">
+                {[
+                  ["4.8★", "App Store rating"],
+                  ["30M+", "People organized"],
+                  ["2B+", "Tasks completed"],
+                  ["100+", "Integrations"],
+                ].map(([n, l]) => (
+                  <div key={l}>
+                    <p className="text-3xl font-extrabold text-brand">{n}</p>
+                    <p className="mt-1 text-sm text-neutral-500">{l}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* 4 — mockup left / text right */}
+            <FeatureSplit
+              reverse
+              tinted
+              eyebrow="Work together"
+              title="Bring your team into one place"
+              body="Create a shared team workspace, organize projects into folders, assign work, and discuss right where the tasks live."
+              bullets={[
+                "Shared team workspaces & folders",
+                "Assignees, comments & reactions",
+                "Roles and access controls",
+              ]}
+              cta={{ label: "Explore for Teams", onClick: () => setActiveView("teams") }}
+            >
+              <MockTeam />
+            </FeatureSplit>
+
+            {/* Final CTA */}
+            <section className="px-6 py-24">
+              <div className="mx-auto max-w-3xl rounded-3xl bg-gradient-to-br from-brand to-[#b23b30] px-8 py-16 text-center text-white shadow-xl">
+                <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+                  Start organizing your work &amp; life today
+                </h2>
+                <p className="mx-auto mt-3 max-w-md text-white/85">
+                  Join millions who trust Todoist to keep life moving forward.
+                  It&apos;s free to get started.
+                </p>
+                <div className="mt-8 flex justify-center">
+                  <Link href={siteConfig.routes.signup}>
+                    <button className="rounded-lg bg-white px-7 py-3 text-sm font-bold text-brand shadow-sm transition hover:bg-white/90">
+                      Start for free
+                    </button>
+                  </Link>
                 </div>
               </div>
             </section>
@@ -1871,5 +2037,433 @@ function JobRow({
         Apply
       </button>
     </div>
+  );
+}
+
+/* ---------- Landing helper components ---------- */
+
+function BrowserGlyph({ d }: { d: string }) {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d={d} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function FeatureSplit({
+  eyebrow,
+  title,
+  body,
+  bullets,
+  reverse,
+  tinted,
+  cta,
+  children,
+}: {
+  eyebrow: string;
+  title: string;
+  body: string;
+  bullets: string[];
+  reverse?: boolean;
+  tinted?: boolean;
+  cta?: { label: string; href?: string; onClick?: () => void };
+  children: React.ReactNode;
+}) {
+  return (
+    <section className={cn("py-16 sm:py-24", tinted && "bg-neutral-50/70")}>
+      <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 md:grid-cols-2 md:gap-16">
+        {/* Text */}
+        <div className={cn(reverse && "md:order-2")}>
+          <span className="text-xs font-extrabold uppercase tracking-wider text-brand">
+            {eyebrow}
+          </span>
+          <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-neutral-900 sm:text-4xl">
+            {title}
+          </h2>
+          <p className="mt-4 text-lg leading-relaxed text-neutral-500">{body}</p>
+          <ul className="mt-6 space-y-3">
+            {bullets.map((b) => (
+              <li key={b} className="flex items-start gap-3 text-sm text-neutral-700">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-tint text-brand">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
+                    <path d="M5 12l5 5L20 6" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                {b}
+              </li>
+            ))}
+          </ul>
+          {cta && (
+            <div className="mt-8">
+              {cta.href ? (
+                <Link href={cta.href}>
+                  <Button size="lg">{cta.label}</Button>
+                </Link>
+              ) : (
+                <button
+                  onClick={cta.onClick}
+                  className="rounded-lg bg-brand px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-brand-dark"
+                >
+                  {cta.label}
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Visual */}
+        <div className={cn("relative", reverse && "md:order-1")}>
+          <div className="absolute -inset-4 -z-10 rounded-3xl bg-[radial-gradient(circle_at_center,rgba(222,72,58,0.08),transparent_70%)]" />
+          <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-xl">
+            {children}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MockChrome({ path }: { path: string }) {
+  return (
+    <div className="flex items-center gap-2 border-b border-neutral-100 bg-neutral-50 px-3 py-2">
+      <span className="h-2 w-2 rounded-full bg-[#ff5f57]" />
+      <span className="h-2 w-2 rounded-full bg-[#febc2e]" />
+      <span className="h-2 w-2 rounded-full bg-[#28c840]" />
+      <span className="ml-2 truncate rounded-full bg-white px-3 py-0.5 text-[9px] text-neutral-400">
+        todoist.com/{path}
+      </span>
+    </div>
+  );
+}
+
+function MockInbox() {
+  const rows: [string, string | null][] = [
+    ["Pay rent · every 1st", "red"],
+    ["Draft Q3 marketing budget", "orange"],
+    ["Reply to design feedback", "blue"],
+    ["Book dentist appointment", null],
+    ["Plan weekend trip", null],
+  ];
+  return (
+    <div>
+      <MockChrome path="app/inbox" />
+      <div className="p-5">
+        <p className="mb-3 text-sm font-bold text-[#202020]">Inbox</p>
+        <div className="space-y-2.5">
+          {rows.map(([t, c]) => (
+            <div key={t} className="flex items-center gap-3">
+              <span
+                className="h-4 w-4 shrink-0 rounded-full border-2"
+                style={{ borderColor: c ? dueHex(c) : "#cfcfcf" }}
+              />
+              <span className="text-sm text-neutral-700">{t}</span>
+            </div>
+          ))}
+          <div className="flex items-center gap-2 pt-1 text-sm font-medium text-brand">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-brand text-white">
+              +
+            </span>
+            Add task
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MockCalendar() {
+  return (
+    <div>
+      <MockChrome path="app/upcoming" />
+      <div className="p-5">
+        <p className="mb-3 text-sm font-bold text-[#202020]">Upcoming</p>
+        <div className="grid grid-cols-4 gap-2">
+          {["Mon 1", "Tue 2", "Wed 3", "Thu 4"].map((d, i) => (
+            <div key={d}>
+              <p className="mb-1.5 text-[10px] font-bold text-neutral-500">{d}</p>
+              <div className="space-y-1.5">
+                {i === 0 && (
+                  <>
+                    <CalChip color="#dc4c3e" label="09:30 Standup" />
+                    <CalChip color="#2f6fed" label="14:00 Review" />
+                  </>
+                )}
+                {i === 1 && <CalChip color="#e8833a" label="11:00 Crit" />}
+                {i === 2 && <CalChip color="#4b8b3b" label="15:00 Pitch" />}
+                {i === 3 && <CalChip color="#7c6fed" label="10:00 1:1" />}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CalChip({ color, label }: { color: string; label: string }) {
+  return (
+    <div
+      className="rounded p-1.5 text-[9px] font-semibold leading-tight"
+      style={{ backgroundColor: `${color}1a`, color, borderLeft: `2px solid ${color}` }}
+    >
+      {label}
+    </div>
+  );
+}
+
+function MockKarma() {
+  return (
+    <div>
+      <MockChrome path="app/productivity" />
+      <div className="p-5">
+        <p className="mb-3 text-sm font-bold text-[#202020]">Productivity</p>
+        <div className="grid grid-cols-3 gap-2.5">
+          {[
+            ["Daily", "5/5", "#4b8b3b"],
+            ["Weekly", "32/30", "#4b8b3b"],
+            ["Karma", "8,450", "#dc4c3e"],
+          ].map(([l, v, c]) => (
+            <div key={l} className="rounded-xl border border-neutral-200 p-2.5 text-center">
+              <p className="text-[10px] font-bold text-neutral-400">{l}</p>
+              <p className="mt-1 text-base font-extrabold" style={{ color: c }}>
+                {v}
+              </p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-3 flex items-end justify-between gap-1.5 px-1">
+          {["h-5", "h-8", "h-11", "h-7", "h-10", "h-4", "h-6"].map((h, i) => (
+            <div key={i} className={cn("flex-1 rounded-t bg-brand/80", h)} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MockTeam() {
+  const members: [string, string, string][] = [
+    ["Tushar Jolly", "Owner", "#d6409f"],
+    ["Sarah Conners", "Member", "#2f6fed"],
+    ["Alex Rivera", "Member", "#4b8b3b"],
+  ];
+  return (
+    <div>
+      <MockChrome path="app/team" />
+      <div className="p-5">
+        <p className="mb-3 text-sm font-bold text-[#202020]">Nicelydone · Team</p>
+        <div className="divide-y divide-neutral-100">
+          {members.map(([n, r, c]) => (
+            <div key={n} className="flex items-center justify-between py-2.5">
+              <span className="flex items-center gap-2.5">
+                <span
+                  className="flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold text-white"
+                  style={{ backgroundColor: c }}
+                >
+                  {n.charAt(0)}
+                </span>
+                <span className="text-sm text-neutral-700">{n}</span>
+              </span>
+              <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-semibold text-neutral-500">
+                {r}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function dueHex(c: string): string {
+  return (
+    { red: "#dc4c3e", orange: "#ea580c", blue: "#2f6fed", green: "#16a34a" }[c] ??
+    "#cfcfcf"
+  );
+}
+
+/* ---------- Landing marketing sections ---------- */
+
+function SocialProofBand() {
+  return (
+    <section className="bg-[#f6ece2] py-10">
+      <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-8 px-6 md:flex-row">
+        <div className="text-center md:text-left">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-neutral-500">
+            300,000+ Reviews
+          </p>
+          <div className="mt-1 flex items-center justify-center gap-0.5 text-amber-500 md:justify-start">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <PhStar key={i} size={16} weight="fill" />
+            ))}
+          </div>
+          <p className="mt-1 text-sm font-semibold text-neutral-700">
+            App Store and Google Play
+          </p>
+        </div>
+        <div className="text-center md:text-right">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-neutral-500">
+            Used by individuals and teams at
+          </p>
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-bold text-neutral-500 md:justify-end">
+            <span className="text-[#ff9900]">amazon</span>
+            <span className="text-neutral-700">Disney</span>
+            <span className="text-[#5fa746]">shopify</span>
+            <span className="text-[#57068c]">NYU</span>
+            <span className="text-neutral-800"> Apple</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function QuoteSlider({ onExplore }: { onExplore: () => void }) {
+  const steps: { label: string; Icon: React.ComponentType<{ size?: number }>; pro?: boolean }[] = [
+    { label: "Add a task", Icon: PhPlus },
+    { label: "Break it into subtasks", Icon: PhListChecks },
+    { label: "Move tasks into projects", Icon: PhFolderSimple },
+    { label: "Share your projects", Icon: PhShareNetwork },
+    { label: "Give tasks a priority level", Icon: PhFlag },
+    { label: "Set up reminders", Icon: PhAlarm, pro: true },
+    { label: "Add some integrations", Icon: PhPuzzlePiece },
+    { label: "Create filter views", Icon: PhFunnel },
+    { label: "Complete tasks", Icon: PhCheckCircle },
+  ];
+  return (
+    <section className="px-6 py-20">
+      <div className="mx-auto max-w-4xl rounded-3xl bg-[#fdf6f0] p-8 sm:p-14">
+        <blockquote className="mx-auto max-w-2xl text-center text-2xl font-extrabold leading-snug text-neutral-900 sm:text-3xl">
+          “Todoist makes it easy to go as simple or as complex as you want”{" "}
+          <span className="text-neutral-400">– The Verge</span>
+        </blockquote>
+        <div className="mt-3 text-center">
+          <button
+            onClick={onExplore}
+            className="text-sm font-bold text-brand hover:underline"
+          >
+            Explore more features
+          </button>
+        </div>
+
+        <div className="mt-10 grid items-center gap-10 md:grid-cols-2">
+          {/* illustration placeholder */}
+          <div className="relative flex h-60 items-center justify-center rounded-2xl border border-neutral-200/70 bg-white">
+            <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_30%_30%,rgba(244,208,106,0.25),transparent_60%),radial-gradient(circle_at_70%_70%,rgba(222,72,58,0.15),transparent_60%)]" />
+            <PhListChecks size={56} className="relative text-brand/70" />
+          </div>
+
+          {/* simple → advanced rail */}
+          <div className="flex gap-4">
+            <div className="flex flex-col items-center pt-1">
+              <span className="rounded-full bg-neutral-200 px-2 py-0.5 text-[10px] font-bold text-neutral-600">
+                Simple
+              </span>
+              <span className="my-1 w-px flex-1 bg-gradient-to-b from-neutral-300 via-brand/40 to-neutral-300" />
+              <span className="rounded-full bg-brand px-2 py-0.5 text-[10px] font-bold text-white">
+                Customize
+              </span>
+              <span className="my-1 w-px flex-1 bg-gradient-to-b from-neutral-300 via-brand/40 to-neutral-300" />
+              <span className="rounded-full bg-neutral-200 px-2 py-0.5 text-[10px] font-bold text-neutral-600">
+                Advanced
+              </span>
+            </div>
+            <ul className="flex-1 space-y-2.5">
+              {steps.map((s) => (
+                <li key={s.label} className="flex items-center gap-2.5 text-sm text-neutral-700">
+                  <span className="text-neutral-400">
+                    <s.Icon size={16} />
+                  </span>
+                  {s.label}
+                  {s.pro && (
+                    <span className="rounded bg-brand-tint px-1.5 py-0.5 text-[9px] font-bold uppercase text-brand">
+                      Pro
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FeatureGrid({ nav }: { nav: (v: ActiveView) => void }) {
+  const items: {
+    Icon: React.ComponentType<{ size?: number; className?: string }>;
+    title: string;
+    body: string;
+    link: string;
+    to: ActiveView;
+  }[] = [
+    {
+      Icon: PhDownloadSimple,
+      title: "With you everywhere",
+      body: "Use Todoist's apps, extensions and widgets on any device or platform.",
+      link: "Download apps",
+      to: "downloads",
+    },
+    {
+      Icon: PhSquaresFour,
+      title: "There's a template for that",
+      body: "Project templates are available to get you started with whatever's on your plate.",
+      link: "Start with templates",
+      to: "templates",
+    },
+    {
+      Icon: PhSliders,
+      title: "Make Todoist yours",
+      body: "Customize your to-do list with filters, labels, priorities, and more.",
+      link: "See all features",
+      to: "teams",
+    },
+    {
+      Icon: PhPuzzlePiece,
+      title: "Connect with your other tools",
+      body: "Link Todoist with your calendar, voice assistant, and 70+ other tools.",
+      link: "Install integrations",
+      to: "developer",
+    },
+    {
+      Icon: PhBrain,
+      title: "Productivity Methods",
+      body: "Personal productivity recommendations based on your unique traits and strengths.",
+      link: "Take the quiz",
+      to: "quiz",
+    },
+  ];
+  return (
+    <section className="px-6 py-16">
+      <div className="mx-auto max-w-4xl">
+        <h2 className="max-w-2xl text-2xl font-extrabold tracking-tight text-neutral-900 sm:text-3xl">
+          Delightfully simple and deceptively powerful task management
+        </h2>
+        <p className="mt-3 max-w-xl text-neutral-500">
+          30 million+ people organize billions of tasks in Todoist for their
+          work, education, and personal life.
+        </p>
+        <div className="mt-10 grid gap-x-12 gap-y-9 sm:grid-cols-2">
+          {items.map((it) => (
+            <div key={it.title} className="flex flex-col">
+              <span className="text-brand">
+                <it.Icon size={26} />
+              </span>
+              <p className="mt-3 text-sm font-bold text-[#202020]">{it.title}</p>
+              <p className="mt-1 text-sm leading-relaxed text-neutral-500">
+                {it.body}
+              </p>
+              <button
+                onClick={() => nav(it.to)}
+                className="mt-2 self-start text-sm font-semibold text-brand hover:underline"
+              >
+                → {it.link}
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
